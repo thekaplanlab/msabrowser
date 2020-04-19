@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<title>MSAViewer Demo</title>
+	<link type="text/css" rel="stylesheet" href="tool.css" media="screen"/>
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
+	<script src="MSAViewer.js"></script>
+</head>
+<body>
+	
+	 <!-- MSAViewer Demo -->
+    <section id="MSAViewerDemo">
+    </section><!-- end of MSAViewer Demo -->
+
+
+    <script type="text/javascript" charset="utf-8">
+    	var id = 'MSAViewerDemo';
+    	var fasta = '>NP_001244970.1 [Homo sapiens]\n--MAERAALEELVKLQGERVRG-LKQQKASAELIEEEVAKLLKLKAQLGPD---ESKQKF\nVLKTPKGTRDYSPRQMAVREKVFDVIIRCFKRHGAEVIDTPVFELKETLMGKYGEDS-KL\nIYDLKDQGGELLSLRYDLTVPFARYLAMNKLTNIKRYHIAK-------------------\n-DFDIAGNFDPMIPDAECLKIMCEILSSLQIGDFLVKVNDRRILDGMFAICGVSDSKFRT\nICSSVDKLDKVSWEEVKNEMVGEKGLAPEVADRIGDYVQQHGG------VSLVEQLLQDP\nKLSQNKQALEGLGDLKLLFEYLTLFGIDDKISFDLSLARGLDYYTGVIYEAVLLQTPAQA\nGEE--------PLGVGSVAAGGRYDGLVGMFDPKGRKVPCVGLSIGVERIFSIVEQRLEA\nLEEKIRTTETQVLVASAQKKLLEERLKLVSELWDAGIKAELLYKKNPKLLNQLQYCEEAG\nIPLVAIIGEQELKDGVIKLRSVTSREEVDVRREDLVEEIKRRTGQPLCIC\n>NP_032240 [Mus musculus]\n--MADRAALEELVRLQGAHVRG-LKEQKASAEQIEEEVTKLLKLKAQLGQD---EGKQKF\nVLKTPKGTRDYSPRQMAVREKVFDVIIRCFKRHGAEVIDTPVFELKETLTGKYGEDS-KL\nIYDLKDQGGELLSLRYDLTVPFARYLAMNKLTNIKRYHIAKVYRRDNPAMTRGRYREFYQ\nCDFDIAGQFDPMIPDAECLKIMCEILSSLQIGNFLVKVNDRRILDGMFAVCGVPDSKFRT\nICSSVDKLDKVSWEEVKNEMVGEKGLAPEVADRIGDYVQQHGG------VSLVEQLLQDP\nKLSQNKQAVEGLGDLKLLFEYLILFGIDDKISFDLSLARGLDYYTGVIYEAVLLQMPTQA\nGEE--------PLGVGSIAAGGRYDGLVGMFDPKGRKVPCVGLSIGVERIFSIVEQRLEA\nSEEKVRTTETQVLVASAQKKLLEERLKLVSELWDAGIKAELLYKKNPKLLNQLQYCEEAG\nIPLVAIIGEQELKDGVIKLRSVASREEVDVRREDLVEEIRRRTNQPLSTC\n>NP_001023374 [Caenorhabditis elegans]\nMFRTITSRLAFSVRQAEETVKPRIAYAQRSGRRIKEKVALMQAKRKEAGETGAPEKPGKF\nVLKTGKGTRDYGPAQSALRNSVLQTVTETFNRYGAETIDTPVFELRDVLMGKYGEEGGKL\nVYDLQDQGGELLSLRYDLTVPFARYLAMNKITNITRYQIAKVYRRDQPVMSRGRYREFYQ\nCDFDIAGQYDLMLPEAECLGIVDELLTKLEIGEFFINLNHRLILEGMFAVSGIPAKDFKT\nICSSVDKLDKTPWEDVEQEMINEKFLTKEQTGKLGELVRFRELNSDLNNLELLEKMSQLP\nDLGQNDKFKKGAEELKVLIEYLNVDGVT-TVRYEPSLARGLDYYTGAIYEAVAPKALEGT\nAVENSEDTAGQPVGVGSVAAGGRYDGLVKMFDSKAN-VPCCGVSFGIERLFAIMEARQKV\nA---IRTTQTEVYVASAQKNLVRDRKKLVKMLRSAGIKTEMALKANPKLLTQFQYAEERR\nIPLAIVIGEQELKDGVVKLRNVVTRDEQTIKLDQLITAVR-DTLAAL---';
+    	var title = 'Human: HARS';
+    	
+    	var domains = [
+						{
+							'domain_id': "PFAM123",
+							'domain_name': "Protein Kinase Domain",
+							'domain_external_link': "http://google.com/",
+							'domain_start_point': 11,
+							'domain_end_point': 32
+						},
+						{
+							'domain_id': "ANANZA",
+							'domain_name': "Protein Kinase Domain",
+							'domain_external_link': "http://google.com/",
+							'domain_start_point': 35,
+							'domain_end_point': 55
+						}
+					];
+    	
+    	var viewer = new MSAViewer({
+			id: id, 
+			msa: MSAProcessor({
+				fasta: fasta,
+				hasConsensus: true
+			}), 
+			title: title, 
+			domains: domains
+		});
+		
+    	viewer.addVariation(0, 1, "M->A : Pathogenic", "Source1");
+    	viewer.addVariation(0, 1, "M->G : VUS", "Source2");
+    	viewer.addVariation(1, 2, "A->R : Benign", "Source3");
+    	viewer.addVariation(2, 4, "T->L : Benign", "Source4");
+    	viewer.addVariation(2, 4, "T->L : Benign", "PTM");
+
+		viewer.loadDivsInViewport(true);
+
+    </script>
+    <script src="MSAViewer.js"></script>
+</body>
+</html>
