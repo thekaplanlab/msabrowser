@@ -1,18 +1,7 @@
 
 /*
-
-    
-   _____                          _     _____           _           _   
-  / ____|                        | |   |  __ \         (_)         | |  
- | |    _   _ _ __ _ __ ___ _ __ | |_  | |__) | __ ___  _  ___  ___| |_ 
- | |   | | | | '__| '__/ _ \ '_ \| __| |  ___/ '__/ _ \| |/ _ \/ __| __|
- | |___| |_| | |  | | |  __/ | | | |_  | |   | | | (_) | |  __/ (__| |_ 
-  \_____\__,_|_|  |_|  \___|_| |_|\__| |_|   |_|  \___/| |\___|\___|\__|
-                                                      _/ |              
-                                                     |__/               
-    CURRENT PROJECT v0.1
-    Jan, 2019
-
+  MSAViewer v0.1
+  April, 2020
 */
 
 /* Font family */
@@ -283,3 +272,45 @@ html, body, div, span, object, iframe,h1, h2, h3, h4, h5, h6, p, blockquote, pre
 .form_input::-moz-placeholder {font-size: 15px; color: #555; opacity: 1;} 
 .form_input:-ms-input-placeholder {font-size: 15px; color: #555; opacity: 1;} 
 .form_input:-moz-placeholder {font-size: 15px; color: #555; opacity: 1;}
+
+/* Tooltips */
+
+.tooltip {
+position: relative;
+/* display: inline-block; */
+overflow:visible!important;
+}
+/* Tooltip text */
+.tooltip .tooltiptext {
+  visibility: hidden;
+  width: 220px;
+  background-color: #555;
+  color: #fff;
+  text-align: center;
+  padding: 5px 0;
+  border-radius: 6px;
+  /* Position the tooltip text */
+  position: absolute;
+  z-index: 5000 !important;
+  top: -5px;
+  left: 105%;
+  margin-left: -60px;
+  /* Fade in tooltip */
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+.tooltip:hover .tooltiptext {
+  visibility: visible;
+  opacity: 1;
+}
+/* Tooltip arrow */
+.tooltip .tooltiptext::after {
+  content: " ";
+  position: absolute;
+  top: 50%;
+  right: 100%; /* To the left of the tooltip */
+  margin-top: -5px;
+  border-width: 5px;
+  border-style: solid;
+  border-color: transparent black transparent transparent;
+}
