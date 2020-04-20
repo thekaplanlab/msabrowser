@@ -68,7 +68,6 @@ function MSAProcessor({
                     var aminoacid = protein[aaInd];
                     position_dict[aminoacid] = aaInd;
             }
-                console.log(position_dict);
                 if (Object.keys(position_dict).length == 1){
                     consensus_logo = consensus_logo.concat(aminoacid);
                 }
@@ -93,7 +92,7 @@ function MSAProcessor({
             
     }
 
-    if(this.hasConsensus) {
+    if(hasConsensus) {
         this.addConsensus();
     }
 
@@ -321,29 +320,29 @@ MSAViewer.prototype.getAminoacidPositionInViewport = function(species_id, positi
     return -1;
 }
 
-MSAViewer.prototype.positionKeyUp = function() {
-    $mainDiv = this.mainDiv;
-    console.log(this);
-    var position = $('#'+this.ids.positionInput).val();
-    var species = parseInt($('#'+this.ids.speciesSelect).val());
-    var alignmentPosition = this.getAminoacidPositionInViewport(species, position - 1);
-    
-    $mainDiv.find('#position-number').remove();
-    $mainDiv.find('.highlight-column').removeClass('highlight-column');
-    $mainDiv.find('.ptmHighlighted').removeClass('ptmHighlighted');
-    $mainDiv.find('.protein:eq(0)').append('<div class="highlight-column" id="position-number" style="left:' + (alignmentPosition * 20) + 'px">' + position + '</div>');
-
-    $mainDiv.scrollLeft(alignmentPosition * 20 - ($mainDiv.width() - 160) / 2)
-
-    setTimeout(function () {
-        $mainDiv.find('.i-' + alignmentPosition).addClass('highlight-column');
-        $mainDiv.find('.protein:eq(' + species + ') .ptm.i-' + alignmentPosition).addClass('ptmHighlighted');
-    }, 75);
-}
 
 MSAViewer.prototype.loadAminoacidSearch = function() {
     var ids = this.ids;
     var that = this;
+    $mainDiv = this.mainDiv;
+    
+    function positionKeyUpCallback() {
+        var position = $('#'+that.ids.positionInput).val();
+        var species = parseInt($('#'+that.ids.speciesSelect).val());
+        var alignmentPosition = that.getAminoacidPositionInViewport(species, position - 1);
+        
+        //$(`#${that.ids.id}`).find('.highlight-column').remove();
+        $mainDiv.find('.highlight-column').removeClass('highlight-column');
+        $mainDiv.find('.ptm-highlighted').removeClass('ptm-highlighted');
+        $mainDiv.find('.protein:eq(0)').append('<div class="highlight-column" style="left:' + (alignmentPosition * 20) + 'px">' + position + '</div>');
+
+        $mainDiv.scrollLeft(alignmentPosition * 20 - ($mainDiv.width() - 160) / 2)
+
+        setTimeout(function () {
+            $mainDiv.find('.i-' + alignmentPosition).addClass('highlight-column');
+            $mainDiv.find('.protein:eq(' + species + ') .ptm.i-' + alignmentPosition).addClass('ptm-highlighted');
+        }, 75);
+    }
 
     $goToDiv = this.mainDiv.find('.go-to-position');
 
@@ -356,11 +355,8 @@ MSAViewer.prototype.loadAminoacidSearch = function() {
     }
 
 
-    $('#'+ids.positionInput).on("keyup", function() {
-        that.positionKeyUp();
-    });
-    $('#'+ids.speciesSelect).on("change", function() {
-        that.positionKeyUp();
+    $(`#${ids.positionInput}, #${ids.speciesSelect}`).on("keyup", function() {
+        positionKeyUpCallback();
     });
 }
 
@@ -440,6 +436,9 @@ MSAViewer.prototype.loadDivsInViewport = function(reset) {
         if (aaLetter.includes("-") === true) {aaBox.style.cssText += "background-color:#333"};
         if (aaLetter.includes("H") === true) {aaBox.style.cssText += "background-color:#8282D2"};
         if (aaLetter.includes("P") === true) {aaBox.style.cssText += "background-color:#DC9682"};
+        if (aaBox.style.cssText.indexOf('background') < 0) {
+            aaBox.style.cssText += "background-color:#80a0f0";
+        }
         documentFragment.appendChild(aaBox);
         aaBox = null;
     }
