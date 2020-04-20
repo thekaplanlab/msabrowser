@@ -151,7 +151,7 @@ html, body, div, span, object, iframe,h1, h2, h3, h4, h5, h6, p, blockquote, pre
   font-size: 14px;
   line-height: 18px;
   padding-left: 10px;
-  z-index: 1 !important;
+  /* z-index: 1 !important; */
   min-width: 150px !important;
   max-width: 150px !important;
   background: #2a76d2 !important;
@@ -283,19 +283,19 @@ overflow:visible!important;
 /* Tooltip text */
 .tooltip .tooltiptext {
   visibility: hidden;
-  width: 220px;
-  background-color: #555;
-  color: #fff;
+  width: 130px;
+  background-color: #fff;
+  color: #555;
   text-align: center;
-  padding: 5px 0;
+  padding: 5px 5px;
   border-radius: 6px;
   /* Position the tooltip text */
   position: absolute;
-  z-index: 5000 !important;
+  z-index: 5 !important;
+  border: 1px solid #ccc;
   top: -5px;
   left: 105%;
   margin-left: -60px;
-  /* Fade in tooltip */
   opacity: 0;
   transition: opacity 0.3s;
 }
@@ -308,9 +308,9 @@ overflow:visible!important;
   content: " ";
   position: absolute;
   top: 50%;
-  right: 100%; /* To the left of the tooltip */
+  right: 100%; 
   margin-top: -5px;
   border-width: 5px;
   border-style: solid;
-  border-color: transparent black transparent transparent;
+  border-color: transparent #fff transparent transparent;
 }
