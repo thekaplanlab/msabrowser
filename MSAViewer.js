@@ -179,16 +179,17 @@ function MSAViewer({   // notice the curly braces! we are receiving an object no
             protein.className = "protein";
             var speciesName = document.createElement("div");
             var speciesNameLink = document.createElement("a");
+            var speciesTooltip = document.createElement('span');
             
             speciesNameLink.setAttribute("href", sequenceDetails.link);
             speciesNameLink.setAttribute('target', '_blank');
-            speciesNameLink.setAttribute('class', 'tooltipped');
-            speciesNameLink.setAttribute('data-position', 'right');
-            speciesNameLink.setAttribute('data-tooltip', sequenceDetails.proteinId);
+            speciesTooltip.setAttribute('class', 'tooltiptext');
+            speciesTooltip.innerHTML = sequenceDetails.proteinId;
 
             document.getElementById(ids.speciesNames).appendChild(speciesName).appendChild(speciesNameLink);
-            speciesName.className = "species-name";
-            speciesNameLink.appendChild(document.createTextNode(sequenceDetails.species)); //// exception case olacak 
+            document.getElementById(ids.speciesNames).appendChild(speciesName).appendChild(speciesTooltip);
+            speciesName.className = "species-name tooltip";
+            speciesNameLink.appendChild(document.createTextNode(sequenceDetails.species));
         }
 
     }
