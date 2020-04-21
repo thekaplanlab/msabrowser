@@ -1,65 +1,85 @@
-
 /*
   MSAViewer v0.1
   April, 2020
 */
 
+
 /* Font family */
+
 @import url('https://fonts.googleapis.com/css?family=Tajawal:500');
 
 /* SCROLLBAR for Chrome -webkit- */
-::-webkit-scrollbar {height: 15px;}
-::-webkit-scrollbar-track{background: #EEE;}
-::-webkit-scrollbar-thumb {width: 450px !important; background: #1976D2; border-radius: 55px;}
+
+::-webkit-scrollbar {
+    height: 15px;
+}
+
+::-webkit-scrollbar-track {
+    background: #EEE;
+}
+
+::-webkit-scrollbar-thumb {
+    width: 450px !important;
+    background: #1976D2;
+    border-radius: 55px;
+}
 
 /* Reset CSS */
 html, body, div, span, object, iframe,h1, h2, h3, h4, h5, h6, p, blockquote, pre,abbr, address, cite, code,del, dfn, em, img, ins, kbd, q, samp,small, strong, sub, sup, var,b, i,dl, dt, dd, ol, ul, li,fieldset, form, label, legend,table, caption, tbody, tfoot, thead, tr, th, td,article, aside, canvas, details, figcaption, figure,footer, header, hgroup, menu, nav, section, summary,time, mark, audio, video {margin:0;padding:0;border:0;outline:0;font-size:100%;vertical-align:baseline;background:transparent;}body {line-height:1;}article,aside,details,figcaption,figure,footer,header,hgroup,menu,nav,section {display:block;}nav ul {list-style:none;}blockquote, q {quotes:none;}blockquote:before, blockquote:after,q:before, q:after {content:'';content:none;}a {margin:0;padding:0;font-size:100%;vertical-align:baseline;background:transparent;}/* change colours to suit your needs */ins {background-color:#ff9;color:#000;text-decoration:none;}/* change colours to suit your needs */mark {background-color:#ff9;color:#000;font-style:italic;font-weight:bold;}del {text-decoration: line-through;}abbr[title], dfn[title] {border-bottom:1px dotted;cursor:help;}table {border-collapse:collapse;border-spacing:0;}/* change border colour to suit your needs */hr {display:block;height:1px;border:0;border-top:1px solid #cccccc;margin:1em 0;padding:0;}input, select {vertical-align:middle;}
 
 .msa-container {
-  width: 100%;
-  height: auto;
-  min-height: 313px;
-  overflow-x: scroll;
-  overflow-y: hidden; 
+    width: 100%;
+    height: auto;
+    min-height: 313px;
+    overflow-x: scroll;
+    overflow-y: hidden;
 }
 
 .protein-length {
-  position: relative;
-  margin: 70px 0;
-  height: 10px;
-  background: #ccc;
+    position: relative;
+    margin: 70px 0;
+    height: 10px;
+    background: #ccc;
 }
 
 .domain {
-  display: flex;
-  position: absolute;
-  top: -30px;
-  height: 70px;
-  color: #fff;
-  background: #CCC;
-  font-family: 'Tajawal', sans-serif !important;
-  font-size: 15px;
-  justify-content: center; /*text-align */
-  align-items: center; /* vertical-align */
-  cursor: pointer !important;
+    display: flex;
+    position: absolute;
+    top: -30px;
+    height: 70px;
+    color: #fff;
+    background: #CCC;
+    font-family: 'Tajawal', sans-serif !important;
+    font-size: 15px;
+    justify-content: center;
+    /*text-align */
+    align-items: center;
+    /* vertical-align */
+    cursor: pointer !important;
 }
+
 
 /* Dashes at the end of the domains */
+
 .domain::before {
-  position: absolute;
-  top: 40px;
-  content: "";
-  width: 100%;
-  height: 78px;
-  box-sizing: border-box;
-  border-left: 3px solid #a3a3a3;
-  border-right: 3px solid #a3a3a3;
-  border-style: dotted;
-  background: none;
-  z-index: -1;
+    position: absolute;
+    top: 40px;
+    content: "";
+    width: 100%;
+    height: 78px;
+    box-sizing: border-box;
+    border-left: 3px solid #a3a3a3;
+    border-right: 3px solid #a3a3a3;
+    border-style: dotted;
+    background: none;
+    z-index: -1;
 }
 
-.domain > p {font-size: 18px;}
+.domain>p {
+    font-size: 18px;
+}
+
+
 /*  Shadow for particular domain on protein sequences 
     && if you change the height or width of aminoacids , do not forget to set that height 
 .domain::after {
@@ -72,189 +92,357 @@ html, body, div, span, object, iframe,h1, h2, h3, h4, h5, h6, p, blockquote, pre
   z-index: -1;
 } */
 
-.protein-length a:nth-child(1) .domain {background: #4285F4; border-bottom-right-radius: 50px; border-top-right-radius: 50px; }
-.protein-length a:nth-child(2) .domain {background: #EA4335; border-radius: 20px;}
-.protein-length a:nth-child(3) .domain {background: #FBBC05; border-bottom-left-radius: 20px; border-top-right-radius: 20px; }
-.protein-length a:nth-child(4) .domain {background: #34A853; border-radius: 0px; }
-.protein-length a:nth-child(5) .domain {background: #7B0099; border-top-left-radius: 20px; border-bottom-right-radius: 20px; }
-.protein-length a:nth-child(6) .domain {background: #004883; border-bottom-left-radius: 20px; border-top-left-radius: 20px; }
-.protein-length a:nth-child(7) .domain {background: #FF5722; border-bottom-left-radius: 20px; border-top-left-radius: 20px; }
-.protein-length a:nth-child(8) .domain {background: #4285F4; border-bottom-right-radius: 50px; border-top-right-radius: 50px; }
-.protein-length a:nth-child(9) .domain {background: #EA4335; border-radius: 20px;}
-.protein-length a:nth-child(10) .domain {background: #34A853; border-radius: 0px; }
-.protein-length a:nth-child(11) .domain {background: #FBBC05; border-bottom-left-radius: 20px; border-top-right-radius: 20px; }
-.protein-length a:nth-child(12) .domain {background: #7B0099; border-top-left-radius: 20px; border-bottom-right-radius: 20px; }
-.protein-length a:nth-child(13) .domain {background: #004883; border-bottom-left-radius: 20px; border-top-left-radius: 20px; }
-.protein-length a:nth-child(14) .domain {background: #FF5722; border-bottom-left-radius: 20px; border-top-left-radius: 20px; }
-
-.domain > a, a:link, a:visited, a:hover, a:focus {text-decoration:none; font-size:20px; color:#FFF; }
-
-.domain_start_point {position:absolute; left:5px}
-.domain_end_point {position:absolute; right:5px;}
-
-.msa-container .sequence-container {position: relative; }
-
-.msa-container .sequence-container section /* or .protein */ { display: flex; flex-flow: row nowrap; }
-
-.msa-container .sequence-container section div {
-  min-width: 20px;
-  min-height: 20px;
-  background: #fff;
-  /* border: 1px solid #fff;  if you open it; do not forget to set height and width as 20px. Same for specieNames */
-  color: #fff;
-  line-height: 20px;
-  font-size: 13px;
-  text-align: center;
-  font-family: sans-serif !important;
-  cursor: default;
-  position: absolute;
-  top: 0;
+.protein-length a:nth-child(1) .domain {
+    background: #4285F4;
+    border-bottom-right-radius: 50px;
+    border-top-right-radius: 50px;
 }
 
+.protein-length a:nth-child(2) .domain {
+    background: #EA4335;
+    border-radius: 20px;
+}
+
+.protein-length a:nth-child(3) .domain {
+    background: #FBBC05;
+    border-bottom-left-radius: 20px;
+    border-top-right-radius: 20px;
+}
+
+.protein-length a:nth-child(4) .domain {
+    background: #34A853;
+    border-radius: 0px;
+}
+
+.protein-length a:nth-child(5) .domain {
+    background: #7B0099;
+    border-top-left-radius: 20px;
+    border-bottom-right-radius: 20px;
+}
+
+.protein-length a:nth-child(6) .domain {
+    background: #004883;
+    border-bottom-left-radius: 20px;
+    border-top-left-radius: 20px;
+}
+
+.protein-length a:nth-child(7) .domain {
+    background: #FF5722;
+    border-bottom-left-radius: 20px;
+    border-top-left-radius: 20px;
+}
+
+.protein-length a:nth-child(8) .domain {
+    background: #4285F4;
+    border-bottom-right-radius: 50px;
+    border-top-right-radius: 50px;
+}
+
+.protein-length a:nth-child(9) .domain {
+    background: #EA4335;
+    border-radius: 20px;
+}
+
+.protein-length a:nth-child(10) .domain {
+    background: #34A853;
+    border-radius: 0px;
+}
+
+.protein-length a:nth-child(11) .domain {
+    background: #FBBC05;
+    border-bottom-left-radius: 20px;
+    border-top-right-radius: 20px;
+}
+
+.protein-length a:nth-child(12) .domain {
+    background: #7B0099;
+    border-top-left-radius: 20px;
+    border-bottom-right-radius: 20px;
+}
+
+.protein-length a:nth-child(13) .domain {
+    background: #004883;
+    border-bottom-left-radius: 20px;
+    border-top-left-radius: 20px;
+}
+
+.protein-length a:nth-child(14) .domain {
+    background: #FF5722;
+    border-bottom-left-radius: 20px;
+    border-top-left-radius: 20px;
+}
+
+.domain>a,
+a:link,
+a:visited,
+a:hover,
+a:focus {
+    text-decoration: none;
+    font-size: 20px;
+    color: #FFF;
+}
+
+.domain_start_point {
+    position: absolute;
+    left: 5px
+}
+
+.domain_end_point {
+    position: absolute;
+    right: 5px;
+}
+
+.msa-container .sequence-container {
+    position: relative;
+}
+
+.msa-container .sequence-container section
+/* or .protein */
+
+{
+    display: flex;
+    flex-flow: row nowrap;
+}
+
+.msa-container .sequence-container section div {
+    min-width: 20px;
+    min-height: 20px;
+    background: #fff;
+    /* border: 1px solid #fff;  if you open it; do not forget to set height and width as 20px. Same for specieNames */
+    color: #fff;
+    line-height: 20px;
+    font-size: 13px;
+    text-align: center;
+    font-family: sans-serif !important;
+    cursor: default;
+    position: absolute;
+    top: 0;
+}
+
+
 /* Domain and Sequence Parts */
-.domain-sequence { position: relative; left: 162px; }
+
+.domain-sequence {
+    position: relative;
+    left: 162px;
+}
 
 .species-and-gene-names {
-  background: #fff;
-  position: absolute;
-  top: 0; left: 0;
-  font-style: italic;
+    background: #fff;
+    position: absolute;
+    top: 0;
+    left: 0;
+    font-style: italic;
 }
 
 .gene-name {
-  position: absolute;
-  left:2px;
-  top: 40px;
-  height: 70px;
-  width: 158px;
-  background: #1976D2;
-  border-radius: 50px;
-  text-align: center;
-  line-height: 1.5;
-  color: #fff;
-  font-family: 'Tajawal', sans-serif !important;
-  font-style: italic;
-  cursor: default;
+    position: absolute;
+    left: 2px;
+    top: 40px;
+    height: 70px;
+    width: 158px;
+    background: #1976D2;
+    border-radius: 50px;
+    text-align: center;
+    line-height: 1.5;
+    color: #fff;
+    font-family: 'Tajawal', sans-serif !important;
+    font-style: italic;
+    cursor: default;
 }
 
 .species-names {
-  margin-top: 150px;
-  cursor: pointer;
-  font-style: italic;
+    margin-top: 150px;
+    cursor: pointer;
+    font-style: italic;
 }
 
 .species-name {
-  min-height: 20px;
-  max-height: 20px;
-  /* border: 1px solid #fff; if you open it; do not forget to set height and width as 20px. Same for specieNames */
-  font-family: 'Tajawal', sans-serif !important;
-  font-size: 14px;
-  line-height: 18px;
-  padding-left: 10px;
-  /* z-index: 1 !important; */
-  min-width: 150px !important;
-  max-width: 150px !important;
-  background: #2a76d2 !important;
-  color:  #FFF !important;
+    min-height: 20px;
+    max-height: 20px;
+    /* border: 1px solid #fff; if you open it; do not forget to set height and width as 20px. Same for specieNames */
+    font-family: 'Tajawal', sans-serif !important;
+    font-size: 14px;
+    line-height: 18px;
+    padding-left: 10px;
+    /* z-index: 1 !important; */
+    min-width: 150px !important;
+    max-width: 150px !important;
+    background: #2a76d2 !important;
+    color: #FFF !important;
 }
 
-.species-name > a,a:link,a:hover,a:focus {font-size:14px;}
+.species-name>a,
+a:link,
+a:hover,
+a:focus {
+    font-size: 14px;
+}
+
 
 /* Specific Amino acids for ClinVar */
+
 .specialAa {
-  cursor:pointer !important; 
-  border-radius: 40%; 
-  border-color: transparent !important; 
-  box-shadow: 0 0 7px #000;
- /* -webkit-animation: pulse 2s infinite;
+    cursor: pointer !important;
+    border-radius: 40%;
+    border-color: transparent !important;
+    box-shadow: 0 0 7px #000;
+    /* -webkit-animation: pulse 2s infinite;
   -moz-animation: pulse 2s infinite;
   -o-animation: pulse 2s infinite;
   animation: pulse 2s infinite; */
 }
-.ptm:before, .ptmHighlighted:before {
-	content: "*";
-	margin-top: -18px;
-	position: absolute;
-	font-size: 22px;
-	font-weight: bold;
-	color: red;
+
+.ptm:before,
+.ptmHighlighted:before {
+    content: "*";
+    margin-top: -18px;
+    position: absolute;
+    font-size: 22px;
+    font-weight: bold;
+    color: red;
 }
 
 .ptmHighlighted:before {
-	margin-top: -30px !important;
+    margin-top: -30px !important;
+}
+
+.aminoacid-info {
+    color: #333;
+    font-family: 'Tajawal', sans-serif !important;
+    font-size: 12px;
 }
 
 
-.aminoacid-info { color: #333; font-family: 'Tajawal', sans-serif !important; font-size: 12px; }
-/*SCROLL ISLEMI OLMADAN .aminoacid-info div */ .variation-text-box {
-  position: absolute;
-  display: flex;
-  z-index:999999;
-  justify-content: center;
-  align-items: center;
-  width: 300px;
-  min-height: 150px;
-  height: auto;
-  background: #fff;
-  opacity: .96;
-  border-radius: 3px;
-  font-size: 18px !important;
+/*SCROLL ISLEMI OLMADAN .aminoacid-info div */
 
+.variation-text-box {
+    position: absolute;
+    display: flex;
+    z-index: 999999;
+    justify-content: center;
+    align-items: center;
+    width: 300px;
+    min-height: 150px;
+    height: auto;
+    background: #fff;
+    opacity: .96;
+    border-radius: 3px;
+    font-size: 18px !important;
 }
 
 .variation-inner-text-box {
-  height:140px !important;
-  max-height:140px !important;
-  padding: 10px !important;
-  overflow-y:scroll;
-  width: 100%; 
-  overflow-x:hidden;
+    height: 140px !important;
+    max-height: 140px !important;
+    padding: 10px !important;
+    overflow-y: scroll;
+    width: 100%;
+    overflow-x: hidden;
 }
 
-.variation-inner-text-box > a, a:link, a:visited, a:hover, a:focus {color : #FFF !important;}
-.variation-inner-text-box h3{margin-top:20px; font-weight:bold}
-.variation-inner-text-box h3:nth-of-type(1) {margin-top: 0;}
-.aminoacid-info>div::after {
-  content: "";
-  position: absolute;
-  top: 14px;  
-  left: -10px;
-  width: 20px;
-  height: 20px;
-  background: inherit;
-  z-index: -1;
-  transform: rotateZ(45deg);
+.variation-inner-text-box>a,
+a:link,
+a:visited,
+a:hover,
+a:focus {
+    color: #FFF !important;
 }
+
+.variation-inner-text-box h3 {
+    margin-top: 20px;
+    font-weight: bold
+}
+
+.variation-inner-text-box h3:nth-of-type(1) {
+    margin-top: 0;
+}
+
+.aminoacid-info>div::after {
+    content: "";
+    position: absolute;
+    top: 14px;
+    left: -10px;
+    width: 20px;
+    height: 20px;
+    background: inherit;
+    z-index: -1;
+    transform: rotateZ(45deg);
+}
+
 
 /*  In order to distinguish the sequence of Homo sapiens */
-.protein:first-of-type {border-bottom: 5px solid #fff;}
-.species-name:nth-child(1) {margin-bottom: 5px;}
+
+.protein:first-of-type {
+    border-bottom: 5px solid #fff;
+}
+
+.species-name:nth-child(1) {
+    margin-bottom: 5px;
+}
+
 
 /* Pulse Animation */
+
 @-webkit-keyframes pulse {
-  0% {-webkit-box-shadow: 0 0 0 0 rgba(0,0,0, 1);}
-  70% {-webkit-box-shadow: 0 0 0 7px rgba(0,0,0, 0);}
-  100% {-webkit-box-shadow: 0 0 0 0 rgba(0,0,0, 0);}
+    0% {
+        -webkit-box-shadow: 0 0 0 0 rgba(0, 0, 0, 1);
+    }
+    70% {
+        -webkit-box-shadow: 0 0 0 7px rgba(0, 0, 0, 0);
+    }
+    100% {
+        -webkit-box-shadow: 0 0 0 0 rgba(0, 0, 0, 0);
+    }
 }
+
 @keyframes pulse {
-  0% {-moz-box-shadow: 0 0 0 0 rgba(0,0,0, 1);box-shadow: 0 0 0 0 rgba(0,0,0, 1);}
-  70% {-moz-box-shadow: 0 0 0 7px rgba(0,0,0, 0);box-shadow: 0 0 0 7px rgba(0,0,0, 0);}
-  100% {-moz-box-shadow: 0 0 0 0 rgba(0,0,0, 0);box-shadow: 0 0 0 0 rgba(0,0,0, 0);}
+    0% {
+        -moz-box-shadow: 0 0 0 0 rgba(0, 0, 0, 1);
+        box-shadow: 0 0 0 0 rgba(0, 0, 0, 1);
+    }
+    70% {
+        -moz-box-shadow: 0 0 0 7px rgba(0, 0, 0, 0);
+        box-shadow: 0 0 0 7px rgba(0, 0, 0, 0);
+    }
+    100% {
+        -moz-box-shadow: 0 0 0 0 rgba(0, 0, 0, 0);
+        box-shadow: 0 0 0 0 rgba(0, 0, 0, 0);
+    }
 }
 
-.variation-text-box.rightArrow::after{right: -10px; left:auto!important;}
+.variation-text-box.rightArrow::after {
+    right: -10px;
+    left: auto!important;
+}
 
-.protein{position: relative; height:20px; background: url(https://i.hizliresim.com/y6O9yk.png) repeat-x; width:100%;}
+.protein {
+    position: relative;
+    height: 20px;
+    background: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAUCAAAAACo4kLRAAAAAW9yTlQBz6J3mgAAABpJREFUGNNjiMECGIaY4PT///8fGFxOoqYgACNCkklBjzWtAAAAAElFTkSuQmCC") repeat-x;
+    width: 100%;
+}
 
-.highlight-column {border-left: 2px solid #fff!important; 
-                  border-right:2px solid #fff!important;
-                      z-index: 1231!important;
-                      border-radius:0!important;
-                }
-.go-to-position{position:fixed; margin-left: 5px}
-#position-number {position:absolute; top:-20px!important;color:#000!important;}
+.highlight-column {
+    border-left: 2px solid #fff!important;
+    border-right: 2px solid #fff!important;
+    z-index: 1231!important;
+    border-radius: 0!important;
+}
+
+.go-to-position {
+    position: fixed;
+    margin-left: 5px
+}
+
+#position-number {
+    position: absolute;
+    top: -20px!important;
+    color: #000!important;
+}
+
 
 /* Form CSS */
+
 .form_input {
     margin: 15px 1px;
     height: 15px;
@@ -268,49 +456,77 @@ html, body, div, span, object, iframe,h1, h2, h3, h4, h5, h6, p, blockquote, pre
     text-align: center;
     border-radius: 30px;
 }
-.form_input::-webkit-input-placeholder {font-size: 15px; color: #555; opacity: 1;} 
-.form_input::-moz-placeholder {font-size: 15px; color: #555; opacity: 1;} 
-.form_input:-ms-input-placeholder {font-size: 15px; color: #555; opacity: 1;} 
-.form_input:-moz-placeholder {font-size: 15px; color: #555; opacity: 1;}
+
+.form_input::-webkit-input-placeholder {
+    font-size: 15px;
+    color: #555;
+    opacity: 1;
+}
+
+.form_input::-moz-placeholder {
+    font-size: 15px;
+    color: #555;
+    opacity: 1;
+}
+
+.form_input:-ms-input-placeholder {
+    font-size: 15px;
+    color: #555;
+    opacity: 1;
+}
+
+.form_input:-moz-placeholder {
+    font-size: 15px;
+    color: #555;
+    opacity: 1;
+}
+
 
 /* Tooltips */
 
 .tooltip {
-position: relative;
-/* display: inline-block; */
-overflow:visible!important;
+    position: relative;
+    /* display: inline-block; */
+    overflow: visible!important;
 }
+
+
 /* Tooltip text */
+
 .tooltip .tooltiptext {
-  visibility: hidden;
-  width: 130px;
-  background-color: #fff;
-  color: #555;
-  text-align: center;
-  padding: 5px 5px;
-  border-radius: 6px;
-  /* Position the tooltip text */
-  position: absolute;
-  z-index: 5 !important;
-  border: 1px solid #ccc;
-  top: -5px;
-  left: 105%;
-  margin-left: -60px;
-  opacity: 0;
-  transition: opacity 0.3s;
+    visibility: hidden;
+    width: 130px;
+    background-color: #fff;
+    color: #555;
+    text-align: center;
+    padding: 5px 5px;
+    border-radius: 6px;
+    /* Position the tooltip text */
+    position: absolute;
+    z-index: 5 !important;
+    border: 1px solid #ccc;
+    top: -5px;
+    left: 105%;
+    margin-left: -60px;
+    opacity: 0;
+    transition: opacity 0.3s;
 }
+
 .tooltip:hover .tooltiptext {
-  visibility: visible;
-  opacity: 1;
+    visibility: visible;
+    opacity: 1;
 }
+
+
 /* Tooltip arrow */
+
 .tooltip .tooltiptext::after {
-  content: " ";
-  position: absolute;
-  top: 50%;
-  right: 100%; 
-  margin-top: -5px;
-  border-width: 5px;
-  border-style: solid;
-  border-color: transparent #fff transparent transparent;
+    content: " ";
+    position: absolute;
+    top: 50%;
+    right: 100%;
+    margin-top: -5px;
+    border-width: 5px;
+    border-style: solid;
+    border-color: transparent #fff transparent transparent;
 }
