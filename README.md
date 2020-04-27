@@ -8,7 +8,7 @@
 	- [:hash: How to use *MSAViewer*?](#hash-how-to-use-msaviewer)
 	- [:hash: Parameters & Examples for the Functions](#hash-parameters--examples-for-the-functions)
 		- [:hash: Color Schemas List](#hash-color-schemas-list)
-		- [:hash: Adding protein domains & Example](#hash-adding-protein-domains--example)
+		- [:hash: Adding Protein Domains & Example](#hash-adding-protein-domains--example)
 		- [:hash: ``addVariation()`` Function & Example Use](#hash-addvariation-function--example-use)
 	- [:hash: Example Usages (Use Cases) of MSAViewer](#hash-example-usages-use-cases-of-msaviewer)
 		- [:hash: Evolutionary Genomics Study](#hash-evolutionary-genomics-study)
@@ -46,8 +46,8 @@
 | title | *It defines the title of MSAViewer component on the box at the top left corner* | HARS Protein
 | hasConsensus  | It asks whether you would like to display the consensus sequence or not. | Please state as either `true` or `false`.
 | colorSchema  | It defines the name of the color schema you would like to display | Please the check the list of color schemas below.
-| domains  | It refers a variable that holds your protein domanin information. | Please the example below.
-| ``addVariation()`` function  | It serves for adding variations on the corresponding amino acids. | Please the example below.
+| domains  | It refers a variable that holds your protein domanin information. | Please check the example below.
+| ``addVariation()`` function  | It serves for adding variations on the corresponding amino acids. | Please check the example below.
 
 ### :hash: Color Schemas List
 
@@ -72,7 +72,7 @@ Example for this:
 - `zappo`
 
 
-### :hash: Adding protein domains & Example
+### :hash: Adding Protein Domains & Example
 
 > You are able to visualize the protein domains above the sequence aligner.
 
