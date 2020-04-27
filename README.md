@@ -3,20 +3,20 @@
 **Contents**
 
 - [🧬 MSAViewer](#%f0%9f%a7%ac-msaviewer)
-  - [:hash: What is *MSAViewer* and the aim of this library?](#hash-what-is-msaviewer-and-the-aim-of-this-library)
-  - [:hash: Requirements and Installation](#hash-requirements-and-installation)
-  - [:hash: How to use *MSAViewer*?](#hash-how-to-use-msaviewer)
-  - [:hash: Parameters & Examples for the Functions](#hash-parameters--examples-for-the-functions)
-    - [:hash: Color Schemas List](#hash-color-schemas-list)
-    - [:hash: Adding protein domains & Example](#hash-adding-protein-domains--example)
-    - [:hash: ``addVariation()`` Function & Example Use](#hash-addvariation-function--example-use)
-  - [:hash: Example Usages (Use Cases) of MSAViewer](#hash-example-usages-use-cases-of-msaviewer)
-    - [:hash: Evolutionary Genomics Study](#hash-evolutionary-genomics-study)
-    - [:hash: Clinical Variant Interpretation Study](#hash-clinical-variant-interpretation-study)
-    - [:hash: COVID-19 / Virology Study](#hash-covid-19--virology-study)
-    - [:hash: Do you have another study which is not listed here?](#hash-do-you-have-another-study-which-is-not-listed-here)
-  - [:hash: Contributing & Feedback](#hash-contributing--feedback)
-  - [:hash: Developers](#hash-developers)
+	- [:hash: What is *MSAViewer* and the aim of this library?](#hash-what-is-msaviewer-and-the-aim-of-this-library)
+	- [:hash: Requirements and Installation](#hash-requirements-and-installation)
+	- [:hash: How to use *MSAViewer*?](#hash-how-to-use-msaviewer)
+	- [:hash: Parameters & Examples for the Functions](#hash-parameters--examples-for-the-functions)
+		- [:hash: Color Schemas List](#hash-color-schemas-list)
+		- [:hash: Adding protein domains & Example](#hash-adding-protein-domains--example)
+		- [:hash: ``addVariation()`` Function & Example Use](#hash-addvariation-function--example-use)
+	- [:hash: Example Usages (Use Cases) of MSAViewer](#hash-example-usages-use-cases-of-msaviewer)
+		- [:hash: Evolutionary Genomics Study](#hash-evolutionary-genomics-study)
+		- [:hash: Clinical Variant Interpretation Study](#hash-clinical-variant-interpretation-study)
+		- [:hash: COVID-19 / Virology Study](#hash-covid-19--virology-study)
+		- [:hash: Do you have another study which is not listed here?](#hash-do-you-have-another-study-which-is-not-listed-here)
+	- [:hash: Contributing & Feedback](#hash-contributing--feedback)
+	- [:hash: Developers](#hash-developers)
 
 ---
 
@@ -44,6 +44,7 @@
 | id | *It defines the ID of the element where you place MSAViewer component.* |`<section id="MSAViewerDemo"></section>` |
 | fasta | *It refers a variable that holds your sequence alignment or the name of the file in FASTA format* | `sample_msa.txt` or `sample_msa.fasta`
 | title | *It defines the title of MSAViewer component on the box at the top left corner* | HARS Protein
+| hasConsensus  | It asks whether you would like to display the consensus sequence or not. | Please state as either `true` or `false`.
 | colorSchema  | It defines the name of the color schema you would like to display | Please the check the list of color schemas below.
 | domains  | It refers a variable that holds your protein domanin information. | Please the example below.
 | ``addVariation()`` function  | It serves for adding variations on the corresponding amino acids. | Please the example below.
@@ -109,14 +110,19 @@ var domains = [
 | variationNote | The annotation part of this variation. | M->A : Pathogenic and causes a disease with a name of X. |
 | source | The source of the information. | Surname et. al (2020) |
 
-> * For instance, an amino acid in a protein in the position of 15 has a substitution. However, since the sequences are aligned and some dashes `-` added into the sequence, you do not need to consider the new position of the amino acid. Only, put the real position of the amino acid. 
+
+> For instance, an amino acid in a protein in the position of 15 has a substitution. However, since the sequences are aligned and some dashes `-` added into the sequence, you do not need to consider the new position of the amino acid. Only, put the real position of the amino acid. 
 
 **Here is the example how to add a variation:**
 ```
 viewer.addVariation(1, 5, "M->A : Pathogenic and causes a disease with a name of X", "Surname et. al (2020)");
 ```
 
-> Here, this variation will be added onto the `5th` amino acid in the protein of `1st` species in the sequence alignment with a note of `M->A : Pathogenic and causes a disease with a name of X` and source of `Surname et. al (2020)`. 
+> Here, this variation will be added onto the `5th` amino acid in the protein of `1st` species in the sequence alignment with a note of "`M->A : Pathogenic and causes a disease with a name of X`" and source of "`Surname et. al (2020)`". 
+
+
+> In addition, if you state the `source` as `"PTM"` (post-translational modification), it also will be notified as red asterisk in the viewer.
+
 
 ## :hash: Example Usages (Use Cases) of MSAViewer
 
