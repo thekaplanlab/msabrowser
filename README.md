@@ -7,14 +7,14 @@
   - [:hash: Requirements and Installation](#hash-requirements-and-installation)
   - [:hash: How to use *MSAViewer*?](#hash-how-to-use-msaviewer)
   - [:hash: Parameters & Examples for the Functions](#hash-parameters--examples-for-the-functions)
-    - [Color Schemas List](#color-schemas-list)
-    - [Domain Example](#domain-example)
-    - [``addVariation()`` Function & Example Use](#addvariation-function--example-use)
+    - [:hash: Color Schemas List](#hash-color-schemas-list)
+    - [:hash: Adding protein domains & Example](#hash-adding-protein-domains--example)
+    - [:hash: ``addVariation()`` Function & Example Use](#hash-addvariation-function--example-use)
   - [:hash: Example Usages (Use Cases) of MSAViewer](#hash-example-usages-use-cases-of-msaviewer)
     - [:hash: Evolutionary Genomics Study](#hash-evolutionary-genomics-study)
     - [:hash: Clinical Variant Interpretation Study](#hash-clinical-variant-interpretation-study)
     - [:hash: COVID-19 / Virology Study](#hash-covid-19--virology-study)
-  - [:hash: Do you have another study which is not listed here?](#hash-do-you-have-another-study-which-is-not-listed-here)
+    - [:hash: Do you have another study which is not listed here?](#hash-do-you-have-another-study-which-is-not-listed-here)
   - [:hash: Contributing & Feedback](#hash-contributing--feedback)
   - [:hash: Developers](#hash-developers)
 
@@ -48,7 +48,7 @@
 | domains  | It refers a variable that holds your protein domanin information. | Please the example below.
 | ``addVariation()`` function  | It serves for adding variations on the corresponding amino acids. | Please the example below.
 
-### Color Schemas List
+### :hash: Color Schemas List
 
 > You need to select a color schema and put the name of the color schema into the variable:
 
@@ -71,7 +71,7 @@ Example for this:
 - `zappo`
 
 
-### Domain Example
+### :hash: Adding protein domains & Example
 
 > You are able to visualize the protein domains above the sequence aligner.
 
@@ -95,7 +95,7 @@ var domains = [
 ];
 ```
 
-### ``addVariation()`` Function & Example Use
+### :hash: ``addVariation()`` Function & Example Use
 
 > You are able to add variations and substitutions on the corresponding amino acids.
 
@@ -129,7 +129,7 @@ Will be added.
 ### :hash: COVID-19 / Virology Study 
 Will be added.
 
-## :hash: Do you have another study which is not listed here?
+### :hash: Do you have another study which is not listed here?
 Please do not hesitate to contact us for your study. 
 
 We would be very happy to list your study here.
