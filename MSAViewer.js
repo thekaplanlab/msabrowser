@@ -490,6 +490,7 @@ MSAViewer.prototype.addDomains = function(domains) {
 }
 
 MSAViewer.prototype.addVariation = function(protein, aminoacid, variationNote, source) {
+    var protein = protein - 1; // the species start from 0
     let aaNumber = aminoacid - 1; // the aacids start from 0
 
     notesByProtein = this.variationNotes[protein];
