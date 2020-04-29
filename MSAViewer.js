@@ -348,7 +348,7 @@ MSAViewer.prototype.loadAminoacidSearch = function() {
     $goToDiv = this.mainDiv.find('.go-to-position');
 
     $goToDiv.append('Search a position: <input type="number" placeholder="3" name="position" class="form_input" id="'+ids.positionInput+'">');
-    $goToDiv.append(' Species : <select name="species" id="'+ids.speciesSelect+'"></select><br>');
+    $goToDiv.append(' Species : <select name="species" id="'+ids.speciesSelect+'"></select>');
 
     for(var i in this.msa.sequenceDetails) {
         var species = this.msa.sequenceDetails[i].species;
@@ -528,3 +528,9 @@ MSAViewer.prototype.scrollIfNeeded = function(element, container) {
     }
 }
 
+MSAViewer.prototype.export = function (fileName) {
+    if (fileName != "") {var fileName = "MSA_export.fasta"}
+    var fileContent = fasta;
+    var hrefTag =  "data:text/plain;charset=UTF-8,"  + encodeURIComponent(fileContent);
+    $goToDiv.append('<a class="exportButton" href="'+ hrefTag +'" download="' + fileName + '">Download as FASTA</a><br>');
+}
