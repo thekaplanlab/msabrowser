@@ -70,6 +70,7 @@ Example for this:
 - `taylor`
 - `turn`
 - `zappo`
+- `nucleotide`
 
 
 ### :hash: Adding Protein Domains & Example
@@ -151,6 +152,6 @@ Moreover, please do not hesitate to open an issue via Github if you have any sug
 **Halil Bilgin |  [bilginhalil@gmail.com](mailto:bilginhalil@gmail.com) | Academia: [Google Scholar Profile](https://scholar.google.com/citations?user=U1jyUGkAAAAJ&hl=en&oi=ao)**
 
 
-**Furkan Torun |  [furkanmtorun@gmail.com](mailto:furkanmtorun@gmail.com) | Website: [furkanmtorun.github.io](https://furkanmtorun.github.io/)**
+**Furkan Torun |  [furkanmtorun@gmail.com](mailto:furkanmtorun@gmail.com) | Academia: [Google Scholar Profile](https://scholar.google.com/citations?user=d5ZyOZ4AAAAJ)**
 
 
