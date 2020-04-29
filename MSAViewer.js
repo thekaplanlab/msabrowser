@@ -1,3 +1,5 @@
+var inject = (str, obj) => str.replace(/\${(.*?)}/g, (x,g)=> obj[g]);
+
 function MSAProcessor({
     fasta,
     hasConsensus = false
@@ -124,9 +126,7 @@ function renderMSATemplate({
             <div id="${ids.geneName}" class="gene-name"><br>${title}</div>
             <div id="${ids.speciesNames}" class="species-names"></div>
         </section>
-        <section class="go-to-position">
-        </section>
-        <br><br>
+        
     </section>
     `;
 }
@@ -325,16 +325,27 @@ MSAViewer.prototype.loadAminoacidSearch = function() {
     var ids = this.ids;
     var that = this;
     $mainDiv = this.mainDiv;
+    containerTemplate = `<section class="go-to-position">
+        Search a position: <input type="number" placeholder="3" name="position" class="form_input" id="${ids.positionInput}">
+        Species : <select name="species" id="${ids.speciesSelect}"></select><br>
+        </section>`;
+        
+    highlightColumnTemplate = '<div class="highlight-column position-number" style="left:${alignmentPosition}px">${position}</div>';
+    if($mainDiv.find('.go-to-position').length == 0)
+        $mainDiv.append(containerTemplate);
     
     function positionKeyUpCallback() {
         var position = $('#'+that.ids.positionInput).val();
         var species = parseInt($('#'+that.ids.speciesSelect).val());
         var alignmentPosition = that.getAminoacidPositionInViewport(species, position - 1);
         
-        //$(`#${that.ids.id}`).find('.highlight-column').remove();
-        $mainDiv.find('.highlight-column').removeClass('highlight-column');
-        $mainDiv.find('.ptm-highlighted').removeClass('ptm-highlighted');
-        $mainDiv.find('.protein:eq(0)').append('<div class="highlight-column" style="left:' + (alignmentPosition * 20) + 'px">' + position + '</div>');
+        $mainDiv.find('.highlight-column').removeClass('highlight-column ptm-highlighted');
+        $mainDiv.find('.position-number').remove();
+        
+        $mainDiv.find('.protein:eq(0)').append(inject(highlightColumnTemplate, {
+            alignmentPosition: alignmentPosition * 20,
+            position: position
+        }));
 
         $mainDiv.scrollLeft(alignmentPosition * 20 - ($mainDiv.width() - 160) / 2)
 
@@ -343,11 +354,6 @@ MSAViewer.prototype.loadAminoacidSearch = function() {
             $mainDiv.find('.protein:eq(' + species + ') .ptm.i-' + alignmentPosition).addClass('ptm-highlighted');
         }, 75);
     }
-
-    $goToDiv = this.mainDiv.find('.go-to-position');
-
-    $goToDiv.append('Search a position: <input type="number" placeholder="3" name="position" class="form_input" id="'+ids.positionInput+'">');
-    $goToDiv.append(' Species : <select name="species" id="'+ids.speciesSelect+'"></select><br>');
 
     for(var i in this.msa.sequenceDetails) {
         var species = this.msa.sequenceDetails[i].species;

@@ -182,7 +182,7 @@ html, body, div, span, object, iframe,h1, h2, h3, h4, h5, h6, p, blockquote, pre
   -o-animation: pulse 2s infinite;
   animation: pulse 2s infinite; */
 }
-.ptm:before, .ptmHighlighted:before {
+.ptm:before, .ptm-highlighted:before {
 	content: "*";
 	margin-top: -18px;
 	position: absolute;
@@ -191,7 +191,7 @@ html, body, div, span, object, iframe,h1, h2, h3, h4, h5, h6, p, blockquote, pre
 	color: red;
 }
 
-.ptmHighlighted:before {
+.ptm-highlighted:before {
 	margin-top: -30px !important;
 }
 
@@ -263,7 +263,7 @@ html, body, div, span, object, iframe,h1, h2, h3, h4, h5, h6, p, blockquote, pre
                       border-radius:0!important;
                 }
 .go-to-position{position:fixed; margin-left: 5px}
-#position-number {position:absolute; top:-20px!important;color:#000!important;}
+.position-number {position:absolute; top:-20px!important;color:#000!important;}
 
 /* Form CSS */
 .form_input {
