@@ -438,6 +438,7 @@ MSAViewer.prototype.loadDivsInViewport = function(reset) {
             "taylor": {A: "#ccff00", R: "#0000ff", N: "#cc00ff", D: "#ff0000", C: "#ffff00", Q: "#ff00cc", E: "#ff0066", G: "#ff9900", H: "#0066ff", I: "#66ff00", L: "#33ff00", K: "#6600ff", M: "#00ff00", F: "#00ff66", P: "#ffcc00", S: "#ff3300", T: "#ff6600", W: "#00ccff", Y: "#00ffcc", V: "#99ff00", B: "#fff", X: "#fff", Z: "#fff"},
             "turn": {A: "#2cd3d3", R: "#708f8f", N: "#ff0000", D: "#e81717", C: "#a85757", Q: "#3fc0c0", E: "#778888", G: "#ff0000", H: "#708f8f", I: "#00ffff", L: "#1ce3e3", K: "#7e8181", M: "#1ee1e1", F: "#1ee1e1", P: "#f60909", S: "#e11e1e", T: "#738c8c", W: "#738c8c", Y: "#9d6262", V: "#07f8f8", B: "#f30c0c", X: "#7c8383", Z: "#5ba4a4"},
             "zappo": {A: "#ffafaf", R: "#6464ff", N: "#00ff00", D: "#ff0000", C: "#ffff00", Q: "#00ff00", E: "#ff0000", G: "#ff00ff", H: "#6464ff", I: "#ffafaf", L: "#ffafaf", K: "#6464ff", M: "#ffafaf", F: "#ffc800", P: "#ff00ff", S: "#00ff00", T: "#00ff00", W: "#ffc800", Y: "#ffc800", V: "#ffafaf", B: "#fff", X: "#fff", Z: "#fff"},
+            "nucleotide": { A: " #64F73F", C: " #FFB340", G: " #EB413C", T: " #3C88EE", U: " #3C88EE" }
         }
         var aaColor = colorSchemas[colorSchema][aaLetter]
         aaBox.style.backgroundColor += aaColor;
