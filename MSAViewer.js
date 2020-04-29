@@ -124,6 +124,10 @@ function renderMSATemplate({
             <div id="${ids.geneName}" class="gene-name"><br>${title}</div>
             <div id="${ids.speciesNames}" class="species-names"></div>
         </section>
+
+        <!-- Bottom and fixed panel -->
+        <section class="bottom-panel">
+        </section>
         
     </section>
     `;
@@ -325,7 +329,7 @@ MSAViewer.prototype.loadAminoacidSearch = function() {
     var ids = this.ids;
     var that = this;
     $mainDiv = this.mainDiv;
-    containerTemplate = `<section class="fixedRegion">
+    containerTemplate = `<section class="go-to-position">
         Search a position: <input type="number" placeholder="3" name="position" class="form_input" id="${ids.positionInput}">
         Species : <select name="species" id="${ids.speciesSelect}"></select>
         </section>`;
@@ -537,5 +541,5 @@ MSAViewer.prototype.export = function (fileName) {
     if (fileName != "") {var fileName = "MSA_export.fasta"}
     var fileContent = fasta;
     var hrefTag =  "data:text/plain;charset=UTF-8,"  + encodeURIComponent(fileContent);
-    this.mainDiv.find('.fixedRegion').append('<a class="exportButton" href="'+ hrefTag +'" download="' + fileName + '">Download as FASTA</a><br>');
+    this.mainDiv.find('.bottom-panel').append('<a class="export-button" href="'+ hrefTag +'" download="' + fileName + '">Download as FASTA</a><br>');
 }
