@@ -330,7 +330,7 @@ MSAViewer.prototype.loadAminoacidSearch = function() {
     var that = this;
     $mainDiv = this.mainDiv;
     containerTemplate = `<section class="go-to-position">
-        Search a position: <input type="number" placeholder="3" name="position" class="form_input" id="${ids.positionInput}">
+        Search a position: <input type="number" placeholder="3" name="position" min="1" class="form_input" id="${ids.positionInput}">
         Species : <select name="species" id="${ids.speciesSelect}"></select>
         </section>`;
         
