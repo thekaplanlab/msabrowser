@@ -334,9 +334,7 @@ MSAViewer.prototype.loadAminoacidSearch = function() {
         Species : <select name="species" id="${ids.speciesSelect}"></select>
         </section>`;
         
-
-    if($mainDiv.find('.bottom-panel').length == 0)
-        $mainDiv.append(containerTemplate);
+    $mainDiv.find('.bottom-panel').append(containerTemplate);
     
     function positionKeyUpCallback() {
         var position = $('#'+that.ids.positionInput).val();
