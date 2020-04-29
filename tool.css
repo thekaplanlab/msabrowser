@@ -440,6 +440,13 @@ a:focus {
     color: #000!important;
 }
 
+.exportButton {
+    background: #4285F4;
+    color: #FFF;
+    border-radius: 10px;
+    padding: 5px;
+    margin-left: 15px;
+}
 
 /* Form CSS */
 
