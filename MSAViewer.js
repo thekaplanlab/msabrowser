@@ -124,9 +124,7 @@ function renderMSATemplate({
             <div id="${ids.geneName}" class="gene-name"><br>${title}</div>
             <div id="${ids.speciesNames}" class="species-names"></div>
         </section>
-        <section class="fixedRegion">
-        </section>
-        <br><br>
+        
     </section>
     `;
 }
@@ -230,6 +228,7 @@ function MSAViewer({   // notice the curly braces! we are receiving an object no
     }
 
     this.showVariation = function(prNumber, aaNumber) {
+
         let textBox = document.createElement("div");
         let innerTextBox = document.createElement("div");
         textBox.setAttribute("class", "variation-text-box");
@@ -326,16 +325,26 @@ MSAViewer.prototype.loadAminoacidSearch = function() {
     var ids = this.ids;
     var that = this;
     $mainDiv = this.mainDiv;
+    containerTemplate = `<section class="fixedRegion">
+        Search a position: <input type="number" placeholder="3" name="position" class="form_input" id="${ids.positionInput}">
+        Species : <select name="species" id="${ids.speciesSelect}"></select>
+        </section>`;
+        
+
+    if($mainDiv.find('.fixedRegion').length == 0)
+        $mainDiv.append(containerTemplate);
     
     function positionKeyUpCallback() {
         var position = $('#'+that.ids.positionInput).val();
         var species = parseInt($('#'+that.ids.speciesSelect).val());
         var alignmentPosition = that.getAminoacidPositionInViewport(species, position - 1);
         
-        //$(`#${that.ids.id}`).find('.highlight-column').remove();
-        $mainDiv.find('.highlight-column').removeClass('highlight-column');
-        $mainDiv.find('.ptm-highlighted').removeClass('ptm-highlighted');
-        $mainDiv.find('.protein:eq(0)').append('<div class="highlight-column" style="left:' + (alignmentPosition * 20) + 'px">' + position + '</div>');
+        $mainDiv.find('.highlight-column').removeClass('highlight-column ptm-highlighted');
+        $mainDiv.find('.position-number').remove();
+        
+        template = `<div class="highlight-column position-number" style="left:${alignmentPosition * 20}px">${position}</div>`;
+
+        $mainDiv.find('.protein:eq(0)').append(template);
 
         $mainDiv.scrollLeft(alignmentPosition * 20 - ($mainDiv.width() - 160) / 2)
 
@@ -345,14 +354,10 @@ MSAViewer.prototype.loadAminoacidSearch = function() {
         }, 75);
     }
 
-    $goToDiv = this.mainDiv.find('.fixedRegion');
-
-    $goToDiv.append('Search a position: <input type="number" placeholder="3" name="position" class="form_input" id="'+ids.positionInput+'">');
-    $goToDiv.append(' Species : <select name="species" id="'+ids.speciesSelect+'"></select>');
-
     for(var i in this.msa.sequenceDetails) {
         var species = this.msa.sequenceDetails[i].species;
-        $('#'+ids.speciesSelect).html($('#'+ids.speciesSelect).html() + '<option value="' + i + '">' + species + '</option>');
+        var template = `<option value="${i}">${species}</option>`;
+        $('#'+ids.speciesSelect).append(template);
     }
 
 
