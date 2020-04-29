@@ -601,7 +601,7 @@ a:focus {
     border-radius: 0!important;
 }
 
-.fixedRegion {
+.bottom-panel {
     position: fixed;
     margin-left: 5px
 }
@@ -630,12 +630,14 @@ a:focus {
     color: #000!important;
 }
 
-.exportButton {
+.export-button {
+    position: relative;
     background: #4285F4;
     color: #FFF;
     border-radius: 10px;
     padding: 5px;
-    margin-left: 15px;
+    top: 15px !important;
+    margin-left: 345px;
 }
 
 /* Form CSS */
