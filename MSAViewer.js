@@ -335,7 +335,7 @@ MSAViewer.prototype.loadAminoacidSearch = function() {
         </section>`;
         
 
-    if($mainDiv.find('.fixedRegion').length == 0)
+    if($mainDiv.find('.bottom-panel').length == 0)
         $mainDiv.append(containerTemplate);
     
     function positionKeyUpCallback() {
