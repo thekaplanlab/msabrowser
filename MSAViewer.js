@@ -181,18 +181,18 @@ function MSAViewer({   // notice the curly braces! we are receiving an object no
             protein.className = "protein";
             var speciesName = document.createElement("div");
             var speciesNameLink = document.createElement("a");
-            var speciesNameHidingButton = document.createElement("a");
+            var sequenceHidingButton = document.createElement("a");
             var speciesTooltip = document.createElement('span');
             
-            speciesNameHidingButton.setAttribute("href", "#" + sequenceDetails.proteinId);
-            speciesNameHidingButton.setAttribute('class', 'hiding-button');
+            sequenceHidingButton.setAttribute("href", "#" + sequenceDetails.proteinId);
+            sequenceHidingButton.setAttribute('class', 'hiding-button');
             speciesNameLink.setAttribute("href", sequenceDetails.link);
             speciesNameLink.setAttribute('target', '_blank');
             speciesTooltip.setAttribute('class', 'tooltiptext');
             speciesTooltip.innerHTML = sequenceDetails.proteinId;
 
-            document.getElementById(ids.speciesNames).appendChild(speciesName).appendChild(speciesNameHidingButton);
-            speciesNameHidingButton.appendChild(document.createTextNode('x '));
+            document.getElementById(ids.speciesNames).appendChild(speciesName).appendChild(sequenceHidingButton);
+            sequenceHidingButton.appendChild(document.createTextNode('x '));
             document.getElementById(ids.speciesNames).appendChild(speciesName).appendChild(speciesNameLink);
             speciesNameLink.appendChild(document.createTextNode(sequenceDetails.species));
             document.getElementById(ids.speciesNames).appendChild(speciesName).appendChild(speciesTooltip);
