@@ -127,6 +127,7 @@ function renderMSATemplate({
 
         <!-- Bottom and fixed panel -->
         <section class="bottom-panel">
+            <a href="javascript:void(0)" class="reset-button">Reset</a>
         </section>
         
     </section>
@@ -172,7 +173,7 @@ function MSAViewer({   // notice the curly braces! we are receiving an object no
         document.getElementById(ids.proteinLength).style = proteinLengthforDomain;
 
         for(var i in msa.sequenceDetails) {
-                    //creating flex container for proteins
+            //creating flex container for proteins
             var sequenceDetails = msa.sequenceDetails[i];
 
             let protein = document.createElement("section");
@@ -181,18 +182,32 @@ function MSAViewer({   // notice the curly braces! we are receiving an object no
             protein.className = "protein";
             var speciesName = document.createElement("div");
             var speciesNameLink = document.createElement("a");
+            var sequenceHidingButton = document.createElement("a");
             var speciesTooltip = document.createElement('span');
             
+            sequenceHidingButton.setAttribute("href", "#" + sequenceDetails.proteinId);
+            sequenceHidingButton.setAttribute('class', 'hiding-button');
             speciesNameLink.setAttribute("href", sequenceDetails.link);
             speciesNameLink.setAttribute('target', '_blank');
             speciesTooltip.setAttribute('class', 'tooltiptext');
             speciesTooltip.innerHTML = sequenceDetails.proteinId;
-
-            document.getElementById(ids.speciesNames).appendChild(speciesName).appendChild(speciesNameLink);
-            document.getElementById(ids.speciesNames).appendChild(speciesName).appendChild(speciesTooltip);
             speciesName.className = "species-name tooltip";
+            protein.setAttribute("data-id", sequenceDetails.proteinId);
+            speciesName.setAttribute("data-id", sequenceDetails.proteinId);
+
+            document.getElementById(ids.speciesNames).appendChild(speciesName).appendChild(sequenceHidingButton);
+            sequenceHidingButton.appendChild(document.createTextNode('x '));
+            document.getElementById(ids.speciesNames).appendChild(speciesName).appendChild(speciesNameLink);
             speciesNameLink.appendChild(document.createTextNode(sequenceDetails.species));
+            document.getElementById(ids.speciesNames).appendChild(speciesName).appendChild(speciesTooltip);
         }
+
+        // For hiding sequences
+        $(".hiding-button").click(function () {
+            var proteinId = $(this).attr("href").split("#")[1];
+            $('[data-id="'+proteinId+'"]').hide(); 
+        });
+ 
 
     }
     
@@ -279,8 +294,13 @@ function MSAViewer({   // notice the curly braces! we are receiving an object no
 
     this.loadDomainBar();
 
+    $('.reset-button').click(() => {this.reset()});
+
 }
 
+MSAViewer.prototype.reset = function() {
+    this.mainDiv.find('.protein, .species-name').show();
+}
 
 MSAViewer.prototype.loadDomainBar = function() {
     var that = this;
@@ -541,3 +561,4 @@ MSAViewer.prototype.export = function (fileName) {
     var hrefTag =  "data:text/plain;charset=UTF-8,"  + encodeURIComponent(fileContent);
     this.mainDiv.find('.bottom-panel').append('<a class="export-button" href="'+ hrefTag +'" download="' + fileName + '">Download as FASTA</a><br>');
 }
+
