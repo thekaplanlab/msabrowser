@@ -203,8 +203,7 @@ select {
     width: 100%;
     height: auto;
     min-height: 313px;
-    overflow-x: scroll;
-    overflow-y: hidden;
+    overflow: hidden;
 }
 
 .protein-length {
@@ -554,15 +553,6 @@ a:focus {
 
 /*  In order to distinguish the sequence of Homo sapiens */
 
-.protein:first-of-type {
-    border-bottom: 5px solid #fff;
-}
-
-.species-name:nth-child(1) {
-    margin-bottom: 5px;
-}
-
-
 .variation-text-box.rightArrow::after {
     right: -10px;
     left: auto!important;
@@ -725,4 +715,9 @@ a:focus {
     margin: 10px;
     border-radius: 3px;
     padding: 5px;
+}
+
+.scroll-container {
+    overflow: scroll;
+    padding-bottom: 0.4em;
 }

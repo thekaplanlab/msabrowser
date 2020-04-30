@@ -105,26 +105,27 @@ function renderMSATemplate({
 }){
     return `
     <section class="msa-container">
-        <!--Current Project | Domains and Sequences Parts -->
-        <section id="${ids.domainSequence}" class="domain-sequence">
-            
-            <!-- Current Project | Protein Domains for Human -->
-            <section id="${ids.proteinLength}" class="protein-length">
-            </section> <!-- end of domains -->
+        <section class="scroll-container">
+            <!--Current Project | Domains and Sequences Parts -->
+            <section id="${ids.domainSequence}" class="domain-sequence">
+                
+                <!-- Current Project | Protein Domains for Human -->
+                <section id="${ids.proteinLength}" class="protein-length">
+                </section> <!-- end of domains -->
 
-            <!-- Current Project | Protein Sequences -->
-            <section id="${ids.sequence}" class="sequence-container">
-                <div id="${ids.aminoacidInfo}" class="aminoacid-info"></div>
-            </section> <!-- end of protein sequences -->
+                <!-- Current Project | Protein Sequences -->
+                <section id="${ids.sequence}" class="sequence-container">
+                    <div id="${ids.aminoacidInfo}" class="aminoacid-info"></div>
+                </section> <!-- end of protein sequences -->
 
-        </section> <!-- end of domain and sequences parts -->
+            </section> <!-- end of domain and sequences parts -->
 
-        <!--Gene name and specie names-->
-        <section id="${ids.nameContainer}" class="species-and-gene-names">
-            <div id="${ids.geneName}" class="gene-name"><br>${title}</div>
-            <div id="${ids.speciesNames}" class="species-names"></div>
+            <!--Gene name and specie names-->
+            <section id="${ids.nameContainer}" class="species-and-gene-names">
+                <div id="${ids.geneName}" class="gene-name"><br>${title}</div>
+                <div id="${ids.speciesNames}" class="species-names"></div>
+            </section>
         </section>
-
         <!-- Bottom and fixed panel -->
         <section class="bottom-panel">
             <a href="javascript:void(0)" class="reset-button">Reset</a>
@@ -288,7 +289,7 @@ function MSAViewer({   // notice the curly braces! we are receiving an object no
         this.addDomains(domains);
     }
     this.loadDivsInViewport();
-    this.mainDiv.scroll(function() {
+    this.mainDiv.find('.scroll-container').scroll(function() {
         that.loadDivsInViewport();
     });
 
