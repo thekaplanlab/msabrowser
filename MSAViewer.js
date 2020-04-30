@@ -39,7 +39,7 @@ function MSAProcessor({
                 this.processedSequences.push(sequence);
                 //Protein Name-Identifier
                 let proteinName = fasta.slice(firstStartPointer + 1, endPointer + 1);
-                let proteinId = proteinName.split(" ")[0].split(".")[0]; 
+                let proteinId = proteinName.split(" ")[0]; 
                 let species = proteinName.split("[").slice(-1)[0].split("]")[0];
                 let speciesByWord = species.split(" ");
                 species = speciesByWord[0][0] + ". " + speciesByWord[1];
@@ -172,7 +172,7 @@ function MSAViewer({   // notice the curly braces! we are receiving an object no
         document.getElementById(ids.proteinLength).style = proteinLengthforDomain;
 
         for(var i in msa.sequenceDetails) {
-                    //creating flex container for proteins
+            //creating flex container for proteins
             var sequenceDetails = msa.sequenceDetails[i];
 
             let protein = document.createElement("section");
@@ -190,15 +190,23 @@ function MSAViewer({   // notice the curly braces! we are receiving an object no
             speciesNameLink.setAttribute('target', '_blank');
             speciesTooltip.setAttribute('class', 'tooltiptext');
             speciesTooltip.innerHTML = sequenceDetails.proteinId;
+            speciesName.className = "species-name tooltip";
+            protein.setAttribute("data-id", sequenceDetails.proteinId);
+            speciesName.setAttribute("data-id", sequenceDetails.proteinId);
 
             document.getElementById(ids.speciesNames).appendChild(speciesName).appendChild(sequenceHidingButton);
             sequenceHidingButton.appendChild(document.createTextNode('x '));
             document.getElementById(ids.speciesNames).appendChild(speciesName).appendChild(speciesNameLink);
             speciesNameLink.appendChild(document.createTextNode(sequenceDetails.species));
             document.getElementById(ids.speciesNames).appendChild(speciesName).appendChild(speciesTooltip);
-            speciesName.className = "species-name tooltip";
-            speciesName.id = "name-for-" + sequenceDetails.proteinId;
         }
+
+        // For hiding sequences
+        $(".hiding-button").click(function () {
+            var proteinId = $(this).attr("href").split("#")[1];
+            $('[data-id="'+proteinId+'"]').hide(); 
+        });
+ 
 
     }
     
@@ -548,8 +556,3 @@ MSAViewer.prototype.export = function (fileName) {
     this.mainDiv.find('.bottom-panel').append('<a class="export-button" href="'+ hrefTag +'" download="' + fileName + '">Download as FASTA</a><br>');
 }
 
-$(".hiding-button").click(function () {
-   var proteinId = $(this).attr("href").split("#")[1];
-   $("#name-for-"+proteinId).hide() 
-   $("#"+proteinId).hide() 
-});
