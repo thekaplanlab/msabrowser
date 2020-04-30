@@ -127,6 +127,7 @@ function renderMSATemplate({
 
         <!-- Bottom and fixed panel -->
         <section class="bottom-panel">
+            <a href="javascript:void(0)" class="reset-button">Reset</a>
         </section>
         
     </section>
@@ -293,8 +294,13 @@ function MSAViewer({   // notice the curly braces! we are receiving an object no
 
     this.loadDomainBar();
 
+    $('.reset-button').click(() => {this.reset()});
+
 }
 
+MSAViewer.prototype.reset = function() {
+    this.mainDiv.find('.protein, .species-name').show();
+}
 
 MSAViewer.prototype.loadDomainBar = function() {
     var that = this;

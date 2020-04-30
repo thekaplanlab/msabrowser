@@ -454,14 +454,17 @@ a:focus {
 .hiding-button {
     padding: 0px 5px;
     text-align: center;
-    border: 2px solid #FFF;
+    /*border: 2px solid #FFF;*/
     border-radius: 50%;
     margin-right: 5px;
+    font-weight: bold;
+    
 }
 .hiding-button:hover {
     background: #FFF !important;
     color: #2a76d2 !important;
 }
+
 
 /* Specific Amino acids for ClinVar */
 
@@ -470,10 +473,6 @@ a:focus {
     border-radius: 40%;
     border-color: transparent !important;
     box-shadow: 0 0 7px #000;
-    /* -webkit-animation: pulse 2s infinite;
-  -moz-animation: pulse 2s infinite;
-  -o-animation: pulse 2s infinite;
-  animation: pulse 2s infinite; */
 }
 
 .ptm:before,
@@ -564,35 +563,6 @@ a:focus {
 }
 
 
-/* Pulse Animation */
-
-@-webkit-keyframes pulse {
-    0% {
-        -webkit-box-shadow: 0 0 0 0 rgba(0, 0, 0, 1);
-    }
-    70% {
-        -webkit-box-shadow: 0 0 0 7px rgba(0, 0, 0, 0);
-    }
-    100% {
-        -webkit-box-shadow: 0 0 0 0 rgba(0, 0, 0, 0);
-    }
-}
-
-@keyframes pulse {
-    0% {
-        -moz-box-shadow: 0 0 0 0 rgba(0, 0, 0, 1);
-        box-shadow: 0 0 0 0 rgba(0, 0, 0, 1);
-    }
-    70% {
-        -moz-box-shadow: 0 0 0 7px rgba(0, 0, 0, 0);
-        box-shadow: 0 0 0 7px rgba(0, 0, 0, 0);
-    }
-    100% {
-        -moz-box-shadow: 0 0 0 0 rgba(0, 0, 0, 0);
-        box-shadow: 0 0 0 0 rgba(0, 0, 0, 0);
-    }
-}
-
 .variation-text-box.rightArrow::after {
     right: -10px;
     left: auto!important;
@@ -614,8 +584,10 @@ a:focus {
 
 .bottom-panel {
     position: fixed;
-    margin-left: 5px
+    padding: 0 5px;
+    width: 100%;
 }
+
 
 #position-number {
     position: absolute;
@@ -630,15 +602,18 @@ a:focus {
     border-radius: 0!important;
 }
 
-.go-to-position {
-    position: fixed;
-    margin-left: 5px
-}
 
 .position-number {
     position: absolute;
     top: -20px!important;
     color: #000!important;
+}
+
+
+.go-to-position {
+    display: block;
+    float:left;
+    margin-left: 5px
 }
 
 .export-button {
@@ -647,8 +622,9 @@ a:focus {
     color: #FFF;
     border-radius: 10px;
     padding: 5px;
-    top: 15px !important;
-    margin-left: 345px;
+    margin: 12px;
+    float: left;
+    display: block;
 }
 
 /* Form CSS */
@@ -739,4 +715,14 @@ a:focus {
     border-width: 5px;
     border-style: solid;
     border-color: transparent #fff transparent transparent;
+}
+
+.reset-button {  
+    display: block;   
+    background: #1ab357;     
+    color: #FFF;
+    float: right;
+    margin: 10px;
+    border-radius: 3px;
+    padding: 5px;
 }
