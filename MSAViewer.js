@@ -124,6 +124,10 @@ function renderMSATemplate({
             <div id="${ids.geneName}" class="gene-name"><br>${title}</div>
             <div id="${ids.speciesNames}" class="species-names"></div>
         </section>
+
+        <!-- Bottom and fixed panel -->
+        <section class="bottom-panel">
+        </section>
         
     </section>
     `;
@@ -326,13 +330,11 @@ MSAViewer.prototype.loadAminoacidSearch = function() {
     var that = this;
     $mainDiv = this.mainDiv;
     containerTemplate = `<section class="go-to-position">
-        Search a position: <input type="number" placeholder="3" name="position" class="form_input" id="${ids.positionInput}">
-        Species : <select name="species" id="${ids.speciesSelect}"></select><br>
+        Search a position: <input type="number" placeholder="3" name="position" min="1" class="form_input" id="${ids.positionInput}">
+        Species : <select name="species" id="${ids.speciesSelect}"></select>
         </section>`;
         
-
-    if($mainDiv.find('.go-to-position').length == 0)
-        $mainDiv.append(containerTemplate);
+    $mainDiv.find('.bottom-panel').append(containerTemplate);
     
     function positionKeyUpCallback() {
         var position = $('#'+that.ids.positionInput).val();
@@ -533,3 +535,9 @@ MSAViewer.prototype.scrollIfNeeded = function(element, container) {
     }
 }
 
+MSAViewer.prototype.export = function (fileName) {
+    if (fileName != "") {var fileName = "MSA_export.fasta"}
+    var fileContent = fasta;
+    var hrefTag =  "data:text/plain;charset=UTF-8,"  + encodeURIComponent(fileContent);
+    this.mainDiv.find('.bottom-panel').append('<a class="export-button" href="'+ hrefTag +'" download="' + fileName + '">Download as FASTA</a><br>');
+}
