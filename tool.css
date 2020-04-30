@@ -451,6 +451,17 @@ a:focus {
     font-size: 14px;
 }
 
+.hiding-button {
+    padding: 0px 5px;
+    text-align: center;
+    border: 2px solid #FFF;
+    border-radius: 50%;
+    margin-right: 5px;
+}
+.hiding-button:hover {
+    background: #FFF !important;
+    color: #2a76d2 !important;
+}
 
 /* Specific Amino acids for ClinVar */
 
