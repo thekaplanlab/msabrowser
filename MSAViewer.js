@@ -197,7 +197,7 @@ function MSAViewer({   // notice the curly braces! we are receiving an object no
             speciesNameLink.appendChild(document.createTextNode(sequenceDetails.species));
             document.getElementById(ids.speciesNames).appendChild(speciesName).appendChild(speciesTooltip);
             speciesName.className = "species-name tooltip";
-            speciesName.id = "nameFor-" + sequenceDetails.proteinId;
+            speciesName.id = "name-for-" + sequenceDetails.proteinId;
         }
 
     }
@@ -550,6 +550,6 @@ MSAViewer.prototype.export = function (fileName) {
 
 $(".hiding-button").click(function () {
    var proteinId = $(this).attr("href").split("#")[1];
-   $("#nameFor-"+proteinId).hide() 
+   $("#name-for-"+proteinId).hide() 
    $("#"+proteinId).hide() 
 });
