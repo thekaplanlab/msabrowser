@@ -8,12 +8,10 @@ function MSAProcessor({
 
         this.extractLinkFromId = function(proteinId){
             var proteinType = proteinId.substring(0, 2);
-            if (proteinType == "NP" || proteinType == "XP") {
-                link = "https://www.ncbi.nlm.nih.gov/protein/" + proteinId;
-            }
-            if (proteinType == "EN") {
-                link = "https://www.ensembl.org/id/" + proteinId;
-            }
+
+            if (proteinType == "gi") { link = "https://www.ncbi.nlm.nih.gov/protein/" + proteinId.split("|")[3]; }
+            else if (proteinType == "NP" || proteinType == "XP") {link = "https://www.ncbi.nlm.nih.gov/protein/" + proteinId;}
+            else if (proteinType == "EN") {link = "https://www.ensembl.org/id/" + proteinId; }
             
             regexPattern = "[OPQ][0-9][A-Z0-9]{3}[0-9]|[A-NR-Z][0-9]([A-Z][A-Z0-9]{2}[0-9]){1,2}"
             if (proteinId.search(regexPattern) != "-1") {
@@ -39,7 +37,11 @@ function MSAProcessor({
                 this.processedSequences.push(sequence);
                 //Protein Name-Identifier
                 let proteinName = fasta.slice(firstStartPointer + 1, endPointer + 1);
-                let proteinId = proteinName.split(" ")[0]; 
+                if (proteinName.substring(0,2) == "gi") {
+                    var proteinId = proteinName.split("|")[3];
+                } else {
+                    var proteinId = proteinName.split(" ")[0];
+                }
                 let species = proteinName.split("[").slice(-1)[0].split("]")[0];
                 let speciesByWord = species.split(" ");
                 species = speciesByWord[0][0] + ". " + speciesByWord[1];
