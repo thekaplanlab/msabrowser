@@ -565,3 +565,11 @@ MSAViewer.prototype.export = function (fileName) {
     this.mainDiv.find('.bottom-panel').append('<a class="export-button" href="'+ hrefTag +'" download="' + fileName + '">Download as FASTA</a><br>');
 }
 
+MSAViewer.prototype.goToVar = function (position, protein) {
+    var that = this; 
+    that.mainDiv.find('input[name=position]').val(position);
+    $("#" + that.ids.speciesSelect).val(protein-1);
+    $("#" + that.ids.speciesSelect).trigger('change');
+    setTimeout(function(){ that.showVariation(protein-1, position-1); }, 20);
+}
+
