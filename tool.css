@@ -179,12 +179,12 @@
     color: #FFF;
 }
 
-.domain_start_point {
+.msa-container .domain_start_point {
     position: absolute;
     left: 5px
 }
 
-.domain_end_point {
+.msa-container .domain_end_point {
     position: absolute;
     right: 5px;
 }
@@ -219,12 +219,12 @@
 
 /* Domain and Sequence Parts */
 
-.domain-sequence {
+.msa-container .domain-sequence {
     position: relative;
     left: 162px;
 }
 
-.species-and-gene-names {
+.msa-container .species-and-gene-names {
     background: #fff;
     position: absolute;
     top: 0;
@@ -232,7 +232,7 @@
     font-style: italic;
 }
 
-.gene-name {
+.msa-container .gene-name {
     position: absolute;
     left: 2px;
     top: 40px;
@@ -248,7 +248,7 @@
     cursor: default;
 }
 
-.species-names {
+.msa-container .species-names {
     margin-top: 150px;
     cursor: pointer;
     font-style: italic;
@@ -271,9 +271,7 @@
     font-size: 14px;
 }
 
-.species-name>a
-
-.hiding-button {
+.msa-container .species-name .hiding-button {
     padding: 0px 5px;
     text-align: center;
     /*border: 2px solid #FFF;*/
@@ -282,7 +280,7 @@
     font-weight: bold;
     
 }
-.hiding-button:hover {
+.msa-container .species-name .hiding-button:hover {
     background: #FFF !important;
     color: #2a76d2 !important;
 }
@@ -349,7 +347,9 @@
 
 
 .variation-inner-text-box h3 {
-    margin-top: 20px;
+    margin-top: 1em;
+    margin-bottom: 0;
+    padding: 0
     font-weight: bold
 }
 
