@@ -371,7 +371,7 @@ MSAViewer.prototype.loadAminoacidSearch = function() {
 
         $mainDiv.find('.protein:eq(0)').append(template);
 
-        $mainDiv.scrollLeft(alignmentPosition * 20 - ($mainDiv.width() - 160) / 2)
+        $mainDiv.find('.scroll-container').scrollLeft(alignmentPosition * 20 - ($mainDiv.width() - 160) / 2)
 
         setTimeout(function () {
             $mainDiv.find('.i-' + alignmentPosition).addClass('highlight-column');
