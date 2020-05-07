@@ -573,7 +573,6 @@ a:focus {
 }
 
 .bottom-panel {
-    position: fixed;
     padding: 0 5px;
     width: 100%;
 }
