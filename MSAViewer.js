@@ -544,20 +544,6 @@ MSAViewer.prototype.addVariation = function(protein, aminoacid, variationNote, s
     }
 }
 
-MSAViewer.prototype.scrollIfNeeded = function(element, container) {
-
-    const halfClientWidth = container.clientWidth / 2;
-    if (element.offsetLeft < container.scrollLeft-200) {
-      container.scrollLeft = element.offsetLeft - halfClientWidth;
-    } else {
-      const offsetRight = element.offsetLeft + element.offsetWidth;
-      const scrollRight = container.scrollLeft + container.offsetWidth;
-      if (offsetRight+200 > scrollRight) {
-        container.scrollLeft = offsetRight - halfClientWidth;
-      }
-    }
-}
-
 MSAViewer.prototype.export = function (fileName) {
     if (fileName != "") {var fileName = "MSA_export.fasta"}
     var fileContent = fasta;
@@ -565,8 +551,9 @@ MSAViewer.prototype.export = function (fileName) {
     this.mainDiv.find('.bottom-panel').append('<a class="export-button" href="'+ hrefTag +'" download="' + fileName + '">Download as FASTA</a><br>');
 }
 
-MSAViewer.prototype.goToVar = function (position, protein) {
+MSAViewer.prototype.goToVar = function (protein, position) {
     var that = this; 
+    this.mainDiv[0].scrollIntoViewIfNeeded();
     that.mainDiv.find('input[name=position]').val(position);
     $("#" + that.ids.speciesSelect).val(protein-1);
     $("#" + that.ids.speciesSelect).trigger('change');
