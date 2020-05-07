@@ -10,196 +10,22 @@
 
 /* SCROLLBAR for Chrome -webkit- */
 
-::-webkit-scrollbar {
+.msa-container ::-webkit-scrollbar {
     height: 15px;
 }
 
-::-webkit-scrollbar-track {
+.msa-container ::-webkit-scrollbar-track {
     background: #EEE;
 }
 
-::-webkit-scrollbar-thumb {
+.msa-container ::-webkit-scrollbar-thumb {
     width: 450px !important;
     background: #1976D2;
     border-radius: 55px;
 }
 
-
-/* Reset CSS */
-
-html,
-body,
-div,
-span,
-object,
-iframe,
-h1,
-h2,
-h3,
-h4,
-h5,
-h6,
-p,
-blockquote,
-pre,
-abbr,
-address,
-cite,
-code,
-del,
-dfn,
-em,
-img,
-ins,
-kbd,
-q,
-samp,
-small,
-strong,
-sub,
-sup,
-var,
-b,
-i,
-dl,
-dt,
-dd,
-ol,
-ul,
-li,
-fieldset,
-form,
-label,
-legend,
-table,
-caption,
-tbody,
-tfoot,
-thead,
-tr,
-th,
-td,
-article,
-aside,
-canvas,
-details,
-figcaption,
-figure,
-footer,
-header,
-hgroup,
-menu,
-nav,
-section,
-summary,
-time,
-mark,
-audio,
-video {
-    margin: 0;
-    padding: 0;
-    border: 0;
-    outline: 0;
-    font-size: 100%;
-    vertical-align: baseline;
-    background: transparent;
-}
-
-body {
-    line-height: 1;
-}
-
-article,
-aside,
-details,
-figcaption,
-figure,
-footer,
-header,
-hgroup,
-menu,
-nav,
-section {
-    display: block;
-}
-
-nav ul {
-    list-style: none;
-}
-
-blockquote,
-q {
-    quotes: none;
-}
-
-blockquote:before,
-blockquote:after,
-q:before,
-q:after {
-    content: '';
-    content: none;
-}
-
-a {
-    margin: 0;
-    padding: 0;
-    font-size: 100%;
-    vertical-align: baseline;
-    background: transparent;
-}
-
-
-/* change colours to suit your needs */
-
-ins {
-    background-color: #ff9;
-    color: #000;
-    text-decoration: none;
-}
-
-
-/* change colours to suit your needs */
-
-mark {
-    background-color: #ff9;
-    color: #000;
-    font-style: italic;
-    font-weight: bold;
-}
-
-del {
-    text-decoration: line-through;
-}
-
-abbr[title],
-dfn[title] {
-    border-bottom: 1px dotted;
-    cursor: help;
-}
-
-table {
-    border-collapse: collapse;
-    border-spacing: 0;
-}
-
-
-/* change border colour to suit your needs */
-
-hr {
-    display: block;
-    height: 1px;
-    border: 0;
-    border-top: 1px solid #cccccc;
-    margin: 1em 0;
-    padding: 0;
-}
-
-input,
-select {
-    vertical-align: middle;
-}
-
 .msa-container {
+    position: relative;
     width: 100%;
     height: auto;
     min-height: 313px;
@@ -343,13 +169,13 @@ select {
     border-top-left-radius: 20px;
 }
 
-.domain>a,
-a:link,
-a:visited,
-a:hover,
-a:focus {
+.msa-container .domain>a,
+.msa-container a:link,
+.msa-container a:visited,
+.msa-container a:hover,
+.msa-container a:focus {
     text-decoration: none;
-    font-size: 20px;
+    font-size: 14px;
     color: #FFF;
 }
 
@@ -428,27 +254,24 @@ a:focus {
     font-style: italic;
 }
 
-.species-name {
+.msa-container .species-name {
     min-height: 20px;
     max-height: 20px;
     /* border: 1px solid #fff; if you open it; do not forget to set height and width as 20px. Same for specieNames */
     font-family: 'Tajawal', sans-serif !important;
-    font-size: 14px;
     line-height: 18px;
     padding-left: 10px;
     /* z-index: 1 !important; */
     min-width: 150px !important;
     max-width: 150px !important;
     background: #2a76d2 !important;
-    color: #FFF !important;
 }
-
-.species-name>a,
-a:link,
-a:hover,
-a:focus {
+.msa-container .species-name a {
+    color: #FFF !important;
     font-size: 14px;
 }
+
+.species-name>a
 
 .hiding-button {
     padding: 0px 5px;
@@ -520,14 +343,10 @@ a:focus {
     width: 100%;
     overflow-x: hidden;
 }
-
-.variation-inner-text-box>a,
-a:link,
-a:visited,
-a:hover,
-a:focus {
-    color: #FFF !important;
+.msa-container .variation-inner-text-box a {
+    color: #004883;
 }
+
 
 .variation-inner-text-box h3 {
     margin-top: 20px;

@@ -9,7 +9,11 @@
 	<script src="MSAViewer.js"></script>
 </head>
 <body>
-	
+	<h1>Project Title</h1>
+	<article>
+	In this study, we have focused on <a href="javascript:void(0)" onclick="viewer.goToVar(2,30)"> this variant </a> and have found out that there was severe phenotype...
+	</article>
+
 	 <!-- MSAViewer Demo -->
 	<section id="MSAViewerDemo"></section>
 	<!-- end of MSAViewer Demo -->
@@ -20,7 +24,7 @@
 		var file_name = "sample_files/hars.txt";
 		var title = 'Human: HARS';
 		var colorSchema = "clustal";
-    	
+		var viewer;
     	var domains = [
 						{
 							'domain_id': "PFAM123",
@@ -44,7 +48,7 @@
 		xhr.onload = function() {if (this.status == 200) {
 			fasta = this.responseText;
 			
-			var viewer = new MSAViewer({
+			viewer = new MSAViewer({
 				id: id, 
 				msa: MSAProcessor({
 					fasta: fasta,
@@ -56,12 +60,11 @@
 			});
 			
 			viewer.addVariation(1, 1, "M->A : Pathogenic", "Source1");
-			viewer.addVariation(1, 1, "M->G : VUS", "Source2");
+			viewer.addVariation(1, 1, "M->G : VUS", "Source2 <a href='naber'>mamamamamamamamamamiya</a>");
 			viewer.addVariation(2, 2, "A->R : Benign", "Source3");
 			viewer.addVariation(3, 4, "T->L : Benign", "Source4");
 			viewer.addVariation(3, 4, "T->L : Benign", "PTM");
 			viewer.export("MSA_export.fasta");
-			viewer.goToVar(120, 2); // Go to the variation from somewhere else on the page
 			viewer.loadDivsInViewport(true);
 
 		}} 
