@@ -536,7 +536,7 @@ MSAViewer.prototype.addVariation = function(protein, aminoacid, variationNote, s
         notesByProtein[aaNumber][source] = "";
     }
 
-    notesByProtein[aaNumber][source] += "<br>" + variationNote;
+    notesByProtein[aaNumber][source] += variationNote;
     this.variationNotes[protein] = notesByProtein
 
     if (source == "PTM") {
