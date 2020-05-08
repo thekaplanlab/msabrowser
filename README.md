@@ -12,7 +12,6 @@
 		- [:hash: Adding Variations & Example](#hash-adding-variations--example)
 	- [:hash: Example Usages (Use Cases) of MSABrowser](#hash-example-usages-use-cases-of-msabrowser)
 		- [:hash: Evolutionary/Comparative Genomics Study](#hash-evolutionarycomparative-genomics-study)
-		- [Click here to reach MSABrowser example for Evolutionary/Comparative Genomics Study.](#click-here-to-reach-msabrowser-example-for-evolutionarycomparative-genomics-study)
 		- [:hash: COVID-19 / Virology Study](#hash-covid-19--virology-study)
 		- [:hash: Do you have another study which is not listed here?](#hash-do-you-have-another-study-which-is-not-listed-here)
 	- [:hash: Contributing & Feedback](#hash-contributing--feedback)
@@ -137,9 +136,9 @@ var domains = [
 ## :hash: Example Usages (Use Cases) of MSABrowser
 
 ### :hash: Evolutionary/Comparative Genomics Study 
-> In this example, human MLH1 protein and its homologous proteins are aligned and human protein domains are added. Additionaly, some genetic variations are also included from different sources such as gnomAD and ClinVar. 
+In this example, human MLH1 protein and its homologous proteins are aligned and human protein domains are added. Additionaly, some genetic variations are also included from different sources such as gnomAD and ClinVar. 
 
-### [Click here to reach MSABrowser example for Evolutionary/Comparative Genomics Study.](https://github.com/thekaplanlab/msaviewer/blob/master/examples/mlh1.html)
+> ### [Click here to reach MSABrowser example for Evolutionary/Comparative Genomics Study.](https://github.com/thekaplanlab/msaviewer/blob/master/examples/mlh1.html)
 
 ### :hash: COVID-19 / Virology Study 
 Will be added.
