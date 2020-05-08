@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<title>MSABrowser | MLH1 Example</title>
+	<link type="text/css" rel="stylesheet" href="../tool.css" media="screen" />
+	<script src="https://code.jquery.com/jquery-3.3.1.min.js"
+		integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
+	<script src="../MSAViewer.js"></script>
+</head>
+
+<body>
+	<h1>Evolutionary Genomics Study | MLH1 Example</h1>
+	<article>
+		In this example, human MLH1 protein and its homologous proteins are aligned and human protein domains are added. <br> 
+		Additionaly, some genetic variations are also included. 
+		For example, you can view a particular <a href="javascript:void(0)" onclick="viewer.goToVar(1,33)"> modification and variation on human</a> or 
+		<a href="javascript:void(0)" onclick="viewer.goToVar(2,17)"> this variation on mouse</a> or 
+		by clicking the link.
+	</article>
+
+	<!-- MSAViewer Demo -->
+	<section id="MSAViewerDemo"></section>
+	<!-- end of MSAViewer Demo -->
+
+
+	<script type="text/javascript" charset="utf-8">
+
+		var viewer;
+		var domains = [
+			{
+				'domain_id':'PF13589.6',
+				'domain_name':'HATPase_c_3',
+				'domain_external_link':'https://pfam.xfam.org/family/PF13589.6',
+				'domain_start_point':'29',
+				'domain_end_point':'131'
+			},
+
+			{
+				'domain_id':'PF01119.19',
+				'domain_name':'DNA_mis_repair',
+				'domain_external_link':'https://pfam.xfam.org/family/PF01119.19',
+				'domain_start_point':'216',
+				'domain_end_point':'334'
+			},
+
+			{
+				'domain_id':'PF16413.5',
+				'domain_name':'Mlh1_C',
+				'domain_external_link':'https://pfam.xfam.org/family/PF16413.5',
+				'domain_start_point':'502',
+				'domain_end_point':'756'
+			}
+		];
+					
+		var variations = [
+			{ 'protein': 1, 'position': 6, 'note': "rsNumber: rs1366752604 <br>p.Gly6Trp <br>missense_variant <br> Frequency: 3.2E-5", 'source': "gnomAD <a href='https://gnomad.broadinstitute.org/variant/3-37035054-G-T' target='_blank'> For details, visit here</a>" },
+			{ 'protein': 1, 'position': 33, 'note': "rsNumber: rs878853795 <br> single nucleotide variant <br> Lynch syndrome", 'source': "ClinVar <a href='https://www.ncbi.nlm.nih.gov/clinvar/29040541/' target='_blank'> For details, visit here</a>" },
+			{ 'protein': 1, 'position': 33, 'note': "PTM Type: Ubiquitination ", 'source': "PTM" },
+			{ 'protein': 2, 'position': 17, 'note': "A variation in the 23rd position of this mouse protein", 'source': "Surname et al., 2020" },
+			{ 'protein': 3, 'position': 2, 'note': "A special annotation for this position can be added such as <br> G->K : VUS", 'source': "Data Source" },
+			{ 'protein': 5, 'position': 82, 'note': "A special note about modifications at this position can be added for this organism!", 'source': "PTM" }
+		];
+
+		$.get("sample_files/mlh1.txt", (fasta) => {
+
+			viewer = new MSAViewer({
+				id: "MSAViewerDemo",
+				msa: MSAProcessor({
+					fasta: fasta,
+					hasConsensus: true
+				}),
+				title: "Human: MLH1",
+				domains: domains,
+				variations: variations,
+				colorSchema: "clustal",
+				resetOnScroll: true
+			});
+
+			viewer.export("MSA_export.fasta");
+			
+		});
+
+	</script>
+</body>
+
+</html>
