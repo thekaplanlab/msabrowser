@@ -1,100 +1,98 @@
 function MSAProcessor({
     fasta,
-    hasConsensus = false,
-    colorSchema
+    hasConsensus = false
 }) {
-        this.sequenceDetails = [];
-        this.processedSequences = [];
+    this.sequenceDetails = [];
+    this.processedSequences = [];
+    this.fasta = fasta;
+    this.extractLinkFromId = function (proteinId) {
+        var proteinType = proteinId.substring(0, 2);
 
-        this.extractLinkFromId = function(proteinId){
-            var proteinType = proteinId.substring(0, 2);
+        if (proteinType == "gi") { link = "https://www.ncbi.nlm.nih.gov/protein/" + proteinId.split("|")[3]; }
+        else if (proteinType == "NP" || proteinType == "XP") { link = "https://www.ncbi.nlm.nih.gov/protein/" + proteinId; }
+        else if (proteinType == "EN") { link = "https://www.ensembl.org/id/" + proteinId; }
 
-            if (proteinType == "gi") { link = "https://www.ncbi.nlm.nih.gov/protein/" + proteinId.split("|")[3]; }
-            else if (proteinType == "NP" || proteinType == "XP") {link = "https://www.ncbi.nlm.nih.gov/protein/" + proteinId;}
-            else if (proteinType == "EN") {link = "https://www.ensembl.org/id/" + proteinId; }
-            
-            regexPattern = "[OPQ][0-9][A-Z0-9]{3}[0-9]|[A-NR-Z][0-9]([A-Z][A-Z0-9]{2}[0-9]){1,2}"
-            if (proteinId.search(regexPattern) != "-1") {
-                proteinId = proteinId.split(" ")[1];
-                link = "https://www.uniprot.org/uniprot/" + proteinId;
-            }
-
-            return link;
-        }
-       
-
-        this.loadSeq = function(fasta) {
-            let firstStartPointer, endPointer, currentStartPointer = -1;
-
-            do {
-                firstStartPointer = fasta.indexOf(">", firstStartPointer + 1);
-                endPointer = fasta.indexOf("\n", firstStartPointer + 1);
-                currentStartPointer = fasta.indexOf(">", firstStartPointer + 1);
-                let sequence = fasta.slice(endPointer + 1, currentStartPointer);
-                //removing new line characters inside seq1
-                sequence = sequence.replace(/\s/g, "");
-    
-                this.processedSequences.push(sequence);
-                //Protein Name-Identifier
-                let proteinName = fasta.slice(firstStartPointer + 1, endPointer + 1);
-                if (proteinName.substring(0,2) == "gi") {
-                    var proteinId = proteinName.split("|")[3];
-                } else {
-                    var proteinId = proteinName.split(" ")[0];
-                }
-                let species = proteinName.split("[").slice(-1)[0].split("]")[0];
-                let speciesByWord = species.split(" ");
-                species = speciesByWord[0][0] + ". " + speciesByWord[1];
-                var link = this.extractLinkFromId(proteinId);
-                this.sequenceDetails.push({
-                    link: link,
-                    species: species,
-                    proteinId: proteinId,
-                    rawProteinName: proteinName
-                });
-    
-            } while (currentStartPointer != -1);
-            
+        regexPattern = "[OPQ][0-9][A-Z0-9]{3}[0-9]|[A-NR-Z][0-9]([A-Z][A-Z0-9]{2}[0-9]){1,2}"
+        if (proteinId.search(regexPattern) != "-1") {
+            proteinId = proteinId.split(" ")[1];
+            link = "https://www.uniprot.org/uniprot/" + proteinId;
         }
 
-        // Time To Run
-        loadSeq(fasta);
-
-        this.addConsensus = function() {
-            let consensus_logo = "";
-            var aaCount = this.processedSequences[0].length;
-            for (let aaInd = 0; aaInd < aaCount; aaInd++) {
-                var position_dict = {};
-                for (let proteinIndex = 0; proteinIndex < this.processedSequences.length; proteinIndex++) {
-                    var protein = this.processedSequences[proteinIndex];
-                    var aminoacid = protein[aaInd];
-                    position_dict[aminoacid] = aaInd;
-            }
-                if (Object.keys(position_dict).length == 1){
-                    consensus_logo = consensus_logo.concat(aminoacid);
-                }
-                else if (Object.keys(position_dict).length == this.processedSequences.length/2) {
-                    consensus_logo = consensus_logo.concat(':');
-                }
-                else if (Object.keys(position_dict).length == this.processedSequences.length)
-                {
-                    consensus_logo = consensus_logo.concat('-');
-                }
-                else{
-                    consensus_logo = consensus_logo.concat('.');
-                }
-            }
-            this.sequenceDetails.push({
-                link: '#',
-                species: 'Consensus',
-                proteinId: 'Consensus',
-                rawProteinName: 'Consensus'
-            });
-            this.processedSequences.push(consensus_logo);
-            
+        return link;
     }
 
-    if(hasConsensus) {
+
+    this.loadSeq = function (fasta) {
+        let firstStartPointer, endPointer, currentStartPointer = -1;
+
+        do {
+            firstStartPointer = fasta.indexOf(">", firstStartPointer + 1);
+            endPointer = fasta.indexOf("\n", firstStartPointer + 1);
+            currentStartPointer = fasta.indexOf(">", firstStartPointer + 1);
+            let sequence = fasta.slice(endPointer + 1, currentStartPointer);
+            //removing new line characters inside seq1
+            sequence = sequence.replace(/\s/g, "");
+
+            this.processedSequences.push(sequence);
+            //Protein Name-Identifier
+            let proteinName = fasta.slice(firstStartPointer + 1, endPointer + 1);
+            if (proteinName.substring(0, 2) == "gi") {
+                var proteinId = proteinName.split("|")[3];
+            } else {
+                var proteinId = proteinName.split(" ")[0];
+            }
+            let species = proteinName.split("[").slice(-1)[0].split("]")[0];
+            let speciesByWord = species.split(" ");
+            species = speciesByWord[0][0] + ". " + speciesByWord[1];
+            var link = this.extractLinkFromId(proteinId);
+            this.sequenceDetails.push({
+                link: link,
+                species: species,
+                proteinId: proteinId,
+                rawProteinName: proteinName
+            });
+
+        } while (currentStartPointer != -1);
+
+    }
+
+    // Time To Run
+    loadSeq(fasta);
+
+    this.addConsensus = function () {
+        let consensus_logo = "";
+        var aaCount = this.processedSequences[0].length;
+        for (let aaInd = 0; aaInd < aaCount; aaInd++) {
+            var position_dict = {};
+            for (let proteinIndex = 0; proteinIndex < this.processedSequences.length; proteinIndex++) {
+                var protein = this.processedSequences[proteinIndex];
+                var aminoacid = protein[aaInd];
+                position_dict[aminoacid] = aaInd;
+            }
+            if (Object.keys(position_dict).length == 1) {
+                consensus_logo = consensus_logo.concat(aminoacid);
+            }
+            else if (Object.keys(position_dict).length == this.processedSequences.length / 2) {
+                consensus_logo = consensus_logo.concat(':');
+            }
+            else if (Object.keys(position_dict).length == this.processedSequences.length) {
+                consensus_logo = consensus_logo.concat('-');
+            }
+            else {
+                consensus_logo = consensus_logo.concat('.');
+            }
+        }
+        this.sequenceDetails.push({
+            link: '#',
+            species: 'Consensus',
+            proteinId: 'Consensus',
+            rawProteinName: 'Consensus'
+        });
+        this.processedSequences.push(consensus_logo);
+
+    }
+
+    if (hasConsensus) {
         this.addConsensus();
     }
 
@@ -104,7 +102,7 @@ function MSAProcessor({
 function renderMSATemplate({
     ids,
     title = ""
-}){
+}) {
     return `
     <section class="msa-container">
         <section class="scroll-container">
@@ -142,8 +140,12 @@ function MSAViewer({   // notice the curly braces! we are receiving an object no
     msa,
     title = "",
     variations = [],
-    templateFunction = renderMSATemplate
-  }) {
+    templateFunction = renderMSATemplate,
+    colorSchema,
+    resetOnScroll = false
+}) {
+    this.colorSchema = colorSchema;
+    this.resetOnScroll = resetOnScroll;
 
     function i_(name) {
         return `${id}-${name}`;
@@ -169,13 +171,13 @@ function MSAViewer({   // notice the curly braces! we are receiving an object no
         this.loadedPositions.push(false);
     }
     var that = this;
-    
+
     function loadProteins(msa) {
         var ids = that.ids;
-        var proteinLengthforDomain = "width:" + msa.processedSequences[0].length * 20 + "px;"; 
+        var proteinLengthforDomain = "width:" + msa.processedSequences[0].length * 20 + "px;";
         document.getElementById(ids.proteinLength).style = proteinLengthforDomain;
 
-        for(var i in msa.sequenceDetails) {
+        for (var i in msa.sequenceDetails) {
             //creating flex container for proteins
             var sequenceDetails = msa.sequenceDetails[i];
 
@@ -187,7 +189,7 @@ function MSAViewer({   // notice the curly braces! we are receiving an object no
             var speciesNameLink = document.createElement("a");
             var sequenceHidingButton = document.createElement("a");
             var speciesTooltip = document.createElement('span');
-            
+
             sequenceHidingButton.setAttribute("href", "#" + sequenceDetails.proteinId);
             sequenceHidingButton.setAttribute('class', 'hiding-button');
             speciesNameLink.setAttribute("href", sequenceDetails.link);
@@ -208,21 +210,21 @@ function MSAViewer({   // notice the curly braces! we are receiving an object no
         // For hiding sequences
         $(".hiding-button").click(function () {
             var proteinId = $(this).attr("href").split("#")[1];
-            $('[data-id="'+proteinId+'"]').hide(); 
+            $('[data-id="' + proteinId + '"]').hide();
         });
- 
+
 
     }
-    
-    function loadViewportToAANumber(msa){
+
+    function loadViewportToAANumber(msa) {
         viewportToAANumber = [];
 
-        for(i in msa.processedSequences){
+        for (i in msa.processedSequences) {
             sequence = msa.processedSequences[i];
             viewportToAANumber.push([]);
             aa_ind = 0;
             for (ind = 0; ind < sequence.length; ind++) {
-    
+
                 if (sequence.charAt(ind) == '-') {
                     viewportToAANumber[i].push(-1);
                     continue;
@@ -233,7 +235,7 @@ function MSAViewer({   // notice the curly braces! we are receiving an object no
             }
         }
     }
-    document.getElementById(id).innerHTML = templateFunction({ids: this.ids, title: title});
+    document.getElementById(id).innerHTML = templateFunction({ ids: this.ids, title: title });
     loadProteins(msa);
     this.viewportToAANumber = loadViewportToAANumber(msa);
 
@@ -249,7 +251,7 @@ function MSAViewer({   // notice the curly braces! we are receiving an object no
         return offsetX;
     }
 
-    this.showVariation = function(prNumber, aaNumber) {
+    this.showVariation = function (prNumber, aaNumber) {
 
         let textBox = document.createElement("div");
         let innerTextBox = document.createElement("div");
@@ -282,73 +284,82 @@ function MSAViewer({   // notice the curly braces! we are receiving an object no
 
     }
 
-    for(i in variations) {
+    for (i in variations) {
         variation = variations[i];
-        this.addVariation(variation['protein'], variation['aminoacid'], variation['note'], variation['source']);
+        this.addVariation(variation);
     }
 
-    if ((typeof(domains) != "undefined") && (domains.length != 0)) {
+    if ((typeof (domains) != "undefined") && (domains.length != 0)) {
         this.addDomains(domains);
     }
+
+    setInterval(() => {
+        if (resetOnScroll == true && $('#' + this.ids.sequence).find('section div').length > 10000) {
+            for (var i in loadedPositions) {
+                loadedPositions[i] = false;
+            }
+            $('#' + this.ids.sequence).find('section div').remove();
+            this.loadDivsInViewport();
+        }
+    }, 5000);
+
     this.loadDivsInViewport();
-    this.mainDiv.find('.scroll-container').scroll(function() {
-        that.loadDivsInViewport();
-    });
+    this.mainDiv.find('.scroll-container').scroll(() => { this.loadDivsInViewport(); });
 
     this.loadDomainBar();
 
-    $('.reset-button').click(() => {this.reset()});
+    $('.reset-button').click(() => { this.reset() });
 
 }
 
-MSAViewer.prototype.reset = function() {
+MSAViewer.prototype.reset = function () {
     this.mainDiv.find('.protein, .species-name').show();
 }
 
-MSAViewer.prototype.loadDomainBar = function() {
+MSAViewer.prototype.loadDomainBar = function () {
     var that = this;
-    $('.domain').each(function() {
+    $('.domain').each(function () {
         //console.log($(this).data('start-point'), );
-        startPosition = that.getAminoacidPositionInViewport(0, parseInt($(this).data('start-point'))-1);
+        startPosition = that.getAminoacidPositionInViewport(0, parseInt($(this).data('start-point')) - 1);
 
-        width = that.getAminoacidPositionInViewport(0, parseInt($(this).data('end-point'))-1) - startPosition;
+        width = that.getAminoacidPositionInViewport(0, parseInt($(this).data('end-point')) - 1) - startPosition;
 
         $(this).css('display', 'flex');
-        $(this).css('left', (startPosition*20)+'px');
-        $(this).width((width*20)+'px');
+        $(this).css('left', (startPosition * 20) + 'px');
+        $(this).width((width * 20) + 'px');
     });
 
-    $(document).on('mouseover', '.specialAa', function(){
+    $(document).on('mouseover', '.specialAa', function () {
         prNumber = $(this).data('sid');
         aaNumber = parseInt($(this).attr('class').split(' ')[0].split('-')[1])
         that.showVariation(prNumber, viewportToAANumber[prNumber][aaNumber]);
     });
 
-        
+
     var ids = this.ids;
-    $('.protein').width(($('#'+ids.proteinLength).width())+'px');
-    $('#'+ids.sequence).width(($('#'+ids.proteinLength).width())+'px');
+    $('.protein').width(($('#' + ids.proteinLength).width()) + 'px');
+    $('#' + ids.sequence).width(($('#' + ids.proteinLength).width()) + 'px');
 }
 
-MSAViewer.prototype.getAminoacidPositionInViewport = function(species_id, position) {
+MSAViewer.prototype.getAminoacidPositionInViewport = function (species_id, position) {
     var sequence = this.msa.processedSequences[species_id];
     var aminoacidIndex = 0;
-    for(i = 0; i< sequence.length; i++){
-    if(sequence.charAt(i) == '-')
-        continue;
-    if(aminoacidIndex == position){
-        return i;
-    }
-    if(sequence.charAt(i) != '-'){
-        aminoacidIndex++;
-    }
-    
+    for (i = 0; i < sequence.length; i++) {
+        if (sequence.charAt(i) == '-')
+            continue;
+        if (aminoacidIndex == position) {
+            return i;
+        }
+        if (sequence.charAt(i) != '-') {
+            aminoacidIndex++;
+        }
+
     }
     return -1;
 }
 
 
-MSAViewer.prototype.loadAminoacidSearch = function() {
+MSAViewer.prototype.loadAminoacidSearch = function () {
     var ids = this.ids;
     var that = this;
     $mainDiv = this.mainDiv;
@@ -356,17 +367,17 @@ MSAViewer.prototype.loadAminoacidSearch = function() {
         Search a position: <input type="number" placeholder="3" name="position" min="1" class="form_input" id="${ids.positionInput}">
         Species : <select name="species" id="${ids.speciesSelect}"></select>
         </section>`;
-        
+
     $mainDiv.find('.bottom-panel').append(containerTemplate);
-    
+
     function positionKeyUpCallback() {
-        var position = $('#'+that.ids.positionInput).val();
-        var species = parseInt($('#'+that.ids.speciesSelect).val());
+        var position = $('#' + that.ids.positionInput).val();
+        var species = parseInt($('#' + that.ids.speciesSelect).val());
         var alignmentPosition = that.getAminoacidPositionInViewport(species, position - 1);
-        
+
         $mainDiv.find('.highlight-column').removeClass('highlight-column ptm-highlighted');
         $mainDiv.find('.position-number').remove();
-        
+
         template = `<div class="highlight-column position-number" style="left:${alignmentPosition * 20}px">${position}</div>`;
 
         $mainDiv.find('.protein:eq(0)').append(template);
@@ -379,127 +390,122 @@ MSAViewer.prototype.loadAminoacidSearch = function() {
         }, 75);
     }
 
-    for(var i in this.msa.sequenceDetails) {
+    for (var i in this.msa.sequenceDetails) {
         var species = this.msa.sequenceDetails[i].species;
         var template = `<option value="${i}">${species}</option>`;
-        $('#'+ids.speciesSelect).append(template);
+        $('#' + ids.speciesSelect).append(template);
     }
 
 
-    $(`#${ids.positionInput}, #${ids.speciesSelect}`).on("keyup", function() {
+    $(`#${ids.positionInput}, #${ids.speciesSelect}`).on("keyup", function () {
         positionKeyUpCallback();
     });
 }
 
-MSAViewer.prototype.loadDivsInViewport = function(reset) {
+MSAViewer.prototype.loadDivsInViewport = function () {
 
-    var ids  = this.ids;
+    var ids = this.ids;
     loadedPositions = this.loadedPositions;
     processedSequences = this.msa.processedSequences;
-    variationNotes  = this.variationNotes;
+    variationNotes = this.variationNotes;
     ptmNotes = this.ptmNotes;
-    if(reset == true){
-        for(var i in loadedPositions){
-            loadedPositions[i] = false;
-        }
-        $('#'+ids.sequence).find('section div').remove();
-    }  
+    
     var viewportOffset = document.getElementById(ids.sequence).getBoundingClientRect();
 
     var aminoacid_index = 0;
-   
-    startX = parseInt((Math.abs(viewportOffset.left) - document.getElementById(ids.nameContainer).clientWidth)/20 - window.innerWidth/40) ;
-    if(startX < 0){
-      startX = 0;
+
+    startX = parseInt((Math.abs(viewportOffset.left) - document.getElementById(ids.nameContainer).clientWidth) / 20 - window.innerWidth / 40);
+    if (startX < 0) {
+        startX = 0;
     }
-    endX = parseInt(startX+(document.getElementById(ids.nameContainer).clientWidth)/20 + 3*window.innerWidth/40 + 20) ;
-    
-    if(processedSequences[0].length <= endX) {
-      endX = processedSequences[0].length-1;
+    endX = parseInt(startX + (document.getElementById(ids.nameContainer).clientWidth) / 20 + 3 * window.innerWidth / 40 + 20);
+
+    if (processedSequences[0].length <= endX) {
+        endX = processedSequences[0].length - 1;
     }
 
-    
-    for(j = 0; j < processedSequences.length; j++){
-      seq1 = processedSequences[j];
-       var documentFragment = document.createDocumentFragment();
-      for (i = startX; i < endX; i++) {
 
-        if(loadedPositions[i] && seq1.length < 5000){
-            continue;
-        }
-        let aaBox = document.createElement("div");
-        //reading protein sequence letter by letter
-        var aaLetter = seq1.charAt(i);
-        //creating amino acid boxes
-        
-        if(aaLetter != '-'){
-            aminoacid_index+= 1;
-            
-            aaBox.className = "i-"+i;  
-        }
-        if(aaLetter == '-'){
-          continue;
-        }
+    for (j = 0; j < processedSequences.length; j++) {
+        seq1 = processedSequences[j];
+        var documentFragment = document.createDocumentFragment();
+        for (i = startX; i < endX; i++) {
 
-        if(j in variationNotes && viewportToAANumber[j][i] != -1 && viewportToAANumber[j][i] in variationNotes[j]){
-           aaBox.className += " specialAa";
-           aaBox.setAttribute('data-sid', j);
-        }
+            if (loadedPositions[i] && seq1.length < 5000) {
+                continue;
+            }
+            let aaBox = document.createElement("div");
+            //reading protein sequence letter by letter
+            var aaLetter = seq1.charAt(i);
+            //creating amino acid boxes
 
-        if(j == 0 && viewportToAANumber[j][i] != -1 && viewportToAANumber[j][i] in ptmNotes){
-           aaBox.className += " ptm";
-           aaBox.setAttribute('data-sid', j);
-        }
+            if (aaLetter != '-') {
+                aminoacid_index += 1;
 
-        aaBox.innerHTML = aaLetter;
-        aaBox.style.cssText  = 'left:'+(i*20)+'px;';
-        
-        // Color schema for amino acids
-        colorSchemas = {
-            "hydrophobicity": { A: "#ad0052", B: "#0c00f3", C: "#c2003d", D: "#0c00f3", E: "#0c00f3", F: "#cb0034", G: "#6a0095", H: "#1500ea", I: "#ff0000", J: "#fff", K: "#0000ff", L: "#ea0015", M: "#b0004f", N: "#0c00f3", O: "#fff", P: "#4600b9", Q: "#0c00f3", R: "#0000ff", S: "#5e00a1", T: "#61009e", U: "#fff", V: "#f60009", W: "#5b00a4", X: "#680097", Y: "#4f00b0", Z: "#0c00f3" },
-            "buried": {A: "#00a35c", R: "#00fc03", N: "#00eb14", D: "#00eb14", C: "#0000ff", Q: "#00f10e", E: "#00f10e", G: "#009d62", H: "#00d52a", I: "#0054ab", L: "#007b84", K: "#00ff00", M: "#009768", F: "#008778", P: "#00e01f", S: "#00d52a", T: "#00db24", W: "#00a857", Y: "#00e619", V: "#005fa0", B: "#00eb14", X: "#00b649", Z: "#00f10e"},
-            "cinema": {A: "#BBBBBB", B: "grey", C: "yellow", D: "red", E: "red", F: "magenta", G: "brown", H: "#00FFFF", I: "#BBBBBB", J: "#fff", K: "#00FFFF", L: "#BBBBBB", M: "#BBBBBB", N: "green", O: "#fff", P: "brown", Q: "green", R: "#00FFFF", S: "green", T: "green", U: "#fff", V: "#BBBBBB", W: "magenta", X: "grey", Y: "magenta", Z: "grey"},
-            "clustal": {A: "orange", B: "#fff", C: "green", D: "red", E: "red", F: "blue", G: "orange", H: "red", I: "green", J: "#fff", K: "red", L: "green", M: "green", N: "#fff", O: "#fff", P: "orange", Q: "#fff", R: "red", S: "orange", T: "orange", U: "#fff", V: "green", W: "blue", X: "#fff", Y: "blue", Z: "#fff"},
-            "clustal2": {A: "#80a0f0", R: "#f01505", N: "#00ff00", D: "#c048c0", C: "#f08080", Q: "#00ff00", E: "#c048c0", G: "#f09048", H: "#15a4a4", I: "#80a0f0", L: "#80a0f0", K: "#f01505", M: "#80a0f0", F: "#80a0f0", P: "#ffff00", S: "#00ff00", T: "#00ff00", W: "#80a0f0", Y: "#15a4a4", V: "#80a0f0", B: "#fff", X: "#fff", Z: "#fff"},
-            "helix": {A: "#e718e7", R: "#6f906f", N: "#1be41b", D: "#778877", C: "#23dc23", Q: "#926d92", E: "#ff00ff", G: "#00ff00", H: "#758a75", I: "#8a758a", L: "#ae51ae", K: "#a05fa0", M: "#ef10ef", F: "#986798", P: "#00ff00", S: "#36c936", T: "#47b847", W: "#8a758a", Y: "#21de21", V: "#857a85", B: "#49b649", X: "#758a75", Z: "#c936c9"},
-            "lesk": {A: " orange", B: " #fff", C: " green", D: " red", E: " red", F: " green", G: " orange", H: " magenta", I: " green", J: " #fff", K: " red", L: " green", M: " green", N: " magenta", O: " #fff", P: " green", Q: " magenta", R: " red", S: " orange", T: " orange", U: " #fff", V: " green", W: " green", X: " #fff", Y: " green", Z: " #fff"},
-            "mae": {A: " #77dd88", B: " #fff", C: " #99ee66", D: " #55bb33", E: " #55bb33", F: " #9999ff", G: " #77dd88", H: " #5555ff", I: " #66bbff", J: " #fff", K: " #ffcc77", L: " #66bbff", M: " #66bbff", N: " #55bb33", O: " #fff", P: " #eeaaaa", Q: " #55bb33", R: " #ffcc77", S: " #ff4455", T: " #ff4455", U: " #fff", V: " #66bbff", W: " #9999ff", X: " #fff", Y: " #9999ff", Z: " #fff"},
-            "strand": {A: "#5858a7", R: "#6b6b94", N: "#64649b", D: "#2121de", C: "#9d9d62", Q: "#8c8c73", E: "#0000ff", G: "#4949b6", H: "#60609f", I: "#ecec13", L: "#b2b24d", K: "#4747b8", M: "#82827d", F: "#c2c23d", P: "#2323dc", S: "#4949b6", T: "#9d9d62", W: "#c0c03f", Y: "#d3d32c", V: "#ffff00", B: "#4343bc", X: "#797986", Z: "#4747b8"},
-            "taylor": {A: "#ccff00", R: "#0000ff", N: "#cc00ff", D: "#ff0000", C: "#ffff00", Q: "#ff00cc", E: "#ff0066", G: "#ff9900", H: "#0066ff", I: "#66ff00", L: "#33ff00", K: "#6600ff", M: "#00ff00", F: "#00ff66", P: "#ffcc00", S: "#ff3300", T: "#ff6600", W: "#00ccff", Y: "#00ffcc", V: "#99ff00", B: "#fff", X: "#fff", Z: "#fff"},
-            "turn": {A: "#2cd3d3", R: "#708f8f", N: "#ff0000", D: "#e81717", C: "#a85757", Q: "#3fc0c0", E: "#778888", G: "#ff0000", H: "#708f8f", I: "#00ffff", L: "#1ce3e3", K: "#7e8181", M: "#1ee1e1", F: "#1ee1e1", P: "#f60909", S: "#e11e1e", T: "#738c8c", W: "#738c8c", Y: "#9d6262", V: "#07f8f8", B: "#f30c0c", X: "#7c8383", Z: "#5ba4a4"},
-            "zappo": {A: "#ffafaf", R: "#6464ff", N: "#00ff00", D: "#ff0000", C: "#ffff00", Q: "#00ff00", E: "#ff0000", G: "#ff00ff", H: "#6464ff", I: "#ffafaf", L: "#ffafaf", K: "#6464ff", M: "#ffafaf", F: "#ffc800", P: "#ff00ff", S: "#00ff00", T: "#00ff00", W: "#ffc800", Y: "#ffc800", V: "#ffafaf", B: "#fff", X: "#fff", Z: "#fff"},
-            "nucleotide": { A: " #64F73F", C: " #FFB340", G: " #EB413C", T: " #3C88EE", U: " #3C88EE" }
-        }
-        var aaColor = colorSchemas[colorSchema][aaLetter]
-        aaBox.style.backgroundColor += aaColor;
-        // Special cases for color schema
-        if ((aaColor == "#fff") || (aaColor == "yellow")) {aaBox.style.color += "#555"};
-        // Consensus
-        if ((aaLetter == ".") || (aaLetter == ":")) {aaBox.style.backgroundColor += "#5c5c5c"};
+                aaBox.className = "i-" + i;
+            }
+            if (aaLetter == '-') {
+                continue;
+            }
 
-        documentFragment.appendChild(aaBox);
-        aaBox = null;
-    }
+            if (j in variationNotes && viewportToAANumber[j][i] != -1 && viewportToAANumber[j][i] in variationNotes[j]) {
+                aaBox.className += " specialAa";
+                aaBox.setAttribute('data-sid', j);
+            }
+
+            if (j == 0 && viewportToAANumber[j][i] != -1 && viewportToAANumber[j][i] in ptmNotes) {
+                aaBox.className += " ptm";
+                aaBox.setAttribute('data-sid', j);
+            }
+
+            aaBox.innerHTML = aaLetter;
+            aaBox.style.cssText = 'left:' + (i * 20) + 'px;';
+
+            // Color schema for amino acids
+            colorSchemas = {
+                "hydrophobicity": { A: "#ad0052", B: "#0c00f3", C: "#c2003d", D: "#0c00f3", E: "#0c00f3", F: "#cb0034", G: "#6a0095", H: "#1500ea", I: "#ff0000", J: "#fff", K: "#0000ff", L: "#ea0015", M: "#b0004f", N: "#0c00f3", O: "#fff", P: "#4600b9", Q: "#0c00f3", R: "#0000ff", S: "#5e00a1", T: "#61009e", U: "#fff", V: "#f60009", W: "#5b00a4", X: "#680097", Y: "#4f00b0", Z: "#0c00f3" },
+                "buried": { A: "#00a35c", R: "#00fc03", N: "#00eb14", D: "#00eb14", C: "#0000ff", Q: "#00f10e", E: "#00f10e", G: "#009d62", H: "#00d52a", I: "#0054ab", L: "#007b84", K: "#00ff00", M: "#009768", F: "#008778", P: "#00e01f", S: "#00d52a", T: "#00db24", W: "#00a857", Y: "#00e619", V: "#005fa0", B: "#00eb14", X: "#00b649", Z: "#00f10e" },
+                "cinema": { A: "#BBBBBB", B: "grey", C: "yellow", D: "red", E: "red", F: "magenta", G: "brown", H: "#00FFFF", I: "#BBBBBB", J: "#fff", K: "#00FFFF", L: "#BBBBBB", M: "#BBBBBB", N: "green", O: "#fff", P: "brown", Q: "green", R: "#00FFFF", S: "green", T: "green", U: "#fff", V: "#BBBBBB", W: "magenta", X: "grey", Y: "magenta", Z: "grey" },
+                "clustal": { A: "orange", B: "#fff", C: "green", D: "red", E: "red", F: "blue", G: "orange", H: "red", I: "green", J: "#fff", K: "red", L: "green", M: "green", N: "#fff", O: "#fff", P: "orange", Q: "#fff", R: "red", S: "orange", T: "orange", U: "#fff", V: "green", W: "blue", X: "#fff", Y: "blue", Z: "#fff" },
+                "clustal2": { A: "#80a0f0", R: "#f01505", N: "#00ff00", D: "#c048c0", C: "#f08080", Q: "#00ff00", E: "#c048c0", G: "#f09048", H: "#15a4a4", I: "#80a0f0", L: "#80a0f0", K: "#f01505", M: "#80a0f0", F: "#80a0f0", P: "#ffff00", S: "#00ff00", T: "#00ff00", W: "#80a0f0", Y: "#15a4a4", V: "#80a0f0", B: "#fff", X: "#fff", Z: "#fff" },
+                "helix": { A: "#e718e7", R: "#6f906f", N: "#1be41b", D: "#778877", C: "#23dc23", Q: "#926d92", E: "#ff00ff", G: "#00ff00", H: "#758a75", I: "#8a758a", L: "#ae51ae", K: "#a05fa0", M: "#ef10ef", F: "#986798", P: "#00ff00", S: "#36c936", T: "#47b847", W: "#8a758a", Y: "#21de21", V: "#857a85", B: "#49b649", X: "#758a75", Z: "#c936c9" },
+                "lesk": { A: " orange", B: " #fff", C: " green", D: " red", E: " red", F: " green", G: " orange", H: " magenta", I: " green", J: " #fff", K: " red", L: " green", M: " green", N: " magenta", O: " #fff", P: " green", Q: " magenta", R: " red", S: " orange", T: " orange", U: " #fff", V: " green", W: " green", X: " #fff", Y: " green", Z: " #fff" },
+                "mae": { A: " #77dd88", B: " #fff", C: " #99ee66", D: " #55bb33", E: " #55bb33", F: " #9999ff", G: " #77dd88", H: " #5555ff", I: " #66bbff", J: " #fff", K: " #ffcc77", L: " #66bbff", M: " #66bbff", N: " #55bb33", O: " #fff", P: " #eeaaaa", Q: " #55bb33", R: " #ffcc77", S: " #ff4455", T: " #ff4455", U: " #fff", V: " #66bbff", W: " #9999ff", X: " #fff", Y: " #9999ff", Z: " #fff" },
+                "strand": { A: "#5858a7", R: "#6b6b94", N: "#64649b", D: "#2121de", C: "#9d9d62", Q: "#8c8c73", E: "#0000ff", G: "#4949b6", H: "#60609f", I: "#ecec13", L: "#b2b24d", K: "#4747b8", M: "#82827d", F: "#c2c23d", P: "#2323dc", S: "#4949b6", T: "#9d9d62", W: "#c0c03f", Y: "#d3d32c", V: "#ffff00", B: "#4343bc", X: "#797986", Z: "#4747b8" },
+                "taylor": { A: "#ccff00", R: "#0000ff", N: "#cc00ff", D: "#ff0000", C: "#ffff00", Q: "#ff00cc", E: "#ff0066", G: "#ff9900", H: "#0066ff", I: "#66ff00", L: "#33ff00", K: "#6600ff", M: "#00ff00", F: "#00ff66", P: "#ffcc00", S: "#ff3300", T: "#ff6600", W: "#00ccff", Y: "#00ffcc", V: "#99ff00", B: "#fff", X: "#fff", Z: "#fff" },
+                "turn": { A: "#2cd3d3", R: "#708f8f", N: "#ff0000", D: "#e81717", C: "#a85757", Q: "#3fc0c0", E: "#778888", G: "#ff0000", H: "#708f8f", I: "#00ffff", L: "#1ce3e3", K: "#7e8181", M: "#1ee1e1", F: "#1ee1e1", P: "#f60909", S: "#e11e1e", T: "#738c8c", W: "#738c8c", Y: "#9d6262", V: "#07f8f8", B: "#f30c0c", X: "#7c8383", Z: "#5ba4a4" },
+                "zappo": { A: "#ffafaf", R: "#6464ff", N: "#00ff00", D: "#ff0000", C: "#ffff00", Q: "#00ff00", E: "#ff0000", G: "#ff00ff", H: "#6464ff", I: "#ffafaf", L: "#ffafaf", K: "#6464ff", M: "#ffafaf", F: "#ffc800", P: "#ff00ff", S: "#00ff00", T: "#00ff00", W: "#ffc800", Y: "#ffc800", V: "#ffafaf", B: "#fff", X: "#fff", Z: "#fff" },
+                "nucleotide": { A: " #64F73F", C: " #FFB340", G: " #EB413C", T: " #3C88EE", U: " #3C88EE" }
+            }
+            var aaColor = colorSchemas[this.colorSchema][aaLetter]
+            aaBox.style.backgroundColor += aaColor;
+            // Special cases for color schema
+            if ((aaColor == "#fff") || (aaColor == "yellow")) { aaBox.style.color += "#555" };
+            // Consensus
+            if ((aaLetter == ".") || (aaLetter == ":")) { aaBox.style.backgroundColor += "#5c5c5c" };
+
+            documentFragment.appendChild(aaBox);
+            aaBox = null;
+        }
         let element = document.getElementById(this.id).getElementsByClassName('protein')[j];
-        if(seq1.length >= 5000){
-          element.innerHTML = '';  
+        if (seq1.length >= 5000) {
+            element.innerHTML = '';
         }
         element.appendChild(documentFragment);
-        documentFragment.innerHTML='';
+        documentFragment.innerHTML = '';
     }
-    
-    for(i = 0; i < seq1.length; i++){
-      if(i >= startX && i < endX)
-        loadedPositions[i] = true;
-      else if(seq1.length >= 5000)
-        loadedPositions[i] = false;
-    }  
+
+    for (i = 0; i < seq1.length; i++) {
+        if (i >= startX && i < endX)
+            loadedPositions[i] = true;
+        else if (seq1.length >= 5000)
+            loadedPositions[i] = false;
+    }
 
 }
 
-MSAViewer.prototype.addDomains = function(domains) {
+MSAViewer.prototype.addDomains = function (domains) {
     var ids = this.ids;
-    for (var key in domains){
+    for (var key in domains) {
         domain_id = domains[key]["domain_id"];
         domain_name = domains[key]["domain_id"];
         domain_external_link = domains[key]["domain_external_link"];
@@ -520,9 +526,14 @@ MSAViewer.prototype.addDomains = function(domains) {
     };
 }
 
-MSAViewer.prototype.addVariation = function(protein, aminoacid, variationNote, source) {
+MSAViewer.prototype.addVariation = function ({ 
+    protein,                                    
+    position, 
+    note = "", 
+    source = ""
+}) {
     var protein = protein - 1; // the species start from 0
-    let aaNumber = aminoacid - 1; // the aacids start from 0
+    let aaNumber = position - 1; // the aacids start from 0
 
     notesByProtein = this.variationNotes[protein];
     if (notesByProtein == undefined) {
@@ -536,27 +547,27 @@ MSAViewer.prototype.addVariation = function(protein, aminoacid, variationNote, s
         notesByProtein[aaNumber][source] = "";
     }
 
-    notesByProtein[aaNumber][source] += variationNote;
+    notesByProtein[aaNumber][source] += note;
     this.variationNotes[protein] = notesByProtein
 
     if (source == "PTM") {
-        this.ptmNotes[aaNumber] += aminoacid + 1;
+        this.ptmNotes[aaNumber] += position + 1;
     }
 }
 
 MSAViewer.prototype.export = function (fileName) {
-    if (fileName != "") {var fileName = "MSA_export.fasta"}
-    var fileContent = fasta;
-    var hrefTag =  "data:text/plain;charset=UTF-8,"  + encodeURIComponent(fileContent);
-    this.mainDiv.find('.bottom-panel').append('<a class="export-button" href="'+ hrefTag +'" download="' + fileName + '">Download as FASTA</a><br>');
+    if (fileName != "") { var fileName = "MSA_export.fasta" }
+    var fileContent = this.msa.fasta;
+    var hrefTag = "data:text/plain;charset=UTF-8," + encodeURIComponent(fileContent);
+    this.mainDiv.find('.bottom-panel').append('<a class="export-button" href="' + hrefTag + '" download="' + fileName + '">Download as FASTA</a><br>');
 }
 
 MSAViewer.prototype.goToVar = function (protein, position) {
-    var that = this; 
+    var that = this;
     this.mainDiv[0].scrollIntoViewIfNeeded();
     that.mainDiv.find('input[name=position]').val(position);
-    $("#" + that.ids.speciesSelect).val(protein-1);
+    $("#" + that.ids.speciesSelect).val(protein - 1);
     $("#" + that.ids.speciesSelect).trigger('change');
-    setTimeout(function(){ that.showVariation(protein-1, position-1); }, 20);
+    setTimeout(function () { that.showVariation(protein - 1, position - 1); }, 20);
 }
 

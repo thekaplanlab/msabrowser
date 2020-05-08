@@ -1,77 +1,74 @@
 <!DOCTYPE html>
 <html>
+
 <head>
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
 	<title>MSAViewer Demo</title>
-	<link type="text/css" rel="stylesheet" href="tool.css" media="screen"/>
-    <script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
+	<link type="text/css" rel="stylesheet" href="tool.css" media="screen" />
+	<script src="https://code.jquery.com/jquery-3.3.1.min.js"
+		integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
 	<script src="MSAViewer.js"></script>
 </head>
+
 <body>
 	<h1>Project Title</h1>
 	<article>
-	In this study, we have focused on <a href="javascript:void(0)" onclick="viewer.goToVar(2,30)"> this variant </a> and have found out that there was severe phenotype...
+		In this study, we have focused on <a href="javascript:void(0)" onclick="viewer.goToVar(2,30)"> this variant </a>
+		and have found out that there was severe phenotype...
 	</article>
 
-	 <!-- MSAViewer Demo -->
+	<!-- MSAViewer Demo -->
 	<section id="MSAViewerDemo"></section>
 	<!-- end of MSAViewer Demo -->
 
 
-    <script type="text/javascript" charset="utf-8">
-		var id = 'MSAViewerDemo';
-		var file_name = "sample_files/hars.txt";
-		var title = 'Human: HARS';
-		var colorSchema = "clustal";
-		var viewer;
-    	var domains = [
-						{
-							'domain_id': "PFAM123",
-							'domain_name': "Protein Kinase Domain",
-							'domain_external_link': "http://google.com/",
-							'domain_start_point': 11,
-							'domain_end_point': 32
-						},
-						{
-							'domain_id': "ANANZA",
-							'domain_name': "Protein Kinase Domain",
-							'domain_external_link': "http://google.com/",
-							'domain_start_point': 35,
-							'domain_end_point': 55
-						}
-					];
+	<script type="text/javascript" charset="utf-8">
 
-		function loadAlignmentFile() {
-		var xhr = new XMLHttpRequest();
-		xhr.open("GET", file_name, true);
-		xhr.onload = function() {if (this.status == 200) {
-			fasta = this.responseText;
-			
+		var viewer;
+		var domains = [
+			{
+				'domain_id': "PFAM123",
+				'domain_name': "Protein Kinase Domain",
+				'domain_external_link': "http://google.com/",
+				'domain_start_point': 11,
+				'domain_end_point': 32
+			},
+			{
+				'domain_id': "ANANZA",
+				'domain_name': "Protein Kinase Domain",
+				'domain_external_link': "http://google.com/",
+				'domain_start_point': 35,
+				'domain_end_point': 55
+			}
+		];
+		var variations = [
+			{ 'protein': 1, 'position': 1, 'note': "M->G : VUS", 'source': "Source2 <a href='naber'>mamamamamamamamamamiya</a>" },
+			{ 'protein': 2, 'position': 2, 'note': "A->R : Benign", 'source': "Source3" },
+			{ 'protein': 3, 'position': 4, 'note': "T->L : Benign", 'source': "Source4" },
+			{ 'protein': 3, 'position': 4, 'note': "T->L : Benign", 'source': "PTM" }
+		];
+
+		$.get("sample_files/hars.txt", (fasta) => {
+
 			viewer = new MSAViewer({
-				id: id, 
+				id: "MSAViewerDemo",
 				msa: MSAProcessor({
 					fasta: fasta,
-					hasConsensus: true,
-					colorSchema: colorSchema
-				}), 
-				title: title, 
-				domains: domains
+					hasConsensus: true
+				}),
+				title: "Human HARS",
+				domains: domains,
+				variations: variations,
+				colorSchema: "clustal",
+				resetOnScroll: true
 			});
-			
-			viewer.addVariation(1, 1, "M->A : Pathogenic", "Source1");
-			viewer.addVariation(1, 1, "M->G : VUS", "Source2 <a href='naber'>mamamamamamamamamamiya</a>");
-			viewer.addVariation(2, 2, "A->R : Benign", "Source3");
-			viewer.addVariation(3, 4, "T->L : Benign", "Source4");
-			viewer.addVariation(3, 4, "T->L : Benign", "PTM");
+
 			viewer.export("MSA_export.fasta");
-			viewer.loadDivsInViewport(true);
+			
+		});
 
-		}} 
-		xhr.send();
-		}
-		loadAlignmentFile();
-
-    </script>
+	</script>
 </body>
+
 </html>
