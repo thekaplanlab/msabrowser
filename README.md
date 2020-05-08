@@ -139,7 +139,7 @@ var domains = [
 ### :hash: Evolutionary/Comparative Genomics Study 
 > In this example, human MLH1 protein and its homologous proteins are aligned and human protein domains are added. Additionaly, some genetic variations are also included from different sources such as gnomAD and ClinVar. 
 
-### [Click here to reach MSABrowser example for Evolutionary/Comparative Genomics Study.](https://github.com/thekaplanlab/msaviewer/tree/master/sample_files)
+### [Click here to reach MSABrowser example for Evolutionary/Comparative Genomics Study.](https://github.com/thekaplanlab/msaviewer/blob/master/examples/mlh1.html)
 
 ### :hash: COVID-19 / Virology Study 
 Will be added.
