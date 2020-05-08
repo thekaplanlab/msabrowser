@@ -1,18 +1,18 @@
-# 🧬 MSAViewer
+# 🧬 MSABrowser
 
 **Contents**
 
-- [🧬 MSAViewer](#%f0%9f%a7%ac-msaviewer)
-	- [:hash: What is *MSAViewer* and the aim of this library?](#hash-what-is-msaviewer-and-the-aim-of-this-library)
+- [🧬 MSABrowser](#%f0%9f%a7%ac-msabrowser)
+	- [:hash: What is *MSABrowser* and the aim of this library?](#hash-what-is-msabrowser-and-the-aim-of-this-library)
 	- [:hash: Requirements and Installation](#hash-requirements-and-installation)
-	- [:hash: How to use *MSAViewer*?](#hash-how-to-use-msaviewer)
+	- [:hash: How to use *MSABrowser*?](#hash-how-to-use-msabrowser)
 	- [:hash: Parameters & Examples for the Functions](#hash-parameters--examples-for-the-functions)
 		- [:hash: Color Schemas List](#hash-color-schemas-list)
-		- [:hash: Adding Protein Domains & Example](#hash-adding-protein-domains--example)
-		- [:hash: ``addVariation()`` Function & Example Use](#hash-addvariation-function--example-use)
-	- [:hash: Example Usages (Use Cases) of MSAViewer](#hash-example-usages-use-cases-of-msaviewer)
-		- [:hash: Evolutionary Genomics Study](#hash-evolutionary-genomics-study)
-		- [:hash: Clinical Variant Interpretation Study](#hash-clinical-variant-interpretation-study)
+		- [:hash: Adding Annoations (Protein Domains) & Example](#hash-adding-annoations-protein-domains--example)
+		- [:hash: Adding Variations & Example](#hash-adding-variations--example)
+	- [:hash: Example Usages (Use Cases) of MSABrowser](#hash-example-usages-use-cases-of-msabrowser)
+		- [:hash: Evolutionary/Comparative Genomics Study](#hash-evolutionarycomparative-genomics-study)
+		- [Click here to reach MSABrowser example for Evolutionary/Comparative Genomics Study.](#click-here-to-reach-msabrowser-example-for-evolutionarycomparative-genomics-study)
 		- [:hash: COVID-19 / Virology Study](#hash-covid-19--virology-study)
 		- [:hash: Do you have another study which is not listed here?](#hash-do-you-have-another-study-which-is-not-listed-here)
 	- [:hash: Contributing & Feedback](#hash-contributing--feedback)
@@ -20,41 +20,45 @@
 
 ---
 
-## :hash: What is *MSAViewer* and the aim of this library?
-*MSAViewer* is an open-source, flexible and modern web-based tool to illustrate the genetic variants, post-translational modifications, and protein domainson the corresponding positions of aminoacids at the protein sequence of any species together with pairwise or multiple sequence alignment of anysize. Ever-increasing number of genetic variants and sequencing projects in next-generation sequencingera enable researchers to investigate the impacts of these variants together with the protein domains. Here, MSAViewer environment and its core features make it easy to visualize the evolutionary conserved amino acids and genetic variants. 
+## :hash: What is *MSABrowser* and the aim of this library?
+*MSABrowser* is an open-source, flexible and modern web-based tool to illustrate the genetic variants, post-translational modifications, and protein domainson the corresponding positions of aminoacids at the protein sequence of any species together with pairwise or multiple sequence alignment of anysize. Ever-increasing number of genetic variants and sequencing projects in next-generation sequencingera enable researchers to investigate the impacts of these variants together with the protein domains. Here, MSABrowser environment and its core features make it easy to visualize the evolutionary conserved amino acids and genetic variants. 
 
 
 ## :hash: Requirements and Installation
-*MSAViewer* is entirely developed in JavaScript and works on a web browser at any platform including Linux, Mac OS X and Windows systems without any installation.
+*MSABrowser* is entirely developed in JavaScript and works on a web browser at any platform including Linux, Mac OS X and Windows systems without any installation.
 
-## :hash: How to use *MSAViewer*?
- - Create a directory and download any example shown below or retrieve "**MSAViewer.js**" and "**index.html**" files or clone the repository via Git using following command:
+## :hash: How to use *MSABrowser*?
+ - Create a directory and download any example listed below or use CDN links for required files on your page or clone the repository via Git using following command:
  
- 	`git clone https://github.com/thekaplanlab/msaviewer.git`
+ 	`git clone https://github.com/thekaplanlab/MSABrowser.git`
+
+> CDN links for JS and CSS files will be added here!
+
 
 - Then, place your pairwise or multiple sequence alignment (MSA) result file as **FASTA** format in the folder.
 
-- Afterwards, set your parameters and define the title, give protein domains information and add your variants onto any species. 
+- Afterwards, set your parameters and define the title, specify the annotations such as protein domains and add your variants. 
 
 - It's ready to use and visualize now! 
 
 ## :hash: Parameters & Examples for the Functions
 | Options in the script | Description | Example |
 |--|--|--|
-| id | *It defines the ID of the element where you place MSAViewer component.* |`<section id="MSAViewerDemo"></section>` |
+| id | *It defines the ID of the element where you place MSABrowser component.* |`<section id="MSABrowserDemo"></section>` |
 | fasta | *It refers a variable that holds your sequence alignment or the name of the file in FASTA format* | `sample_msa.txt` or `sample_msa.fasta`
-| title | *It defines the title of MSAViewer component on the box at the top left corner* | HARS Protein
 | hasConsensus  | It asks whether you would like to display the consensus sequence or not. | Please state as either `true` or `false`.
-| colorSchema  | It defines the name of the color schema you would like to display | Please the check the list of color schemas below.
+| title | *It defines the title of MSABrowser component on the box at the top left corner* | HARS Protein
 | domains  | It refers a variable that holds your protein domanin information. | Please check the example below.
-| ``addVariation()`` function  | It serves for adding variations on the corresponding amino acids. | Please check the example below.
+| variations | It serves for adding variations on the corresponding positions. | Please check the example below.
+| colorSchema  | It defines the name of the color schema you would like to display | Please the check the list of color schemas below.
+| resetOnScroll  | It enables to render (only) the positions in viewport. | Please state as either `true` (default) or `false`.
 
 ### :hash: Color Schemas List
 
 > You need to select a color schema and put the name of the color schema into the variable:
 
 Example for this:
-> `var colorSchema = "clustal";`
+> `colorSchema = "clustal";`
 
 **List of the color schemas:**
 
@@ -73,9 +77,9 @@ Example for this:
 - `nucleotide`
 
 
-### :hash: Adding Protein Domains & Example
+### :hash: Adding Annoations (Protein Domains) & Example
 
-> You are able to visualize the protein domains above the sequence aligner.
+> You are able to visualize the protein domains above the sequence aligner in the annotation part.
 
 Here is the example use of `domains` variable.
 ```
@@ -97,41 +101,45 @@ var domains = [
 ];
 ```
 
-### :hash: ``addVariation()`` Function & Example Use
+### :hash: Adding Variations & Example
 
-> You are able to add variations and substitutions on the corresponding amino acids.
+> You are able to add variations and modifications or any types of notes on the corresponding positions.
 
-**Here is the details of ``addVariation()`` function:**
+**Here is the details for use of `variations` :**
 
 
-| Parameter | Description | Example |
+| Key | Description | Example |
 |---------------------------------------------------|--------------------------------------------------------|----------------------------------------------------------|
 | protein | The order of the species in the sequence alignment | 1 |
-| aminoacid | The (real) position of the amino acid in the protein.* | 5 |
-| variationNote | The annotation part of this variation. | M->A : Pathogenic and causes a disease with a name of X. |
+| position | The (real) position of the amino acid in the protein.* | 5 |
+| note | The annotation part for this position. | M->A : Pathogenic and causes a disease with a name of X. |
 | source | The source of the information. | Surname et. al (2020) |
 
 
-> For instance, an amino acid in a protein in the position of 15 has a substitution. However, since the sequences are aligned and some dashes `-` added into the sequence, you do not need to consider the new position of the amino acid. Only, put the real position of the amino acid. 
 
 **Here is the example how to add a variation:**
 ```
-viewer.addVariation(1, 5, "M->A : Pathogenic and causes a disease with a name of X", "Surname et. al (2020)");
+{
+	'protein': 2, 
+	'position': 5, 
+	'note': 'M->A : Pathogenic and causes a disease X', 
+	source: 'Surname et. al (2020)'
+},
+...
 ```
 
-> Here, this variation will be added onto the `5th` amino acid in the protein of `1st` species in the sequence alignment with a note of "`M->A : Pathogenic and causes a disease with a name of X`" and source of "`Surname et. al (2020)`". 
+> Here, this variation will be added onto the `5th` amino acid in the protein of `2nd` species in the sequence alignment with a note of "`M->A : Pathogenic and causes a disease with a name of X`" and source of "`Surname et. al (2020)`". 
 
 
 > In addition, if you state the `source` as `"PTM"` (post-translational modification), it also will be notified as red asterisk in the viewer.
 
 
-## :hash: Example Usages (Use Cases) of MSAViewer
+## :hash: Example Usages (Use Cases) of MSABrowser
 
-### :hash: Evolutionary Genomics Study 
-Will be added.
+### :hash: Evolutionary/Comparative Genomics Study 
+> In this example, human MLH1 protein and its homologous proteins are aligned and human protein domains are added. Additionaly, some genetic variations are also included from different sources such as gnomAD and ClinVar. 
 
-### :hash: Clinical Variant Interpretation Study 
-Will be added.
+### [Click here to reach MSABrowser example for Evolutionary/Comparative Genomics Study.](https://github.com/thekaplanlab/msaviewer/tree/master/sample_files)
 
 ### :hash: COVID-19 / Virology Study 
 Will be added.
@@ -143,9 +151,9 @@ We would be very happy to list your study here.
 
 
 ## :hash: Contributing & Feedback
-MSAViewer is released as an open-source and web-based software under GNU General Public License, version 3.0 (GPLv3). The visualizer, documentation, all source code and examples are available at http://MSAViewer.github.io/ and GitHub repository https://github.com/thekaplanlab/MSAViewer.
+MSABrowser is released as an open-source and web-based software under GNU General Public License, version 3.0 (GPLv3). The visualizer, documentation, all source code and examples are available at GitHub repository https://github.com/thekaplanlab/MSABrowser.
 
-Moreover, please do not hesitate to open an issue via Github if you have any suggestion or feedback.
+Moreover, please do not hesitate to `open an issue via Github` if you have any suggestion or feedback.
 
 
 ## :hash: Developers
