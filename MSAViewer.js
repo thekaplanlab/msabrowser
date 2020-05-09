@@ -165,7 +165,7 @@ function MSAViewer({   // notice the curly braces! we are receiving an object no
     }
     this.msa = msa;
     this.variationNotes = {};
-    this.ptmNotes = {};
+    this.modificationNotes = {};
     this.loadedPositions = [];
     for (i = 0; i < msa.processedSequences[0].length; i++) {
         this.loadedPositions.push(false);
@@ -358,24 +358,10 @@ MSAViewer.prototype.getAminoacidPositionInViewport = function (species_id, posit
     return -1;
 }
 
+MSAViewer.prototype.highlightPosition = function (species, position) {
+        var alignmentPosition = this.getAminoacidPositionInViewport(species, position - 1);
 
-MSAViewer.prototype.loadAminoacidSearch = function () {
-    var ids = this.ids;
-    var that = this;
-    $mainDiv = this.mainDiv;
-    containerTemplate = `<section class="go-to-position">
-        Search a position: <input type="number" placeholder="3" name="position" min="1" class="form_input" id="${ids.positionInput}">
-        Species : <select name="species" id="${ids.speciesSelect}"></select>
-        </section>`;
-
-    $mainDiv.find('.bottom-panel').append(containerTemplate);
-
-    function positionKeyUpCallback() {
-        var position = $('#' + that.ids.positionInput).val();
-        var species = parseInt($('#' + that.ids.speciesSelect).val());
-        var alignmentPosition = that.getAminoacidPositionInViewport(species, position - 1);
-
-        $mainDiv.find('.highlight-column').removeClass('highlight-column ptm-highlighted');
+        $mainDiv.find('.highlight-column').removeClass('highlight-column modification-highlighted');
         $mainDiv.find('.position-number').remove();
 
         template = `<div class="highlight-column position-number" style="left:${alignmentPosition * 20}px">${position}</div>`;
@@ -386,9 +372,18 @@ MSAViewer.prototype.loadAminoacidSearch = function () {
 
         setTimeout(function () {
             $mainDiv.find('.i-' + alignmentPosition).addClass('highlight-column');
-            $mainDiv.find('.protein:eq(' + species + ') .ptm.i-' + alignmentPosition).addClass('ptm-highlighted');
+            $mainDiv.find('.protein:eq(' + species + ') .modification.i-' + alignmentPosition).addClass('modification-highlighted');
         }, 75);
-    }
+}
+MSAViewer.prototype.loadAminoacidSearch = function () {
+    var ids = this.ids;
+    $mainDiv = this.mainDiv;
+    containerTemplate = `<section class="go-to-position">
+        Search a position: <input type="number" placeholder="3" name="position" min="1" class="form_input" id="${ids.positionInput}">
+        Species : <select name="species" id="${ids.speciesSelect}"></select>
+        </section>`;
+
+    $mainDiv.find('.bottom-panel').append(containerTemplate);
 
     for (var i in this.msa.sequenceDetails) {
         var species = this.msa.sequenceDetails[i].species;
@@ -397,8 +392,10 @@ MSAViewer.prototype.loadAminoacidSearch = function () {
     }
 
 
-    $(`#${ids.positionInput}, #${ids.speciesSelect}`).on("keyup", function () {
-        positionKeyUpCallback();
+    $(`#${ids.positionInput}, #${ids.speciesSelect}`).on("keyup", () => {
+        var position = parseInt($('#' + this.ids.positionInput).val());
+        var species = parseInt($('#' + this.ids.speciesSelect).val()); 
+        this.highlightPosition(species, position)
     });
 }
 
@@ -408,7 +405,7 @@ MSAViewer.prototype.loadDivsInViewport = function () {
     loadedPositions = this.loadedPositions;
     processedSequences = this.msa.processedSequences;
     variationNotes = this.variationNotes;
-    ptmNotes = this.ptmNotes;
+    modificationNotes = this.modificationNotes;
     
     var viewportOffset = document.getElementById(ids.sequence).getBoundingClientRect();
 
@@ -452,8 +449,8 @@ MSAViewer.prototype.loadDivsInViewport = function () {
                 aaBox.setAttribute('data-sid', j);
             }
 
-            if (j == 0 && viewportToAANumber[j][i] != -1 && viewportToAANumber[j][i] in ptmNotes) {
-                aaBox.className += " ptm";
+            if (j == 0 && viewportToAANumber[j][i] != -1 && viewportToAANumber[j][i] in modificationNotes) {
+                aaBox.className += " modification";
                 aaBox.setAttribute('data-sid', j);
             }
 
@@ -550,8 +547,33 @@ MSAViewer.prototype.addVariation = function ({
     notesByProtein[aaNumber][source] += note;
     this.variationNotes[protein] = notesByProtein
 
-    if (source == "PTM") {
-        this.ptmNotes[aaNumber] += position + 1;
+    if (source == "modification") {
+        this.modificationNotes[aaNumber] += position + 1;
+    }
+}
+
+function saveAs(uri, filename) {
+
+    var link = document.createElement('a');
+
+    if (typeof link.download === 'string') {
+
+        link.href = uri;
+        link.download = filename;
+
+        //Firefox requires the link to be in the body
+        document.body.appendChild(link);
+
+        //simulate click
+        link.click();
+
+        //remove the link when done
+        document.body.removeChild(link);
+
+    } else {
+
+        window.open(uri);
+
     }
 }
 
@@ -559,15 +581,22 @@ MSAViewer.prototype.export = function (fileName) {
     if (fileName != "") { var fileName = "MSA_export.fasta" }
     var fileContent = this.msa.fasta;
     var hrefTag = "data:text/plain;charset=UTF-8," + encodeURIComponent(fileContent);
-    this.mainDiv.find('.bottom-panel').append('<a class="export-button" href="' + hrefTag + '" download="' + fileName + '">Download as FASTA</a><br>');
+    this.mainDiv.find('.bottom-panel').append('<a class="msa-button export-button" href="' + hrefTag + '" download="' + fileName + '">Download as FASTA</a>');
+    this.mainDiv.find('.bottom-panel').append('<a href="javascript:void(0)" class="msa-button ss-button">Save as PNG</a>');
+    this.mainDiv.find('.ss-button').click(() => {
+        html2canvas(this.mainDiv.find('.scroll-container')[0], {height: this.mainDiv.height(), width: this.mainDiv.width()}).then(canvas => {
+            console.log(canvas);
+            saveAs(canvas.toDataURL(), 'msa-browser-image.png');
+        });
+    })
 }
 
-MSAViewer.prototype.goToVar = function (protein, position) {
+MSAViewer.prototype.scrollToPosition = function (species, position) {
     var that = this;
     this.mainDiv[0].scrollIntoViewIfNeeded();
     that.mainDiv.find('input[name=position]').val(position);
-    $("#" + that.ids.speciesSelect).val(protein - 1);
-    $("#" + that.ids.speciesSelect).trigger('change');
-    setTimeout(function () { that.showVariation(protein - 1, position - 1); }, 20);
+    this.highlightPosition(species, position)
+
+    setTimeout(function () { that.showVariation(species - 1, position - 1); }, 20);
 }
 

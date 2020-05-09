@@ -25,6 +25,7 @@
 }
 
 .msa-container {
+    resize: horizontal;
     position: relative;
     width: 100%;
     height: auto;
@@ -295,8 +296,8 @@
     box-shadow: 0 0 7px #000;
 }
 
-.ptm:before,
-.ptm-highlighted:before {
+.modification:before,
+.modification-highlighted:before {
     content: "*";
     margin-top: -18px;
     position: absolute;
@@ -305,7 +306,7 @@
     color: red;
 }
 
-.ptm-highlighted:before {
+.modification-highlighted:before {
     margin-top: -30px !important;
 }
 
@@ -424,7 +425,7 @@
     margin-left: 5px
 }
 
-.export-button {
+.msa-button {
     position: relative;
     background: #4285F4;
     color: #FFF;

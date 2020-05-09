@@ -6,6 +6,7 @@
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
 	<title>MSAViewer Demo</title>
 	<link type="text/css" rel="stylesheet" href="tool.css" media="screen" />
+	<script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js" type="text/javascript"></script>
 	<script src="https://code.jquery.com/jquery-3.3.1.min.js"
 		integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
 	<script src="MSAViewer.js"></script>
@@ -14,7 +15,7 @@
 <body>
 	<h1>Project Title</h1>
 	<article>
-		In this study, we have focused on <a href="javascript:void(0)" onclick="viewer.goToVar(2,30)"> this variant </a>
+		In this study, we have focused on <a href="javascript:void(0)" onclick="viewer.scrollToPosition(2,30)"> this variant </a>
 		and have found out that there was severe phenotype...
 	</article>
 
@@ -46,7 +47,7 @@
 			{ 'protein': 1, 'position': 1, 'note': "M->G : VUS", 'source': "Source2 <a href='naber'>mamamamamamamamamamiya</a>" },
 			{ 'protein': 2, 'position': 2, 'note': "A->R : Benign", 'source': "Source3" },
 			{ 'protein': 3, 'position': 4, 'note': "T->L : Benign", 'source': "Source4" },
-			{ 'protein': 3, 'position': 4, 'note': "T->L : Benign", 'source': "PTM" }
+			{ 'protein': 3, 'position': 4, 'note': "T->L : Benign", 'source': "modification" }
 		];
 
 		$.get("sample_files/hars.txt", (fasta) => {
@@ -67,8 +68,9 @@
 			viewer.export("MSA_export.fasta");
 			
 		});
-
+		
 	</script>
+
 </body>
 
 </html>
