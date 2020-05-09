@@ -136,9 +136,9 @@ var domains = [
 ## :hash: Example Usages (Use Cases) of MSABrowser
 
 ### :hash: Evolutionary/Comparative Genomics Study 
-In this example, human MLH1 protein and its homologous proteins are aligned and human protein domains are added. Additionaly, some genetic variations are also included from different sources such as gnomAD and ClinVar. 
+In this example, human TUBA1A protein and its homologous proteins are aligned and human protein domains are added. Additionaly, some genetic variations are also included from different sources such as gnomAD and ClinVar. 
 
-> [Click here to reach MSABrowser example for Evolutionary/Comparative Genomics Study.](https://github.com/thekaplanlab/msaviewer/blob/master/examples/mlh1.html)
+> [Click here to reach MSABrowser example for Evolutionary/Comparative Genomics Study.](https://github.com/thekaplanlab/msaviewer/blob/master/examples/TUBA1A.html)
 
 ### :hash: COVID-19 / Virology Study 
 Will be added.
