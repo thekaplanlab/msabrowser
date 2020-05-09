@@ -7,7 +7,7 @@ function MSAProcessor({
     this.fasta = fasta;
     this.extractLinkFromId = function (sequenceId) {
         var sequenceType = sequenceId.substring(0, 2);
-
+        var link;
         if (sequenceType == "gi") { link = "https://www.ncbi.nlm.nih.gov/protein/" + sequenceId.split("|")[3]; }
         else if (sequenceType == "NP" || sequenceType == "XP") { link = "https://www.ncbi.nlm.nih.gov/protein/" + sequenceId; }
         else if (sequenceType == "EN") { link = "https://www.ensembl.org/id/" + sequenceId; }
@@ -106,6 +106,13 @@ function renderMSATemplate({
     return `
     <section class="msa-container">
         <section class="scroll-container">
+            <!--Gene name and specie names-->
+            <section>
+                <section id="${ids.nameContainer}" class="species-and-gene-names">
+
+                    <div id="${ids.speciesNames}" class="species-names"></div>
+                </section>
+            </section>
             <!--Current Project | annotations and Sequences Parts -->
             <section id="${ids.annotationSequence}" class="annotation-sequence">
                 
@@ -118,11 +125,6 @@ function renderMSATemplate({
                 <div id="${ids.aminoacidInfo}" class="aminoacid-info"></div>
             </section> <!-- end of protein sequences -->
 
-            <!--Gene name and specie names-->
-            <section id="${ids.nameContainer}" class="species-and-gene-names">
-
-                <div id="${ids.speciesNames}" class="species-names"></div>
-            </section>
         </section>
         <!-- Bottom and fixed panel -->
         <section class="bottom-panel">
@@ -184,6 +186,7 @@ function MSAViewer({   // notice the curly braces! we are receiving an object no
             document.getElementById(ids.sequence).appendChild(sequence);
             sequence.id = sequenceDetails.sequenceId;
             sequence.className = "sequence";
+            sequence.style = sequenceLengthforDomain;
             var speciesName = document.createElement("div");
             var speciesNameLink = document.createElement("a");
             var sequenceHidingButton = document.createElement("a");
@@ -291,19 +294,26 @@ function MSAViewer({   // notice the curly braces! we are receiving an object no
     if ((typeof (annotations) != "undefined")) {
         this.addAnnotations(annotations);
     }
-
-    setInterval(() => {
-        if (resetOnScroll == true && $('#' + this.ids.sequence).find('section div').length > 10000) {
-            for (var i in loadedPositions) {
-                loadedPositions[i] = false;
+    var t;
+    function checkScroll() {
+        setTimeout(() => {
+            if (resetOnScroll == true && $('#' + that.ids.sequence).find('section div').length > 10000) {
+                for (var i in loadedPositions) {
+                    loadedPositions[i] = false;
+                }
+                $('#' + that.ids.sequence).find('section div:not(.position-number)').remove();
+                that.loadDivsInViewport();
             }
-            $('#' + this.ids.sequence).find('section div').remove();
-            this.loadDivsInViewport();
-        }
-    }, 5000);
+        }, 150);
+    };
 
     this.loadDivsInViewport();
-    this.mainDiv.find('.scroll-container').scroll(() => { this.loadDivsInViewport(); });
+    this.mainDiv.find('.scroll-container').scroll(() => { 
+        clearTimeout(t);
+        this.loadDivsInViewport(); 
+        checkScroll();
+
+    });
 
     this.loadDomainBar();
 
@@ -407,21 +417,22 @@ MSAViewer.prototype.loadDivsInViewport = function () {
     modificationNotes = this.modificationNotes;
 
     var viewportOffset = document.getElementById(ids.sequence).getBoundingClientRect();
+    this.mainDiv.find('.species-and-gene-names').css('left', this.mainDiv.find('.scroll-container').scrollLeft());
 
-    var aminoacid_index = 0;
-
-    startX = parseInt((Math.abs(viewportOffset.left) - document.getElementById(ids.nameContainer).clientWidth) / 20 - window.innerWidth / 40);
-    if (startX < 0) {
-        startX = 0;
+    var startX = Math.max(0, parseInt((Math.abs(viewportOffset.left) - document.getElementById(ids.nameContainer).clientWidth) / 20 - this.mainDiv.innerWidth() / 40));
+    
+    var endX = Math.min(processedSequences[0].length, 
+                parseInt(startX + (document.getElementById(ids.nameContainer).clientWidth) / 20 + 3 * this.mainDiv.innerWidth() / 40 + 20));
+    
+    var startY = 0;
+    if(this.mainDiv.find('.gene-name')){
+        startY = -this.mainDiv.find('.gene-name').height()* this.mainDiv.find('.gene-name').length / 20
     }
-    endX = parseInt(startX + (document.getElementById(ids.nameContainer).clientWidth) / 20 + 3 * window.innerWidth / 40 + 20);
+    startY = Math.max(0, parseInt(startY+$('#'+ids.id).find('.scroll-container').scrollTop()/20 - 3));
 
-    if (processedSequences[0].length <= endX) {
-        endX = processedSequences[0].length - 1;
-    }
+    var endY = Math.min(processedSequences.length, parseInt(startY +  350 / 20));
 
-
-    for (var sequenceIndex = 0; sequenceIndex < processedSequences.length; sequenceIndex++) {
+    for (var sequenceIndex = startY; sequenceIndex < endY; sequenceIndex++) {
         seq1 = processedSequences[sequenceIndex];
         var documentFragment = document.createDocumentFragment();
         for (var positionIndex = startX; positionIndex < endX; positionIndex++) {
@@ -435,8 +446,6 @@ MSAViewer.prototype.loadDivsInViewport = function () {
             //creating amino acid boxes
 
             if (aaLetter != '-') {
-                aminoacid_index += 1;
-
                 aaBox.className = "i-" + positionIndex;
             }
             if (aaLetter == '-') {

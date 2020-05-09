@@ -224,15 +224,16 @@
 .msa-container .annotation-sequence {
     position: relative;
     left: 162px;
-    float:left;
 }
 
 .msa-container .species-and-gene-names {
-    background: #fff;
     position: absolute;
     top: 0;
     left: 0;
+    z-index:150;
+    background: #fff;
     font-style: italic;
+    float:left;
 }
 .msa-container .gene-name:first-of-type{
     margin-top: 1.4em;
@@ -547,6 +548,8 @@
 }
 
 .scroll-container {
+    position: relative;
     overflow: scroll;
+    max-height: 350px;
     padding-bottom: 0.4em;
 }
