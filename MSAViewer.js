@@ -110,19 +110,17 @@ function renderMSATemplate({
             <section id="${ids.annotationSequence}" class="annotation-sequence">
                 
                 <!-- Current Project | Protein annotations for Human -->
-                <section id="${ids.sequenceLength}" class="sequence-length">
-                </section> <!-- end of annotations -->
-
-                <!-- Current Project | Protein Sequences -->
-                <section id="${ids.sequence}" class="sequence-container">
-                    <div id="${ids.aminoacidInfo}" class="aminoacid-info"></div>
-                </section> <!-- end of protein sequences -->
+                <!-- end of annotations -->
 
             </section> <!-- end of annotation and sequences parts -->
+            <!-- Current Project | Protein Sequences -->
+            <section id="${ids.sequence}" class="sequence-container">
+                <div id="${ids.aminoacidInfo}" class="aminoacid-info"></div>
+            </section> <!-- end of protein sequences -->
 
             <!--Gene name and specie names-->
             <section id="${ids.nameContainer}" class="species-and-gene-names">
-                <div id="${ids.geneName}" class="gene-name"><br>${title}</div>
+
                 <div id="${ids.speciesNames}" class="species-names"></div>
             </section>
         </section>
@@ -140,6 +138,7 @@ function MSAViewer({   // notice the curly braces! we are receiving an object no
     msa,
     title = "",
     variations = [],
+    annotations = [],
     templateFunction = renderMSATemplate,
     colorSchema,
     resetOnScroll = false
@@ -175,7 +174,7 @@ function MSAViewer({   // notice the curly braces! we are receiving an object no
     function loadProteins(msa) {
         var ids = that.ids;
         var sequenceLengthforDomain = "width:" + msa.processedSequences[0].length * 20 + "px;";
-        document.getElementById(ids.sequenceLength).style = sequenceLengthforDomain;
+        document.getElementById(ids.annotationSequence).style = sequenceLengthforDomain;
 
         for (var i in msa.sequenceDetails) {
             //creating flex container for proteins
@@ -287,8 +286,9 @@ function MSAViewer({   // notice the curly braces! we are receiving an object no
         variation = variations[i];
         this.addVariation(variation);
     }
+    this.annotations = {};
 
-    if ((typeof (annotations) != "undefined") && (annotations.length != 0)) {
+    if ((typeof (annotations) != "undefined")) {
         this.addAnnotations(annotations);
     }
 
@@ -500,26 +500,41 @@ MSAViewer.prototype.loadDivsInViewport = function () {
 }
 
 MSAViewer.prototype.addAnnotations = function (annotations) {
+    
     var ids = this.ids;
-    for (var key in annotations) {
-        annotation_id = annotations[key]["annotation_id"];
-        annotation_name = annotations[key]["annotation_id"];
-        annotation_external_link = annotations[key]["annotation_external_link"];
-        annotation_start_point = annotations[key]["annotation_start_point"];
-        annotation_end_point = annotations[key]["annotation_end_point"];
 
-        annotation_template = `
-        <a href="${annotation_external_link}" target="_blank">
-            <div class="annotation" data-start-point="${annotation_start_point}" data-end-point="${annotation_end_point}">
-                <div class="annotation_start_point">${annotation_start_point}</div>
-                <p>${annotation_name} (${annotation_start_point} - ${annotation_end_point})</p>
-                <div class="annotation_end_point">${annotation_end_point}</div>
-            </div>
-        </a>
-        `;
+    for (var annotation of annotations) {
+        if(this.annotations[annotation.source]){
+            continue;
+        }
+        this.annotations[annotation.source] = annotations.data;
+        
+        var annotationContainerTemplate = `<section class="sequence-length"></section>`;
+        $('#'+ids.annotationSequence).append(annotationContainerTemplate);
+        
+        
+        var annotationContainer =  $('#'+ids.annotationSequence).find('.sequence-length:last')[0];
+        $('#'+ids.speciesNames).before(`<div class="gene-name">${annotation.source}</div>`);
 
-        $('#' + ids.sequenceLength).append(annotation_template);
-    };
+        for (var key in annotation.data) {
+            var name = annotation.data[key]["annotation_id"];
+            var link = annotation.data[key]["annotation_external_link"];
+            var startPoint = annotation.data[key]["annotation_start_point"];
+            var endPoint = annotation.data[key]["annotation_end_point"];
+
+            var annotationHtml = `
+            <a href="${link}" target="_blank">
+                <div class="annotation" data-start-point="${startPoint}" data-end-point="${endPoint}">
+                    <div class="annotation_start_point">${startPoint}</div>
+                    <p>${name} (${startPoint} - ${endPoint})</p>
+                    <div class="annotation_end_point">${endPoint}</div>
+                </div>
+            </a>
+            `;
+
+            $(annotationContainer).append(annotationHtml);
+        };
+    }
 }
 
 MSAViewer.prototype.addVariation = function ({

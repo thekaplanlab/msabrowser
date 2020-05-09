@@ -14,10 +14,12 @@
 <body>
 	<h1>Evolutionary/Comparative Genomics Study | TUBA1A Example</h1>
 	<article>
-		In this example, human TUBA1A sequence and its homologous sequences are aligned and human sequence annotations are added. <br> 
-		Additionaly, some genetic variations are also included from different sources such as gnomAD and ClinVar. 
-		For example, you can view a particular <a href="javascript:void(0)" onclick="viewer.scrollToPosition(1,33)"> modification and variation on human</a> or 
-		<a href="javascript:void(0)" onclick="viewer.scrollToPosition(2,17)"> this variation on mouse</a> or 
+		In this example, human TUBA1A sequence and its homologous sequences are aligned and human sequence annotations
+		are added. <br>
+		Additionaly, some genetic variations are also included from different sources such as gnomAD and ClinVar.
+		For example, you can view a particular <a href="javascript:void(0)" onclick="viewer.scrollToPosition(1,33)">
+			modification and variation on human</a> or
+		<a href="javascript:void(0)" onclick="viewer.scrollToPosition(2,17)"> this variation on mouse</a> or
 		by clicking the link.
 	</article>
 
@@ -30,20 +32,45 @@
 
 		var viewer;
 		var annotations = [
-		{
-			'annotation_id': 'PF00091.25',
-			'annotation_name': 'Tubulin',
-			'annotation_external_link': 'https://pfam.xfam.org/family/PF00091.25',
-			'annotation_start_point': 3,
-			'annotation_end_point': 213
-		},
-		{
-			'annotation_id': 'PF03953.17',
-			'annotation_name': 'Tubulin_C',
-			'annotation_external_link': 'https://pfam.xfam.org/family/PF03953.17',
-			'annotation_start_point': 263,
-			'annotation_end_point': 392
-		}
+			{
+				source: "PFAM",
+				data: [
+					{
+						'annotation_id': 'PF00091.25',
+						'annotation_name': 'Tubulin',
+						'annotation_external_link': 'https://pfam.xfam.org/family/PF00091.25',
+						'annotation_start_point': 3,
+						'annotation_end_point': 213
+					},
+					{
+						'annotation_id': 'PF03953.17',
+						'annotation_name': 'Tubulin_C',
+						'annotation_external_link': 'https://pfam.xfam.org/family/PF03953.17',
+						'annotation_start_point': 263,
+						'annotation_end_point': 392
+					}
+				]
+			},
+			{
+				source: "PFAM2",
+				data: [
+					{
+						'annotation_id': 'PF00091.25',
+						'annotation_name': 'Tubulin',
+						'annotation_external_link': 'https://pfam.xfam.org/family/PF00091.25',
+						'annotation_start_point': 15,
+						'annotation_end_point': 180
+					},
+					{
+						'annotation_id': 'PF03953.17',
+						'annotation_name': 'Tubulin_C',
+						'annotation_external_link': 'https://pfam.xfam.org/family/PF03953.17',
+						'annotation_start_point': 223,
+						'annotation_end_point': 352
+					}
+				]
+			}
+			
 		];
 
 		var variations = [
@@ -172,22 +199,22 @@
 			{ 'sequenceIndex': 1, 'position': 96, 'note': 'PTM residue: K96-ub<br>PTM Type: Ubiquitination', 'source': 'modification' },
 			{ 'sequenceIndex': 1, 'position': 96, 'note': 'PTM residue: K96-ac<br>PTM Type: Acetylation', 'source': 'modification' },
 			{ 'sequenceIndex': 1, 'position': 96, 'note': 'PTM residue: K96-sm<br>PTM Type: Sumoylation', 'source': 'modification' },
-			
+
 			// gnomAD Data
-			{ 'sequenceIndex': 1, 'position':  42, 'note': 'Variation ID:<a style="color:#1976D2 !important; font-size:15px !important;" href="https://gnomad.broadinstitute.org/variant/12-49580495-A-G" target="_blank"> 12-49580495-A-G</a> <br> Frequency: 4.0E-6 <br> rsNumber: rs1247802698<br> p.Ile42Thr <br> missense_variant', 'source': 'gnomAD' },
-			{ 'sequenceIndex': 1, 'position':  84, 'note': 'Variation ID:<a style="color:#1976D2 !important; font-size:15px !important;" href="https://gnomad.broadinstitute.org/variant/12-49580217-C-T" target="_blank"> 12-49580217-C-T</a> <br> Frequency: 0 <br> rsNumber: rs1400284461<br> p.Arg84His <br> missense_variant', 'source': 'gnomAD' },
-			{ 'sequenceIndex': 1, 'position':  105, 'note': 'Variation ID:<a style="color:#1976D2 !important; font-size:15px !important;" href="https://gnomad.broadinstitute.org/variant/12-49580155-G-C" target="_blank"> 12-49580155-G-C</a> <br> Frequency: 0 <br> rsNumber: rs1237540680<br> p.Arg105Gly <br> missense_variant', 'source': 'gnomAD' },
-			{ 'sequenceIndex': 1, 'position':  173, 'note': 'Variation ID:<a style="color:#1976D2 !important; font-size:15px !important;" href="https://gnomad.broadinstitute.org/variant/12-49579632-G-A" target="_blank"> 12-49579632-G-A</a> <br> Frequency: 4.0E-6 <br> rsNumber: rs1488125532<br> p.Pro173Ser <br> missense_variant', 'source': 'gnomAD' },
-			{ 'sequenceIndex': 1, 'position':  194, 'note': 'Variation ID:<a style="color:#1976D2 !important; font-size:15px !important;" href="https://gnomad.broadinstitute.org/variant/12-49579568-G-A" target="_blank"> 12-49579568-G-A</a> <br> Frequency: 4.0E-6 <br> rsNumber: rs1397581823<br> p.Thr194Ile <br> missense_variant', 'source': 'gnomAD' },
-			{ 'sequenceIndex': 1, 'position':  274, 'note': 'Variation ID:<a style="color:#1976D2 !important; font-size:15px !important;" href="https://gnomad.broadinstitute.org/variant/12-49579326-CAG-C" target="_blank"> 12-49579326-CAG-C</a> <br> Frequency: 0 <br> rsNumber: <br> p.Pro274ArgfsTer5 <br> frameshift_variant', 'source': 'gnomAD' },
-			{ 'sequenceIndex': 1, 'position':  287, 'note': 'Variation ID:<a style="color:#1976D2 !important; font-size:15px !important;" href="https://gnomad.broadinstitute.org/variant/12-49579290-A-T" target="_blank"> 12-49579290-A-T</a> <br> Frequency: 4.4E-5 <br> rsNumber: rs150978489<br> p.Ser287Thr <br> missense_variant', 'source': 'gnomAD' },
-			{ 'sequenceIndex': 1, 'position':  339, 'note': 'Variation ID:<a style="color:#1976D2 !important; font-size:15px !important;" href="https://gnomad.broadinstitute.org/variant/12-49579133-C-T" target="_blank"> 12-49579133-C-T</a> <br> Frequency: 4.0E-6 <br> rsNumber: rs1258159775<br> p.Arg339His <br> missense_variant', 'source': 'gnomAD' },
-			{ 'sequenceIndex': 1, 'position':  380, 'note': 'Variation ID:<a style="color:#1976D2 !important; font-size:15px !important;" href="https://gnomad.broadinstitute.org/variant/12-49579011-T-TG" target="_blank"> 12-49579011-T-TG</a> <br> Frequency: 0 <br> rsNumber: rs1400864801<br> p.Asn380GlnfsTer7 <br> frameshift_variant', 'source': 'gnomAD' },
-			{ 'sequenceIndex': 1, 'position':  427, 'note': 'Variation ID:<a style="color:#1976D2 !important; font-size:15px !important;" href="https://gnomad.broadinstitute.org/variant/12-49578869-G-C" target="_blank"> 12-49578869-G-C</a> <br> Frequency: 1.2E-5 <br> rsNumber: rs773920941<br> p.Ala427Gly <br> missense_variant', 'source': 'gnomAD' },
-			{ 'sequenceIndex': 1, 'position':  431, 'note': 'Variation ID:<a style="color:#1976D2 !important; font-size:15px !important;" href="https://gnomad.broadinstitute.org/variant/12-49578858-C-T" target="_blank"> 12-49578858-C-T</a> <br> Frequency: 0 <br> rsNumber: rs1361084932<br> p.Asp431Asn <br> missense_variant', 'source': 'gnomAD' },
-			{ 'sequenceIndex': 1, 'position':  440, 'note': 'Variation ID:<a style="color:#1976D2 !important; font-size:15px !important;" href="https://gnomad.broadinstitute.org/variant/12-49578831-C-T" target="_blank"> 12-49578831-C-T</a> <br> Frequency: 4.0E-6 <br> rsNumber: rs749746325<br> p.Val440Ile <br> missense_variant', 'source': 'gnomAD' },
-			{ 'sequenceIndex': 1, 'position':  444, 'note': 'Variation ID:<a style="color:#1976D2 !important; font-size:15px !important;" href="https://gnomad.broadinstitute.org/variant/12-49578818-C-G" target="_blank"> 12-49578818-C-G</a> <br> Frequency: 4.0E-6 <br> rsNumber: rs770156445<br> p.Gly444Ala <br> missense_variant', 'source': 'gnomAD' },
-			{ 'sequenceIndex': 1, 'position':  448, 'note': 'Variation ID:<a style="color:#1976D2 !important; font-size:15px !important;" href="https://gnomad.broadinstitute.org/variant/12-49578806-C-T" target="_blank"> 12-49578806-C-T</a> <br> Frequency: 4.0E-6 <br> rsNumber: rs1324228374<br> p.Gly448Glu <br> missense_variant', 'source': 'gnomAD' }, 
+			{ 'sequenceIndex': 1, 'position': 42, 'note': 'Variation ID:<a style="color:#1976D2 !important; font-size:15px !important;" href="https://gnomad.broadinstitute.org/variant/12-49580495-A-G" target="_blank"> 12-49580495-A-G</a> <br> Frequency: 4.0E-6 <br> rsNumber: rs1247802698<br> p.Ile42Thr <br> missense_variant', 'source': 'gnomAD' },
+			{ 'sequenceIndex': 1, 'position': 84, 'note': 'Variation ID:<a style="color:#1976D2 !important; font-size:15px !important;" href="https://gnomad.broadinstitute.org/variant/12-49580217-C-T" target="_blank"> 12-49580217-C-T</a> <br> Frequency: 0 <br> rsNumber: rs1400284461<br> p.Arg84His <br> missense_variant', 'source': 'gnomAD' },
+			{ 'sequenceIndex': 1, 'position': 105, 'note': 'Variation ID:<a style="color:#1976D2 !important; font-size:15px !important;" href="https://gnomad.broadinstitute.org/variant/12-49580155-G-C" target="_blank"> 12-49580155-G-C</a> <br> Frequency: 0 <br> rsNumber: rs1237540680<br> p.Arg105Gly <br> missense_variant', 'source': 'gnomAD' },
+			{ 'sequenceIndex': 1, 'position': 173, 'note': 'Variation ID:<a style="color:#1976D2 !important; font-size:15px !important;" href="https://gnomad.broadinstitute.org/variant/12-49579632-G-A" target="_blank"> 12-49579632-G-A</a> <br> Frequency: 4.0E-6 <br> rsNumber: rs1488125532<br> p.Pro173Ser <br> missense_variant', 'source': 'gnomAD' },
+			{ 'sequenceIndex': 1, 'position': 194, 'note': 'Variation ID:<a style="color:#1976D2 !important; font-size:15px !important;" href="https://gnomad.broadinstitute.org/variant/12-49579568-G-A" target="_blank"> 12-49579568-G-A</a> <br> Frequency: 4.0E-6 <br> rsNumber: rs1397581823<br> p.Thr194Ile <br> missense_variant', 'source': 'gnomAD' },
+			{ 'sequenceIndex': 1, 'position': 274, 'note': 'Variation ID:<a style="color:#1976D2 !important; font-size:15px !important;" href="https://gnomad.broadinstitute.org/variant/12-49579326-CAG-C" target="_blank"> 12-49579326-CAG-C</a> <br> Frequency: 0 <br> rsNumber: <br> p.Pro274ArgfsTer5 <br> frameshift_variant', 'source': 'gnomAD' },
+			{ 'sequenceIndex': 1, 'position': 287, 'note': 'Variation ID:<a style="color:#1976D2 !important; font-size:15px !important;" href="https://gnomad.broadinstitute.org/variant/12-49579290-A-T" target="_blank"> 12-49579290-A-T</a> <br> Frequency: 4.4E-5 <br> rsNumber: rs150978489<br> p.Ser287Thr <br> missense_variant', 'source': 'gnomAD' },
+			{ 'sequenceIndex': 1, 'position': 339, 'note': 'Variation ID:<a style="color:#1976D2 !important; font-size:15px !important;" href="https://gnomad.broadinstitute.org/variant/12-49579133-C-T" target="_blank"> 12-49579133-C-T</a> <br> Frequency: 4.0E-6 <br> rsNumber: rs1258159775<br> p.Arg339His <br> missense_variant', 'source': 'gnomAD' },
+			{ 'sequenceIndex': 1, 'position': 380, 'note': 'Variation ID:<a style="color:#1976D2 !important; font-size:15px !important;" href="https://gnomad.broadinstitute.org/variant/12-49579011-T-TG" target="_blank"> 12-49579011-T-TG</a> <br> Frequency: 0 <br> rsNumber: rs1400864801<br> p.Asn380GlnfsTer7 <br> frameshift_variant', 'source': 'gnomAD' },
+			{ 'sequenceIndex': 1, 'position': 427, 'note': 'Variation ID:<a style="color:#1976D2 !important; font-size:15px !important;" href="https://gnomad.broadinstitute.org/variant/12-49578869-G-C" target="_blank"> 12-49578869-G-C</a> <br> Frequency: 1.2E-5 <br> rsNumber: rs773920941<br> p.Ala427Gly <br> missense_variant', 'source': 'gnomAD' },
+			{ 'sequenceIndex': 1, 'position': 431, 'note': 'Variation ID:<a style="color:#1976D2 !important; font-size:15px !important;" href="https://gnomad.broadinstitute.org/variant/12-49578858-C-T" target="_blank"> 12-49578858-C-T</a> <br> Frequency: 0 <br> rsNumber: rs1361084932<br> p.Asp431Asn <br> missense_variant', 'source': 'gnomAD' },
+			{ 'sequenceIndex': 1, 'position': 440, 'note': 'Variation ID:<a style="color:#1976D2 !important; font-size:15px !important;" href="https://gnomad.broadinstitute.org/variant/12-49578831-C-T" target="_blank"> 12-49578831-C-T</a> <br> Frequency: 4.0E-6 <br> rsNumber: rs749746325<br> p.Val440Ile <br> missense_variant', 'source': 'gnomAD' },
+			{ 'sequenceIndex': 1, 'position': 444, 'note': 'Variation ID:<a style="color:#1976D2 !important; font-size:15px !important;" href="https://gnomad.broadinstitute.org/variant/12-49578818-C-G" target="_blank"> 12-49578818-C-G</a> <br> Frequency: 4.0E-6 <br> rsNumber: rs770156445<br> p.Gly444Ala <br> missense_variant', 'source': 'gnomAD' },
+			{ 'sequenceIndex': 1, 'position': 448, 'note': 'Variation ID:<a style="color:#1976D2 !important; font-size:15px !important;" href="https://gnomad.broadinstitute.org/variant/12-49578806-C-T" target="_blank"> 12-49578806-C-T</a> <br> Frequency: 4.0E-6 <br> rsNumber: rs1324228374<br> p.Gly448Glu <br> missense_variant', 'source': 'gnomAD' },
 
 			// ClinVar
 			{ 'sequenceIndex': 1, 'position': 101, 'note': 'Variation ID: 625515 <br> rsNumber: N/A<br> p.Asn101Ser <br> single nucleotide variant <br> Pathogenic<br>Tubulinopathies', 'source': 'ClinVar' },
@@ -498,7 +525,7 @@
 			});
 
 			viewer.export("MSA_export.fasta");
-			
+
 		});
 
 	</script>
