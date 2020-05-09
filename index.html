@@ -27,27 +27,27 @@
 	<script type="text/javascript" charset="utf-8">
 
 		var viewer;
-		var domains = [
+		var annotations = [
 			{
-				'domain_id': "PFAM123",
-				'domain_name': "Protein Kinase Domain",
-				'domain_external_link': "http://google.com/",
-				'domain_start_point': 11,
-				'domain_end_point': 32
+				'annotation_id': "PFAM123",
+				'annotation_name': "Protein Kinase Domain",
+				'annotation_external_link': "http://google.com/",
+				'annotation_start_point': 11,
+				'annotation_end_point': 32
 			},
 			{
-				'domain_id': "ANANZA",
-				'domain_name': "Protein Kinase Domain",
-				'domain_external_link': "http://google.com/",
-				'domain_start_point': 35,
-				'domain_end_point': 55
+				'annotation_id': "ANANZA",
+				'annotation_name': "Protein Kinase Domain",
+				'annotation_external_link': "http://google.com/",
+				'annotation_start_point': 35,
+				'annotation_end_point': 55
 			}
 		];
 		var variations = [
-			{ 'protein': 1, 'position': 1, 'note': "M->G : VUS", 'source': "Source2 <a href='naber'>mamamamamamamamamamiya</a>" },
-			{ 'protein': 2, 'position': 2, 'note': "A->R : Benign", 'source': "Source3" },
-			{ 'protein': 3, 'position': 4, 'note': "T->L : Benign", 'source': "Source4" },
-			{ 'protein': 3, 'position': 4, 'note': "T->L : Benign", 'source': "modification" }
+			{ 'sequenceIndex': 1, 'position': 1, 'note': "M->G : VUS", 'source': "Source2 <a href='naber'>mamamamamamamamamamiya</a>" },
+			{ 'sequenceIndex': 2, 'position': 2, 'note': "A->R : Benign", 'source': "Source3" },
+			{ 'sequenceIndex': 3, 'position': 4, 'note': "T->L : Benign", 'source': "Source4" },
+			{ 'sequenceIndex': 3, 'position': 4, 'note': "T->L : Benign", 'source': "modification" }
 		];
 
 		$.get("sample_files/hars.txt", (fasta) => {
@@ -59,7 +59,7 @@
 					hasConsensus: true
 				}),
 				title: "Human HARS",
-				domains: domains,
+				annotations: annotations,
 				variations: variations,
 				colorSchema: "clustal",
 				resetOnScroll: true

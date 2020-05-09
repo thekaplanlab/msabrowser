@@ -5,17 +5,17 @@ function MSAProcessor({
     this.sequenceDetails = [];
     this.processedSequences = [];
     this.fasta = fasta;
-    this.extractLinkFromId = function (proteinId) {
-        var proteinType = proteinId.substring(0, 2);
+    this.extractLinkFromId = function (sequenceId) {
+        var sequenceType = sequenceId.substring(0, 2);
 
-        if (proteinType == "gi") { link = "https://www.ncbi.nlm.nih.gov/protein/" + proteinId.split("|")[3]; }
-        else if (proteinType == "NP" || proteinType == "XP") { link = "https://www.ncbi.nlm.nih.gov/protein/" + proteinId; }
-        else if (proteinType == "EN") { link = "https://www.ensembl.org/id/" + proteinId; }
+        if (sequenceType == "gi") { link = "https://www.ncbi.nlm.nih.gov/protein/" + sequenceId.split("|")[3]; }
+        else if (sequenceType == "NP" || sequenceType == "XP") { link = "https://www.ncbi.nlm.nih.gov/protein/" + sequenceId; }
+        else if (sequenceType == "EN") { link = "https://www.ensembl.org/id/" + sequenceId; }
 
         regexPattern = "[OPQ][0-9][A-Z0-9]{3}[0-9]|[A-NR-Z][0-9]([A-Z][A-Z0-9]{2}[0-9]){1,2}"
-        if (proteinId.search(regexPattern) != "-1") {
-            proteinId = proteinId.split(" ")[1];
-            link = "https://www.uniprot.org/uniprot/" + proteinId;
+        if (sequenceId.search(regexPattern) != "-1") {
+            sequenceId = sequenceId.split(" ")[1];
+            link = "https://www.uniprot.org/uniprot/" + sequenceId;
         }
 
         return link;
@@ -35,21 +35,21 @@ function MSAProcessor({
 
             this.processedSequences.push(sequence);
             //Protein Name-Identifier
-            let proteinName = fasta.slice(firstStartPointer + 1, endPointer + 1);
-            if (proteinName.substring(0, 2) == "gi") {
-                var proteinId = proteinName.split("|")[3];
+            let sequenceDescription = fasta.slice(firstStartPointer + 1, endPointer + 1);
+            if (sequenceDescription.substring(0, 2) == "gi") {
+                var sequenceId = sequenceDescription.split("|")[3];
             } else {
-                var proteinId = proteinName.split(" ")[0];
+                var sequenceId = sequenceDescription.split(" ")[0];
             }
-            let species = proteinName.split("[").slice(-1)[0].split("]")[0];
+            let species = sequenceDescription.split("[").slice(-1)[0].split("]")[0];
             let speciesByWord = species.split(" ");
             species = speciesByWord[0][0] + ". " + speciesByWord[1];
-            var link = this.extractLinkFromId(proteinId);
+            var link = this.extractLinkFromId(sequenceId);
             this.sequenceDetails.push({
                 link: link,
                 species: species,
-                proteinId: proteinId,
-                rawProteinName: proteinName
+                sequenceId: sequenceId,
+                rawProteinName: sequenceDescription
             });
 
         } while (currentStartPointer != -1);
@@ -62,12 +62,12 @@ function MSAProcessor({
     this.addConsensus = function () {
         let consensus_logo = "";
         var aaCount = this.processedSequences[0].length;
-        for (let aaInd = 0; aaInd < aaCount; aaInd++) {
+        for (let positionIndex = 0; positionIndex < aaCount; positionIndex++) {
             var position_dict = {};
-            for (let proteinIndex = 0; proteinIndex < this.processedSequences.length; proteinIndex++) {
-                var protein = this.processedSequences[proteinIndex];
-                var aminoacid = protein[aaInd];
-                position_dict[aminoacid] = aaInd;
+            for (let sequenceIndex = 0; sequenceIndex < this.processedSequences.length; sequenceIndex++) {
+                var sequence = this.processedSequences[sequenceIndex];
+                var aminoacid = sequence[positionIndex];
+                position_dict[aminoacid] = positionIndex;
             }
             if (Object.keys(position_dict).length == 1) {
                 consensus_logo = consensus_logo.concat(aminoacid);
@@ -85,7 +85,7 @@ function MSAProcessor({
         this.sequenceDetails.push({
             link: '#',
             species: 'Consensus',
-            proteinId: 'Consensus',
+            sequenceId: 'Consensus',
             rawProteinName: 'Consensus'
         });
         this.processedSequences.push(consensus_logo);
@@ -106,19 +106,19 @@ function renderMSATemplate({
     return `
     <section class="msa-container">
         <section class="scroll-container">
-            <!--Current Project | Domains and Sequences Parts -->
-            <section id="${ids.domainSequence}" class="domain-sequence">
+            <!--Current Project | annotations and Sequences Parts -->
+            <section id="${ids.annotationSequence}" class="annotation-sequence">
                 
-                <!-- Current Project | Protein Domains for Human -->
-                <section id="${ids.proteinLength}" class="protein-length">
-                </section> <!-- end of domains -->
+                <!-- Current Project | Protein annotations for Human -->
+                <section id="${ids.sequenceLength}" class="sequence-length">
+                </section> <!-- end of annotations -->
 
                 <!-- Current Project | Protein Sequences -->
                 <section id="${ids.sequence}" class="sequence-container">
                     <div id="${ids.aminoacidInfo}" class="aminoacid-info"></div>
                 </section> <!-- end of protein sequences -->
 
-            </section> <!-- end of domain and sequences parts -->
+            </section> <!-- end of annotation and sequences parts -->
 
             <!--Gene name and specie names-->
             <section id="${ids.nameContainer}" class="species-and-gene-names">
@@ -153,8 +153,8 @@ function MSAViewer({   // notice the curly braces! we are receiving an object no
     this.id = id;
     this.ids = {
         id: id,
-        domainSequence: i_('-domain-sequence'),
-        proteinLength: i_('-protein-length'),
+        annotationSequence: i_('-annotation-sequence'),
+        sequenceLength: i_('-sequence-length'),
         sequence: i_('-sequence'),
         aminoacidInfo: i_('-aminoacid-info'),
         nameContainer: i_('-name-container'),
@@ -174,31 +174,31 @@ function MSAViewer({   // notice the curly braces! we are receiving an object no
 
     function loadProteins(msa) {
         var ids = that.ids;
-        var proteinLengthforDomain = "width:" + msa.processedSequences[0].length * 20 + "px;";
-        document.getElementById(ids.proteinLength).style = proteinLengthforDomain;
+        var sequenceLengthforDomain = "width:" + msa.processedSequences[0].length * 20 + "px;";
+        document.getElementById(ids.sequenceLength).style = sequenceLengthforDomain;
 
         for (var i in msa.sequenceDetails) {
             //creating flex container for proteins
             var sequenceDetails = msa.sequenceDetails[i];
 
-            let protein = document.createElement("section");
-            document.getElementById(ids.sequence).appendChild(protein);
-            protein.id = sequenceDetails.proteinId;
-            protein.className = "protein";
+            let sequence = document.createElement("section");
+            document.getElementById(ids.sequence).appendChild(sequence);
+            sequence.id = sequenceDetails.sequenceId;
+            sequence.className = "sequence";
             var speciesName = document.createElement("div");
             var speciesNameLink = document.createElement("a");
             var sequenceHidingButton = document.createElement("a");
             var speciesTooltip = document.createElement('span');
 
-            sequenceHidingButton.setAttribute("href", "#" + sequenceDetails.proteinId);
+            sequenceHidingButton.setAttribute("href", "#" + sequenceDetails.sequenceId);
             sequenceHidingButton.setAttribute('class', 'hiding-button');
             speciesNameLink.setAttribute("href", sequenceDetails.link);
             speciesNameLink.setAttribute('target', '_blank');
             speciesTooltip.setAttribute('class', 'tooltiptext');
-            speciesTooltip.innerHTML = sequenceDetails.proteinId;
+            speciesTooltip.innerHTML = sequenceDetails.sequenceId;
             speciesName.className = "species-name tooltip";
-            protein.setAttribute("data-id", sequenceDetails.proteinId);
-            speciesName.setAttribute("data-id", sequenceDetails.proteinId);
+            sequence.setAttribute("data-id", sequenceDetails.sequenceId);
+            speciesName.setAttribute("data-id", sequenceDetails.sequenceId);
 
             document.getElementById(ids.speciesNames).appendChild(speciesName).appendChild(sequenceHidingButton);
             sequenceHidingButton.appendChild(document.createTextNode('x '));
@@ -209,8 +209,8 @@ function MSAViewer({   // notice the curly braces! we are receiving an object no
 
         // For hiding sequences
         $(".hiding-button").click(function () {
-            var proteinId = $(this).attr("href").split("#")[1];
-            $('[data-id="' + proteinId + '"]').hide();
+            var sequenceId = $(this).attr("href").split("#")[1];
+            $('[data-id="' + sequenceId + '"]').hide();
         });
 
 
@@ -258,10 +258,9 @@ function MSAViewer({   // notice the curly braces! we are receiving an object no
         textBox.setAttribute("class", "variation-text-box");
         innerTextBox.setAttribute("class", "variation-inner-text-box");
 
-        proteinNotes = this.variationNotes[prNumber];
-        for (var source in proteinNotes[aaNumber]) {
-            innerTextBox.innerHTML += "<h3>" + source + "</h3>" + proteinNotes[aaNumber][source];
-            //console.log(source);
+        var sequenceNotes = this.variationNotes[prNumber];
+        for (var source in sequenceNotes[aaNumber]) {
+            innerTextBox.innerHTML += "<h3>" + source + "</h3>" + sequenceNotes[aaNumber][source];
         }
         var aminoacidInfoBox = document.getElementById(this.ids.aminoacidInfo);
         aminoacidInfoBox.innerHTML = '';
@@ -272,7 +271,7 @@ function MSAViewer({   // notice the curly braces! we are receiving an object no
         });
 
         offsetX = getOffsetX(prNumber, aaNumber);
-        var container = document.getElementById(this.id).getElementsByClassName("protein")[0];
+        var container = document.getElementById(this.id).getElementsByClassName("sequence")[0];
 
         if (container.scrollWidth < (offsetX + 600)) {
             offsetX = offsetX - 340;
@@ -289,8 +288,8 @@ function MSAViewer({   // notice the curly braces! we are receiving an object no
         this.addVariation(variation);
     }
 
-    if ((typeof (domains) != "undefined") && (domains.length != 0)) {
-        this.addDomains(domains);
+    if ((typeof (annotations) != "undefined") && (annotations.length != 0)) {
+        this.addAnnotations(annotations);
     }
 
     setInterval(() => {
@@ -313,12 +312,12 @@ function MSAViewer({   // notice the curly braces! we are receiving an object no
 }
 
 MSAViewer.prototype.reset = function () {
-    this.mainDiv.find('.protein, .species-name').show();
+    this.mainDiv.find('.sequence, .species-name').show();
 }
 
 MSAViewer.prototype.loadDomainBar = function () {
     var that = this;
-    $('.domain').each(function () {
+    $('.annotation').each(function () {
         //console.log($(this).data('start-point'), );
         startPosition = that.getAminoacidPositionInViewport(0, parseInt($(this).data('start-point')) - 1);
 
@@ -337,8 +336,8 @@ MSAViewer.prototype.loadDomainBar = function () {
 
 
     var ids = this.ids;
-    $('.protein').width(($('#' + ids.proteinLength).width()) + 'px');
-    $('#' + ids.sequence).width(($('#' + ids.proteinLength).width()) + 'px');
+    $('.sequence').width(($('#' + ids.sequenceLength).width()) + 'px');
+    $('#' + ids.sequence).width(($('#' + ids.sequenceLength).width()) + 'px');
 }
 
 MSAViewer.prototype.getAminoacidPositionInViewport = function (species_id, position) {
@@ -359,21 +358,21 @@ MSAViewer.prototype.getAminoacidPositionInViewport = function (species_id, posit
 }
 
 MSAViewer.prototype.highlightPosition = function (species, position) {
-        var alignmentPosition = this.getAminoacidPositionInViewport(species, position - 1);
+    var alignmentPosition = this.getAminoacidPositionInViewport(species, position - 1);
 
-        $mainDiv.find('.highlight-column').removeClass('highlight-column modification-highlighted');
-        $mainDiv.find('.position-number').remove();
+    $mainDiv.find('.highlight-column').removeClass('highlight-column modification-highlighted');
+    $mainDiv.find('.position-number').remove();
 
-        template = `<div class="highlight-column position-number" style="left:${alignmentPosition * 20}px">${position}</div>`;
+    template = `<div class="highlight-column position-number" style="left:${alignmentPosition * 20}px">${position}</div>`;
 
-        $mainDiv.find('.protein:eq(0)').append(template);
+    $mainDiv.find('.sequence:eq(0)').append(template);
 
-        $mainDiv.find('.scroll-container').scrollLeft(alignmentPosition * 20 - ($mainDiv.width() - 160) / 2)
+    $mainDiv.find('.scroll-container').scrollLeft(alignmentPosition * 20 - ($mainDiv.width() - 160) / 2)
 
-        setTimeout(function () {
-            $mainDiv.find('.i-' + alignmentPosition).addClass('highlight-column');
-            $mainDiv.find('.protein:eq(' + species + ') .modification.i-' + alignmentPosition).addClass('modification-highlighted');
-        }, 75);
+    setTimeout(function () {
+        $mainDiv.find('.i-' + alignmentPosition).addClass('highlight-column');
+        $mainDiv.find('.sequence:eq(' + species + ') .modification.i-' + alignmentPosition).addClass('modification-highlighted');
+    }, 75);
 }
 MSAViewer.prototype.loadAminoacidSearch = function () {
     var ids = this.ids;
@@ -394,7 +393,7 @@ MSAViewer.prototype.loadAminoacidSearch = function () {
 
     $(`#${ids.positionInput}, #${ids.speciesSelect}`).on("keyup", () => {
         var position = parseInt($('#' + this.ids.positionInput).val());
-        var species = parseInt($('#' + this.ids.speciesSelect).val()); 
+        var species = parseInt($('#' + this.ids.speciesSelect).val());
         this.highlightPosition(species, position)
     });
 }
@@ -406,7 +405,7 @@ MSAViewer.prototype.loadDivsInViewport = function () {
     processedSequences = this.msa.processedSequences;
     variationNotes = this.variationNotes;
     modificationNotes = this.modificationNotes;
-    
+
     var viewportOffset = document.getElementById(ids.sequence).getBoundingClientRect();
 
     var aminoacid_index = 0;
@@ -422,40 +421,44 @@ MSAViewer.prototype.loadDivsInViewport = function () {
     }
 
 
-    for (j = 0; j < processedSequences.length; j++) {
-        seq1 = processedSequences[j];
+    for (var sequenceIndex = 0; sequenceIndex < processedSequences.length; sequenceIndex++) {
+        seq1 = processedSequences[sequenceIndex];
         var documentFragment = document.createDocumentFragment();
-        for (i = startX; i < endX; i++) {
+        for (var positionIndex = startX; positionIndex < endX; positionIndex++) {
 
-            if (loadedPositions[i] && seq1.length < 5000) {
+            if (loadedPositions[positionIndex] && seq1.length < 5000) {
                 continue;
             }
             let aaBox = document.createElement("div");
             //reading protein sequence letter by letter
-            var aaLetter = seq1.charAt(i);
+            var aaLetter = seq1.charAt(positionIndex);
             //creating amino acid boxes
 
             if (aaLetter != '-') {
                 aminoacid_index += 1;
 
-                aaBox.className = "i-" + i;
+                aaBox.className = "i-" + positionIndex;
             }
             if (aaLetter == '-') {
                 continue;
             }
 
-            if (j in variationNotes && viewportToAANumber[j][i] != -1 && viewportToAANumber[j][i] in variationNotes[j]) {
+            if (sequenceIndex in variationNotes 
+                && viewportToAANumber[sequenceIndex][positionIndex] != -1 
+                && viewportToAANumber[sequenceIndex][positionIndex] in variationNotes[sequenceIndex]) {
                 aaBox.className += " specialAa";
-                aaBox.setAttribute('data-sid', j);
+                aaBox.setAttribute('data-sid', sequenceIndex);
             }
 
-            if (j == 0 && viewportToAANumber[j][i] != -1 && viewportToAANumber[j][i] in modificationNotes) {
+            if (sequenceIndex == 0
+                && viewportToAANumber[sequenceIndex][positionIndex] != -1 
+                && viewportToAANumber[sequenceIndex][positionIndex] in modificationNotes) {
                 aaBox.className += " modification";
-                aaBox.setAttribute('data-sid', j);
+                aaBox.setAttribute('data-sid', sequenceIndex);
             }
 
             aaBox.innerHTML = aaLetter;
-            aaBox.style.cssText = 'left:' + (i * 20) + 'px;';
+            aaBox.style.cssText = 'left:' + (positionIndex * 20) + 'px;';
 
             // Color schema for amino acids
             colorSchemas = {
@@ -483,7 +486,7 @@ MSAViewer.prototype.loadDivsInViewport = function () {
             documentFragment.appendChild(aaBox);
             aaBox = null;
         }
-        let element = document.getElementById(this.id).getElementsByClassName('protein')[j];
+        let element = document.getElementById(this.id).getElementsByClassName('sequence')[sequenceIndex];
         if (seq1.length >= 5000) {
             element.innerHTML = '';
         }
@@ -491,48 +494,48 @@ MSAViewer.prototype.loadDivsInViewport = function () {
         documentFragment.innerHTML = '';
     }
 
-    for (i = 0; i < seq1.length; i++) {
-        if (i >= startX && i < endX)
-            loadedPositions[i] = true;
+    for (positionIndex = 0; positionIndex < seq1.length; positionIndex++) {
+        if (positionIndex >= startX && positionIndex < endX)
+            loadedPositions[positionIndex] = true;
         else if (seq1.length >= 5000)
-            loadedPositions[i] = false;
+            loadedPositions[positionIndex] = false;
     }
 
 }
 
-MSAViewer.prototype.addDomains = function (domains) {
+MSAViewer.prototype.addAnnotations = function (annotations) {
     var ids = this.ids;
-    for (var key in domains) {
-        domain_id = domains[key]["domain_id"];
-        domain_name = domains[key]["domain_id"];
-        domain_external_link = domains[key]["domain_external_link"];
-        domain_start_point = domains[key]["domain_start_point"];
-        domain_end_point = domains[key]["domain_end_point"];
+    for (var key in annotations) {
+        annotation_id = annotations[key]["annotation_id"];
+        annotation_name = annotations[key]["annotation_id"];
+        annotation_external_link = annotations[key]["annotation_external_link"];
+        annotation_start_point = annotations[key]["annotation_start_point"];
+        annotation_end_point = annotations[key]["annotation_end_point"];
 
-        domain_template = `
-        <a href="${domain_external_link}" target="_blank">
-            <div class="domain" data-start-point="${domain_start_point}" data-end-point="${domain_end_point}">
-                <div class="domain_start_point">${domain_start_point}</div>
-                <p>${domain_name} (${domain_start_point} - ${domain_end_point})</p>
-                <div class="domain_end_point">${domain_end_point}</div>
+        annotation_template = `
+        <a href="${annotation_external_link}" target="_blank">
+            <div class="annotation" data-start-point="${annotation_start_point}" data-end-point="${annotation_end_point}">
+                <div class="annotation_start_point">${annotation_start_point}</div>
+                <p>${annotation_name} (${annotation_start_point} - ${annotation_end_point})</p>
+                <div class="annotation_end_point">${annotation_end_point}</div>
             </div>
         </a>
         `;
 
-        $('#' + ids.proteinLength).append(domain_template);
+        $('#' + ids.sequenceLength).append(annotation_template);
     };
 }
 
-MSAViewer.prototype.addVariation = function ({ 
-    protein,                                    
-    position, 
-    note = "", 
+MSAViewer.prototype.addVariation = function ({
+    sequenceIndex,
+    position,
+    note = "",
     source = ""
 }) {
-    var protein = protein - 1; // the species start from 0
+    var sequenceIndex = sequenceIndex - 1; // the species start from 0
     let aaNumber = position - 1; // the aacids start from 0
 
-    notesByProtein = this.variationNotes[protein];
+    notesByProtein = this.variationNotes[sequenceIndex];
     if (notesByProtein == undefined) {
         notesByProtein = [];
     }
@@ -545,7 +548,7 @@ MSAViewer.prototype.addVariation = function ({
     }
 
     notesByProtein[aaNumber][source] += note;
-    this.variationNotes[protein] = notesByProtein
+    this.variationNotes[sequenceIndex] = notesByProtein
 
     if (source == "modification") {
         this.modificationNotes[aaNumber] += position + 1;
@@ -584,7 +587,7 @@ MSAViewer.prototype.export = function (fileName) {
     this.mainDiv.find('.bottom-panel').append('<a class="msa-button export-button" href="' + hrefTag + '" download="' + fileName + '">Download as FASTA</a>');
     this.mainDiv.find('.bottom-panel').append('<a href="javascript:void(0)" class="msa-button ss-button">Save as PNG</a>');
     this.mainDiv.find('.ss-button').click(() => {
-        html2canvas(this.mainDiv.find('.scroll-container')[0], {height: this.mainDiv.height(), width: this.mainDiv.width()}).then(canvas => {
+        html2canvas(this.mainDiv.find('.scroll-container')[0], { height: this.mainDiv.height(), width: this.mainDiv.width() }).then(canvas => {
             console.log(canvas);
             saveAs(canvas.toDataURL(), 'msa-browser-image.png');
         });

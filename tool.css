@@ -33,14 +33,14 @@
     overflow: hidden;
 }
 
-.protein-length {
+.sequence-length {
     position: relative;
     margin: 70px 0;
     height: 10px;
     background: #ccc;
 }
 
-.domain {
+.annotation {
     display: flex;
     position: absolute;
     top: -30px;
@@ -57,9 +57,9 @@
 }
 
 
-/* Dashes at the end of the domains */
+/* Dashes at the end of the annotations */
 
-.domain::before {
+.annotation::before {
     position: absolute;
     top: 40px;
     content: "";
@@ -73,14 +73,14 @@
     z-index: -1;
 }
 
-.domain>p {
+.annotation>p {
     font-size: 18px;
 }
 
 
-/*  Shadow for particular domain on protein sequences 
+/*  Shadow for particular annotation on protein sequences 
     && if you change the height or width of aminoacids , do not forget to set that height 
-.domain::after {
+.annotation::after {
   position: absolute;
   top: 135px;
   content: "";
@@ -90,87 +90,87 @@
   z-index: -1;
 } */
 
-.protein-length a:nth-child(1) .domain {
+.sequence-length a:nth-child(1) .annotation {
     background: #4285F4;
     border-bottom-right-radius: 50px;
     border-top-right-radius: 50px;
 }
 
-.protein-length a:nth-child(2) .domain {
+.sequence-length a:nth-child(2) .annotation {
     background: #EA4335;
     border-radius: 20px;
 }
 
-.protein-length a:nth-child(3) .domain {
+.sequence-length a:nth-child(3) .annotation {
     background: #FBBC05;
     border-bottom-left-radius: 20px;
     border-top-right-radius: 20px;
 }
 
-.protein-length a:nth-child(4) .domain {
+.sequence-length a:nth-child(4) .annotation {
     background: #34A853;
     border-radius: 0px;
 }
 
-.protein-length a:nth-child(5) .domain {
+.sequence-length a:nth-child(5) .annotation {
     background: #7B0099;
     border-top-left-radius: 20px;
     border-bottom-right-radius: 20px;
 }
 
-.protein-length a:nth-child(6) .domain {
+.sequence-length a:nth-child(6) .annotation {
     background: #004883;
     border-bottom-left-radius: 20px;
     border-top-left-radius: 20px;
 }
 
-.protein-length a:nth-child(7) .domain {
+.sequence-length a:nth-child(7) .annotation {
     background: #FF5722;
     border-bottom-left-radius: 20px;
     border-top-left-radius: 20px;
 }
 
-.protein-length a:nth-child(8) .domain {
+.sequence-length a:nth-child(8) .annotation {
     background: #4285F4;
     border-bottom-right-radius: 50px;
     border-top-right-radius: 50px;
 }
 
-.protein-length a:nth-child(9) .domain {
+.sequence-length a:nth-child(9) .annotation {
     background: #EA4335;
     border-radius: 20px;
 }
 
-.protein-length a:nth-child(10) .domain {
+.sequence-length a:nth-child(10) .annotation {
     background: #34A853;
     border-radius: 0px;
 }
 
-.protein-length a:nth-child(11) .domain {
+.sequence-length a:nth-child(11) .annotation {
     background: #FBBC05;
     border-bottom-left-radius: 20px;
     border-top-right-radius: 20px;
 }
 
-.protein-length a:nth-child(12) .domain {
+.sequence-length a:nth-child(12) .annotation {
     background: #7B0099;
     border-top-left-radius: 20px;
     border-bottom-right-radius: 20px;
 }
 
-.protein-length a:nth-child(13) .domain {
+.sequence-length a:nth-child(13) .annotation {
     background: #004883;
     border-bottom-left-radius: 20px;
     border-top-left-radius: 20px;
 }
 
-.protein-length a:nth-child(14) .domain {
+.sequence-length a:nth-child(14) .annotation {
     background: #FF5722;
     border-bottom-left-radius: 20px;
     border-top-left-radius: 20px;
 }
 
-.msa-container .domain>a,
+.msa-container .annotation>a,
 .msa-container a:link,
 .msa-container a:visited,
 .msa-container a:hover,
@@ -180,12 +180,12 @@
     color: #FFF;
 }
 
-.msa-container .domain_start_point {
+.msa-container .annotation_start_point {
     position: absolute;
     left: 5px
 }
 
-.msa-container .domain_end_point {
+.msa-container .annotation_end_point {
     position: absolute;
     right: 5px;
 }
@@ -220,7 +220,7 @@
 
 /* Domain and Sequence Parts */
 
-.msa-container .domain-sequence {
+.msa-container .annotation-sequence {
     position: relative;
     left: 162px;
 }
@@ -378,7 +378,7 @@
     left: auto!important;
 }
 
-.protein {
+.sequence {
     position: relative;
     height: 20px;
     background: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAUCAAAAACo4kLRAAAAAW9yTlQBz6J3mgAAABpJREFUGNNjiMECGIaY4PT///8fGFxOoqYgACNCkklBjzWtAAAAAElFTkSuQmCC") repeat-x;
