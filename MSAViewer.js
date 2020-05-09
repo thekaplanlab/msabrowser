@@ -358,12 +358,12 @@ MSAViewer.prototype.getAminoacidPositionInViewport = function (species_id, posit
 }
 
 MSAViewer.prototype.highlightPosition = function (species, position) {
-    var alignmentPosition = this.getAminoacidPositionInViewport(species, position - 1);
+    var alignmentPosition = this.getAminoacidPositionInViewport(species, position);
 
     $mainDiv.find('.highlight-column').removeClass('highlight-column modification-highlighted');
     $mainDiv.find('.position-number').remove();
 
-    template = `<div class="highlight-column position-number" style="left:${alignmentPosition * 20}px">${position}</div>`;
+    template = `<div class="highlight-column position-number" style="left:${alignmentPosition * 20}px">${position+1}</div>`;
 
     $mainDiv.find('.sequence:eq(0)').append(template);
 
@@ -391,10 +391,10 @@ MSAViewer.prototype.loadAminoacidSearch = function () {
     }
 
 
-    $(`#${ids.positionInput}, #${ids.speciesSelect}`).on("keyup", () => {
+    $(`#${ids.positionInput}, #${ids.speciesSelect}`).on("keyup change", () => {
         var position = parseInt($('#' + this.ids.positionInput).val());
         var species = parseInt($('#' + this.ids.speciesSelect).val());
-        this.highlightPosition(species, position)
+        this.highlightPosition(species, position-1)
     });
 }
 
@@ -443,16 +443,12 @@ MSAViewer.prototype.loadDivsInViewport = function () {
                 continue;
             }
 
-            if (sequenceIndex in variationNotes 
-                && viewportToAANumber[sequenceIndex][positionIndex] != -1 
-                && viewportToAANumber[sequenceIndex][positionIndex] in variationNotes[sequenceIndex]) {
+            if (sequenceIndex in variationNotes && viewportToAANumber[sequenceIndex][positionIndex] != -1 && viewportToAANumber[sequenceIndex][positionIndex] in variationNotes[sequenceIndex]) {
                 aaBox.className += " specialAa";
                 aaBox.setAttribute('data-sid', sequenceIndex);
             }
 
-            if (sequenceIndex == 0
-                && viewportToAANumber[sequenceIndex][positionIndex] != -1 
-                && viewportToAANumber[sequenceIndex][positionIndex] in modificationNotes) {
+            if (sequenceIndex == 0 && viewportToAANumber[sequenceIndex][positionIndex] != -1 && viewportToAANumber[sequenceIndex][positionIndex] in modificationNotes) {
                 aaBox.className += " modification";
                 aaBox.setAttribute('data-sid', sequenceIndex);
             }
@@ -595,11 +591,10 @@ MSAViewer.prototype.export = function (fileName) {
 }
 
 MSAViewer.prototype.scrollToPosition = function (species, position) {
-    var that = this;
+    
+    this.highlightPosition(species-1, position-1)
     this.mainDiv[0].scrollIntoViewIfNeeded();
-    that.mainDiv.find('input[name=position]').val(position);
-    this.highlightPosition(species, position)
 
-    setTimeout(function () { that.showVariation(species - 1, position - 1); }, 20);
+    setTimeout(() => { this.showVariation(species - 1, position - 1); }, 20);
 }
 
