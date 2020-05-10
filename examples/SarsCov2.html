@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>MSABrowser | SARS-CoV-2 Example</title>
+    <link type="text/css" rel="stylesheet" href="../tool.css" media="screen" />
+    <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js" type="text/javascript"></script>
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+    <script src="../MSAViewer.js"></script>
+</head>
+
+<body>
+    <h1>Evolutionary/Comparative Genomics Study | SARS-CoV-2 Example</h1>
+    <article>
+        In this example, some available SARS-CoV-2 sequences are aligned with default options of MUSCLE and their variations are added. <br>
+    </article>
+
+    <!-- MSABrowser Demo -->
+    <section id="MSABrowserDemo"></section>
+    <!-- end of MSABrowser Demo -->
+
+
+    <script type="text/javascript" charset="utf-8">
+        var viewer;
+        var annotations = [{
+                source: "?BINDING REGION",
+                data: [{
+                    'annotation_id': 'PF00091.25',
+                    'annotation_name': 'Tubulin',
+                    'annotation_external_link': 'https://pfam.xfam.org/family/PF00091.25',
+                    'annotation_start_point': 3,
+                    'annotation_end_point': 213
+                }, {
+                    'annotation_id': 'PF03953.17',
+                    'annotation_name': 'Tubulin_C',
+                    'annotation_external_link': 'https://pfam.xfam.org/family/PF03953.17',
+                    'annotation_start_point': 263,
+                    'annotation_end_point': 392
+                }]
+            }, {
+                source: "?PROTEIN DOMAIN",
+                data: [{
+                    'annotation_id': 'PF00091.25',
+                    'annotation_name': 'Tubulin',
+                    'annotation_external_link': 'https://pfam.xfam.org/family/PF00091.25',
+                    'annotation_start_point': 15,
+                    'annotation_end_point': 180
+                }, {
+                    'annotation_id': 'PF03953.17',
+                    'annotation_name': 'Tubulin_C',
+                    'annotation_external_link': 'https://pfam.xfam.org/family/PF03953.17',
+                    'annotation_start_point': 223,
+                    'annotation_end_point': 352
+                }]
+            }
+
+        ];
+
+        var variations = [{
+                'sequenceIndex': 4,
+                'position': 225,
+                'note': ' SNP 2019-nCoV/USA-IL1/2020 VariantID:490 REF=T 225 ALT=W VEP=coding_sequence_variant gene-orf1ab:g.225gaT>gaW',
+                'source': 'China NCBI'
+            }, {
+                'sequenceIndex': 4,
+                'position': 2912,
+                'note': ' SNP 2019-nCoV/USA-IL1/2020 VariantID:3177 REF=C 2912 ALT=Y VEP=coding_sequence_variant gene-orf1ab:g.2912cCt>cYt ',
+                'source': 'China NCBI'
+            }, {
+                'sequenceIndex': 4,
+                'position': 8517,
+                'note': ' SNP 2019-nCoV/USA-IL1/2020 VariantID:8782 REF=C 8517 ALT=Y VEP=coding_sequence_variant gene-orf1ab:g.8517agC>agY ',
+                'source': 'China NCBI'
+            }, {
+                'sequenceIndex': 4,
+                'position': 2472,
+                'note': ' SNP 2019-nCoV/USA-IL1/2020 VariantID:24034 REF=C 2472 ALT=Y VEP=coding_sequence_variant gene-S:g.2472aaC>aaY',
+                'source': 'China NCBI'
+            }, {
+                'sequenceIndex': 4,
+                'position': 207,
+                'note': ' SNP 2019-nCoV/USA-IL1/2020 VariantID:26729 REF=T 207 ALT=Y VEP=coding_sequence_variant gene-M:g.207gcT>gcY',
+                'source': 'China NCBI'
+            }, {
+                'sequenceIndex': 4,
+                'position': 184,
+                'note': ' SNP 2019-nCoV/USA-IL1/2020 VariantID:28077 REF=G 184 ALT=S VEP=coding_sequence_variant gene-ORF8:g.184Gtg>Stg',
+                'source': 'China NCBI'
+            }, {
+                'sequenceIndex': 4,
+                'position': 251,
+                'note': ' SNP 2019-nCoV/USA-IL1/2020 VariantID:28144 REF=T 251 ALT=Y VEP=coding_sequence_variant gene-ORF8:g.251tTa>tYa',
+                'source': 'China NCBI'
+            }, {
+                'sequenceIndex': 4,
+                'position': 581,
+                'note': ' SNP 2019-nCoV/USA-IL1/2020 VariantID:28854 REF=C 581 ALT=Y VEP=coding_sequence_variant gene-N:g.581tCa>tYa',
+                'source': 'China NCBI'
+            }, {
+                'sequenceIndex': 5,
+                'position': 3253,
+                'note': ' SNP BetaCoV/USA/MA1/2020 VariantID:3518 REF=G 3253 ALT=T VEP=missense_variant gene-orf1ab:c.3253Gtt>Ttt',
+                'source': 'China NCBI'
+            }, {
+                'sequenceIndex': 5,
+                'position': 5215,
+                'note': ' SNP BetaCoV/USA/MA1/2020 VariantID:5480 REF=G 5215 ALT=R VEP=coding_sequence_variant gene-orf1ab:c.5215Gcc>Rcc',
+                'source': 'China NCBI'
+            }, {
+                'sequenceIndex': 5,
+                'position': 17159,
+                'note': ' SNP BetaCoV/USA/MA1/2020 VariantID:17423 REF=A 17159 ALT=G VEP=missense_variant gene-orf1ab:c.17159tAt>tGt',
+                'source': 'China NCBI'
+            }, {
+                'sequenceIndex': 5,
+                'position': 2472,
+                'note': ' SNP BetaCoV/USA/MA1/2020 VariantID:24034 REF=C 2472 ALT=T VEP=synonymous_variant gene-S:c.2472aaC>aaT',
+                'source': 'China NCBI'
+            }, {
+                'sequenceIndex': 5,
+                'position': 581,
+                'note': ' SNP BetaCoV/USA/MA1/2020 VariantID:28854 REF=C 581 ALT=T VEP=missense_variant gene-N:c.581tCa>tTa',
+                'source': 'China NCBI'
+            }, {
+                'sequenceIndex': 1,
+                'position': 389,
+                'note': ' SNP SARS-CoV-2/IQTC03/human/2020/CHN VariantID:654 REF=G 389 ALT=A VEP=missense_variant gene-orf1ab:c.389gGa>gAa',
+                'source': 'China NCBI'
+            }, {
+                'sequenceIndex': 1,
+                'position': 6554,
+                'note': ' SNP SARS-CoV-2/IQTC03/human/2020/CHN VariantID:6819 REF=G 6554 ALT=T VEP=missense_variant gene-orf1ab:c.6554aGt>aTt',
+                'source': 'China NCBI'
+            }, {
+                'sequenceIndex': 1,
+                'position': 6731,
+                'note': ' SNP SARS-CoV-2/IQTC03/human/2020/CHN VariantID:6996 REF=T 6731 ALT=C VEP=missense_variant gene-orf1ab:c.6731aTc>aCc',
+                'source': 'China NCBI'
+            }, {
+                'sequenceIndex': 1,
+                'position': 17109,
+                'note': ' SNP SARS-CoV-2/IQTC03/human/2020/CHN VariantID:17373 REF=C 17109 ALT=T VEP=synonymous_variant gene-orf1ab:c.17109gcC >gcT',
+                'source': 'China NCBI'
+            }, {
+                'sequenceIndex': 1,
+                'position': 1254,
+                'note': ' SNP SARS-CoV-2/IQTC03/human/2020/CHN VariantID:29527 REF=G 1254 ALT=A VEP=synonymous_variant gene-N:c.1254caG>caA',
+                'source': 'China NCBI'
+            }, {
+                'sequenceIndex': 2,
+                'position': 5519,
+                'note': ' SNP BetaCoV/USA/WA2/2020 VariantID:5784 REF=C 5519 ALT=T VEP=missense_variant gene-orf1ab:c.5519aCt>aTt',
+                'source': 'China NCBI'
+            }, {
+                'sequenceIndex': 2,
+                'position': 8517,
+                'note': ' SNP BetaCoV/USA/WA2/2020 VariantID:8782 REF=C 8517 ALT=T VEP=synonymous_variant gene-orf1ab:c.8517agC>agT',
+                'source': 'China NCBI'
+            }, {
+                'sequenceIndex': 2,
+                'position': 17483,
+                'note': ' SNP BetaCoV/USA/WA2/2020 VariantID:17747 REF=C 17483 ALT=T VEP=missense_variant gene-orf1ab:c.17483cCt>cTt',
+                'source': 'China NCBI'
+            }, {
+                'sequenceIndex': 2,
+                'position': 17594,
+                'note': ' SNP BetaCoV/USA/WA2/2020 VariantID:17858 REF=A 17594 ALT=G VEP=missense_variant gene-orf1ab:c.17594tAt>tGt',
+                'source': 'China NCBI'
+            }, {
+                'sequenceIndex': 2,
+                'position': 17796,
+                'note': ' SNP BetaCoV/USA/WA2/2020 VariantID:18060 REF=C 17796 ALT=T VEP=synonymous_variant gene-orf1ab:c.17796ctC>ctT',
+                'source': ' China NCBI'
+            }, {
+                'sequenceIndex': 2,
+                'position': 251,
+                'note': ' SNP BetaCoV/USA/WA2/2020 VariantID:28144 REF=T 251 ALT=C VEP=missense_variant gene-ORF8:c.251tTa>tCa',
+                'source': 'China NCBI'
+            }, {
+                'sequenceIndex': 3,
+                'position': 973,
+                'note': ' SNP hCoV-19/USA/WA-UW172/2020 VariantID:1238 REF=C 973 ALT=T VEP=missense_variant gene-orf1ab:c.973Cat>Tat',
+                'source': 'China NCBI'
+            }, {
+                'sequenceIndex': 3,
+                'position': 3328,
+                'note': ' SNP hCoV-19/USA/WA-UW172/2020 VariantID:3593 REF=C 3328 ALT=T VEP=missense_variant gene-orf1ab:c.3328Ctt>Ttt',
+                'source': 'China NCBI'
+            }, {
+                'sequenceIndex': 3,
+                'position': 4418,
+                'note': ' SNP hCoV-19/USA/WA-UW172/2020 VariantID:4683 REF=C 4418 ALT=T VEP=missense_variant gene-orf1ab:c.4418gCt>gTt',
+                'source': 'China NCBI'
+            }, {
+                'sequenceIndex': 3,
+                'position': 4514,
+                'note': ' SNP hCoV-19/USA/WA-UW172/2020 VariantID:4779 REF=T 4514 ALT=C VEP=missense_variant gene-orf1ab:c.4514aTc>aCc',
+                'source': 'China NCBI'
+            }, {
+                'sequenceIndex': 3,
+                'position': 8517,
+                'note': ' SNP hCoV-19/USA/WA-UW172/2020 VariantID:8782 REF=C 8517 ALT=T VEP=synonymous_variant gene-orf1ab:c.8517agC>agT',
+                'source': 'China NCBI'
+            }, {
+                'sequenceIndex': 3,
+                'position': 17483,
+                'note': ' SNP hCoV-19/USA/WA-UW172/2020 VariantID:17747 REF=C 17483 ALT=T VEP=missense_variant gene-orf1ab:c.17483cCt>cTt ',
+                'source': 'China NCBI'
+            }, {
+                'sequenceIndex': 3,
+                'position': 17594,
+                'note': ' SNP hCoV-19/USA/WA-UW172/2020 VariantID:17858 REF=A 17594 ALT=G VEP=missense_variant gene-orf1ab:c.17594tAt>tGt ',
+                'source': 'China NCBI'
+            }, {
+                'sequenceIndex': 3,
+                'position': 17796,
+                'note': ' SNP hCoV-19/USA/WA-UW172/2020 VariantID:18060 REF=C 17796 ALT=T VEP=synonymous_variant gene-orf1ab:c.17796ctC>ctT',
+                'source': 'China NCBI'
+            }, {
+                'sequenceIndex': 3,
+                'position': 251,
+                'note': ' SNP hCoV-19/USA/WA-UW172/2020 VariantID:28144 REF=T 251 ALT=C VEP=missense_variant gene-ORF8:c.251tTa>tCa',
+                'source': 'China NCBI'
+            }, {
+                'sequenceIndex': 3,
+                'position': 651,
+                'note': ' SNP hCoV-19/USA/WA-UW172/2020 VariantID:28924 REF=T 651 ALT=C VEP=synonymous_variant gene-N:c.651gcT>gcC',
+                'source': 'China NCBI'
+            },
+
+        ];
+        $.get("sample_files/SARS_CoV_2.txt", (fasta) => {
+
+            viewer = new MSAViewer({
+                id: "MSABrowserDemo",
+                msa: MSAProcessor({
+                    fasta: fasta,
+                    hasConsensus: true
+                }),
+                title: "SARS-CoV-2",
+                annotations: annotations,
+                variations: variations,
+                colorSchema: "nucleotide",
+                resetOnScroll: true
+            });
+
+            viewer.export("MSA_export.fasta");
+
+        });
+    </script>
+</body>
+
+</html>
