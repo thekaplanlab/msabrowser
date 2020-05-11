@@ -2,531 +2,2211 @@
 <html>
 
 <head>
-	<meta charset="utf-8">
-	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<title>MSABrowser | TUBA1A Example</title>
-	<link type="text/css" rel="stylesheet" href="../tool.css" media="screen" />
-	<script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js" type="text/javascript"></script>
-	<script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
-	<script src="../MSAViewer.js"></script>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>MSABrowser | TUBA1A Example</title>
+    <link type="text/css" rel="stylesheet" href="../tool.css" media="screen" />
+    <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js" type="text/javascript"></script>
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+    <script src="../MSAViewer.js"></script>
 </head>
 
 <body>
-	<h1>Evolutionary/Comparative Genomics Study | TUBA1A Example</h1>
-	<article>
-		In this example, human TUBA1A sequence and its homologous sequences are aligned and human sequence annotations are added. <br> 
-		Additionaly, some genetic variations are also included from different sources such as gnomAD and ClinVar. 
-		For example, you can view a particular <a href="javascript:void(0)" onclick="viewer.scrollToPosition(1,6)"> modification and variation on human</a> or 
-		<a href="javascript:void(0)" onclick="viewer.scrollToPosition(3,144)"> this variation on <i>C. elegans</i></a> or 
-		by clicking the link.
-	</article>
+    <h1>Evolutionary/Comparative Genomics Study | TUBA1A Example</h1>
+    <article>
+        In this example, human TUBA1A sequence and its homologous sequences are aligned and human sequence annotations are added.
+        <br> Additionaly, some genetic variations are also included from different sources such as gnomAD and ClinVar.
+        <br> For example, you can view a particular <a href="javascript:void(0)" onclick="viewer.scrollToPosition(1,6)"> modification and variation on human</a> or
+        <a href="javascript:void(0)" onclick="viewer.scrollToPosition(3,144)"> this variation on <i>C. elegans</i></a> or by clicking the link.
+        <br> Also, you might annotate a sequence interval together with the protein domains. Look at the "NOTES" part!
+    </article>
 
-	<!-- MSABrowser Demo -->
-	<section id="MSABrowserDemo"></section>
-	<!-- end of MSABrowser Demo -->
+    <!-- MSABrowser Demo -->
+    <section id="MSABrowserDemo"></section>
+    <!-- end of MSABrowser Demo -->
 
 
-	<script type="text/javascript" charset="utf-8">
+    <script type="text/javascript" charset="utf-8">
+        var viewer;
+        var annotations = [{
+                source: "PFAM",
+                data: [{
+                    'annotation_id': 'PF00091.25',
+                    'annotation_name': 'Tubulin',
+                    'annotation_external_link': 'https://pfam.xfam.org/family/PF00091.25',
+                    'annotation_start_point': 3,
+                    'annotation_end_point': 213
+                }, {
+                    'annotation_id': 'PF03953.17',
+                    'annotation_name': 'Tubulin_C',
+                    'annotation_external_link': 'https://pfam.xfam.org/family/PF03953.17',
+                    'annotation_start_point': 263,
+                    'annotation_end_point': 392
+                }]
+            }, {
+                source: "NOTES",
+                data: [{
+                    'annotation_id': 'CRISPR Target Region',
+                    'annotation_name': 'CRISPR Target Region',
+                    'annotation_external_link': 'https://msabrowser.github.io',
+                    'annotation_start_point': 15,
+                    'annotation_end_point': 35
+                }, {
+                    'annotation_id': 'CRISPR Target Region 2',
+                    'annotation_name': 'CRISPR Target Region 2',
+                    'annotation_external_link': 'https://msabrowser.github.io',
+                    'annotation_start_point': 55,
+                    'annotation_end_point': 95
+                }]
+            }
 
-		var viewer;
-		var annotations = [
-			{
-				source: "PFAM",
-				data: [
-					{
-						'annotation_id': 'PF00091.25',
-						'annotation_name': 'Tubulin',
-						'annotation_external_link': 'https://pfam.xfam.org/family/PF00091.25',
-						'annotation_start_point': 3,
-						'annotation_end_point': 213
-					},
-					{
-						'annotation_id': 'PF03953.17',
-						'annotation_name': 'Tubulin_C',
-						'annotation_external_link': 'https://pfam.xfam.org/family/PF03953.17',
-						'annotation_start_point': 263,
-						'annotation_end_point': 392
-					}
-				]
-			},
-			{
-				source: "PFAM2",
-				data: [
-					{
-						'annotation_id': 'PF00091.25',
-						'annotation_name': 'Tubulin',
-						'annotation_external_link': 'https://pfam.xfam.org/family/PF00091.25',
-						'annotation_start_point': 15,
-						'annotation_end_point': 180
-					},
-					{
-						'annotation_id': 'PF03953.17',
-						'annotation_name': 'Tubulin_C',
-						'annotation_external_link': 'https://pfam.xfam.org/family/PF03953.17',
-						'annotation_start_point': 223,
-						'annotation_end_point': 352
-					}
-				]
-			}
-			
-		];
+        ];
 
-		var variations = [
-			//  Mouse Variations
-			{ 'sequenceIndex': 2, 'position': 5, 'note': "Mutation: I to F at 5<br> Mutation Type: missense<br>Note:possibly damaging", 'source': "Mouse Variation" },
-			{ 'sequenceIndex': 2, 'position': 41, 'note': "Mutation: T to P at 41<br> Mutation Type: missense<br>Note:probably benign", 'source': "Mouse Variation" },
+        var variations = [
+            //  Mouse Variations
+            {
+                'sequenceIndex': 2,
+                'position': 5,
+                'note': "Mutation: I to F at 5<br> Mutation Type: missense<br>Note:possibly damaging",
+                'source': "Mouse Variation"
+            }, {
+                'sequenceIndex': 2,
+                'position': 41,
+                'note': "Mutation: T to P at 41<br> Mutation Type: missense<br>Note:probably benign",
+                'source': "Mouse Variation"
+            },
 
-			// WormBase Variations
-			{ 'sequenceIndex': 3, 'position': 416, 'note': 'Mutation: G to E at 416<br> Mutation Type: Missense<br>WormBase Var. ID:WBVar02141274', 'source': 'WormBase' },
-			{ 'sequenceIndex': 3, 'position': 415, 'note': 'Mutation: E to K at 415<br> Mutation Type: Missense<br>WormBase Var. ID:WBVar00266521', 'source': 'WormBase' },
-			{ 'sequenceIndex': 3, 'position': 365, 'note': 'Mutation: G to E at 365<br> Mutation Type: Missense<br>WormBase Var. ID:WBVar00814000', 'source': 'WormBase' },
-			{ 'sequenceIndex': 3, 'position': 354, 'note': 'Mutation: G to E at 354<br> Mutation Type: Missense<br>WormBase Var. ID:WBVar00266616', 'source': 'WormBase' },
-			{ 'sequenceIndex': 3, 'position': 323, 'note': 'Mutation: V to I at 323<br> Mutation Type: Missense<br>WormBase Var. ID:WBVar00814008', 'source': 'WormBase' },
-			{ 'sequenceIndex': 3, 'position': 307, 'note': 'Mutation: P to L at 307<br> Mutation Type: Missense<br>WormBase Var. ID:WBVar00814009', 'source': 'WormBase' },
-			{ 'sequenceIndex': 3, 'position': 196, 'note': 'Mutation: E to K at 196<br> Mutation Type: Missense<br>WormBase Var. ID:WBVar00814015', 'source': 'WormBase' },
-			{ 'sequenceIndex': 3, 'position': 192, 'note': 'Mutation: H to Y at 192<br> Mutation Type: Missense<br>WormBase Var. ID:WBVar00600744', 'source': 'WormBase' },
-			{ 'sequenceIndex': 3, 'position': 192, 'note': 'Mutation: H to Y at 192<br> Mutation Type: Missense<br>WormBase Var. ID:WBVar00144145', 'source': 'WormBase' },
-			{ 'sequenceIndex': 3, 'position': 152, 'note': 'Mutation: L to F at 152<br> Mutation Type: Missense<br>WormBase Var. ID:WBVar00814016', 'source': 'WormBase' },
-			{ 'sequenceIndex': 3, 'position': 144, 'note': 'Mutation: G to S at 144<br> Mutation Type: Missense<br>WormBase Var. ID:WBVar00144146', 'source': 'WormBase' },
-			{ 'sequenceIndex': 3, 'position': 142, 'note': 'Mutation: G to E at 142<br> Mutation Type: Missense<br>WormBase Var. ID:WBVar00814017', 'source': 'WormBase' },
-			{ 'sequenceIndex': 3, 'position': 140, 'note': 'Mutation: S to F at 140<br> Mutation Type: Missense<br>WormBase Var. ID:WBVar00814018', 'source': 'WormBase' },
-			{ 'sequenceIndex': 3, 'position': 69, 'note': 'Mutation: D to N at 69<br> Mutation Type: Missense<br>WormBase Var. ID:WBVar00266530', 'source': 'WormBase <a href="https://wormbase.org/species/c_elegans/variation/WBVar00266530" target="_blank">For details, visit here</a>' },
-			{ 'sequenceIndex': 3, 'position': 60, 'note': 'Mutation: R to H at 60<br> Mutation Type: Missense<br>WormBase Var. ID:WBVar00814037', 'source': 'WormBase' },
-			{ 'sequenceIndex': 3, 'position': 50, 'note': 'Mutation: S to N at 50<br> Mutation Type: Missense<br>WormBase Var. ID:WBVar00393438', 'source': 'WormBase' },
-			{ 'sequenceIndex': 3, 'position': 32, 'note': 'Mutation: P to S at 32<br> Mutation Type: Missense<br>WormBase Var. ID:WBVar00393439', 'source': 'WormBase' },
+            // WormBase Variations
+            {
+                'sequenceIndex': 3,
+                'position': 416,
+                'note': 'Mutation: G to E at 416<br> Mutation Type: Missense<br>WormBase Var. ID:WBVar02141274',
+                'source': 'WormBase'
+            }, {
+                'sequenceIndex': 3,
+                'position': 415,
+                'note': 'Mutation: E to K at 415<br> Mutation Type: Missense<br>WormBase Var. ID:WBVar00266521',
+                'source': 'WormBase'
+            }, {
+                'sequenceIndex': 3,
+                'position': 365,
+                'note': 'Mutation: G to E at 365<br> Mutation Type: Missense<br>WormBase Var. ID:WBVar00814000',
+                'source': 'WormBase'
+            }, {
+                'sequenceIndex': 3,
+                'position': 354,
+                'note': 'Mutation: G to E at 354<br> Mutation Type: Missense<br>WormBase Var. ID:WBVar00266616',
+                'source': 'WormBase'
+            }, {
+                'sequenceIndex': 3,
+                'position': 323,
+                'note': 'Mutation: V to I at 323<br> Mutation Type: Missense<br>WormBase Var. ID:WBVar00814008',
+                'source': 'WormBase'
+            }, {
+                'sequenceIndex': 3,
+                'position': 307,
+                'note': 'Mutation: P to L at 307<br> Mutation Type: Missense<br>WormBase Var. ID:WBVar00814009',
+                'source': 'WormBase'
+            }, {
+                'sequenceIndex': 3,
+                'position': 196,
+                'note': 'Mutation: E to K at 196<br> Mutation Type: Missense<br>WormBase Var. ID:WBVar00814015',
+                'source': 'WormBase'
+            }, {
+                'sequenceIndex': 3,
+                'position': 192,
+                'note': 'Mutation: H to Y at 192<br> Mutation Type: Missense<br>WormBase Var. ID:WBVar00600744',
+                'source': 'WormBase'
+            }, {
+                'sequenceIndex': 3,
+                'position': 192,
+                'note': 'Mutation: H to Y at 192<br> Mutation Type: Missense<br>WormBase Var. ID:WBVar00144145',
+                'source': 'WormBase'
+            }, {
+                'sequenceIndex': 3,
+                'position': 152,
+                'note': 'Mutation: L to F at 152<br> Mutation Type: Missense<br>WormBase Var. ID:WBVar00814016',
+                'source': 'WormBase'
+            }, {
+                'sequenceIndex': 3,
+                'position': 144,
+                'note': 'Mutation: G to S at 144<br> Mutation Type: Missense<br>WormBase Var. ID:WBVar00144146',
+                'source': 'WormBase'
+            }, {
+                'sequenceIndex': 3,
+                'position': 142,
+                'note': 'Mutation: G to E at 142<br> Mutation Type: Missense<br>WormBase Var. ID:WBVar00814017',
+                'source': 'WormBase'
+            }, {
+                'sequenceIndex': 3,
+                'position': 140,
+                'note': 'Mutation: S to F at 140<br> Mutation Type: Missense<br>WormBase Var. ID:WBVar00814018',
+                'source': 'WormBase'
+            }, {
+                'sequenceIndex': 3,
+                'position': 69,
+                'note': 'Mutation: D to N at 69<br> Mutation Type: Missense<br>WormBase Var. ID:WBVar00266530',
+                'source': 'WormBase <a href="https://wormbase.org/species/c_elegans/variation/WBVar00266530" target="_blank">For details, visit here</a>'
+            }, {
+                'sequenceIndex': 3,
+                'position': 60,
+                'note': 'Mutation: R to H at 60<br> Mutation Type: Missense<br>WormBase Var. ID:WBVar00814037',
+                'source': 'WormBase'
+            }, {
+                'sequenceIndex': 3,
+                'position': 50,
+                'note': 'Mutation: S to N at 50<br> Mutation Type: Missense<br>WormBase Var. ID:WBVar00393438',
+                'source': 'WormBase'
+            }, {
+                'sequenceIndex': 3,
+                'position': 32,
+                'note': 'Mutation: P to S at 32<br> Mutation Type: Missense<br>WormBase Var. ID:WBVar00393439',
+                'source': 'WormBase'
+            },
 
-			// Modifications
-			{ 'sequenceIndex': 1, 'position': 103, 'note': 'PTM residue: Y103-p<br>PTM Type: Phosphorylation', 'source': 'modification' },
-			{ 'sequenceIndex': 1, 'position': 108, 'note': 'PTM residue: Y108-p<br>PTM Type: Phosphorylation', 'source': 'modification' },
-			{ 'sequenceIndex': 1, 'position': 109, 'note': 'PTM residue: T109-p<br>PTM Type: Phosphorylation', 'source': 'modification' },
-			{ 'sequenceIndex': 1, 'position': 112, 'note': 'PTM residue: K112-ub<br>PTM Type: Ubiquitination', 'source': 'modification' },
-			{ 'sequenceIndex': 1, 'position': 112, 'note': 'PTM residue: K112-ac<br>PTM Type: Acetylation', 'source': 'modification' },
-			{ 'sequenceIndex': 1, 'position': 112, 'note': 'PTM residue: K112-sm<br>PTM Type: Sumoylation', 'source': 'modification' },
-			{ 'sequenceIndex': 1, 'position': 124, 'note': 'PTM residue: K124-ub<br>PTM Type: Ubiquitination', 'source': 'modification' },
-			{ 'sequenceIndex': 1, 'position': 124, 'note': 'PTM residue: K124-ac<br>PTM Type: Acetylation', 'source': 'modification' },
-			{ 'sequenceIndex': 1, 'position': 151, 'note': 'PTM residue: S151-p<br>PTM Type: Phosphorylation', 'source': 'modification' },
-			{ 'sequenceIndex': 1, 'position': 158, 'note': 'PTM residue: S158-p<br>PTM Type: Phosphorylation', 'source': 'modification' },
-			{ 'sequenceIndex': 1, 'position': 161, 'note': 'PTM residue: Y161-p<br>PTM Type: Phosphorylation', 'source': 'modification' },
-			{ 'sequenceIndex': 1, 'position': 163, 'note': 'PTM residue: K163-ub<br>PTM Type: Ubiquitination', 'source': 'modification' },
-			{ 'sequenceIndex': 1, 'position': 163, 'note': 'PTM residue: K163-ac<br>PTM Type: Acetylation', 'source': 'modification' },
-			{ 'sequenceIndex': 1, 'position': 163, 'note': 'PTM residue: K163-m1<br>PTM Type: Methylation', 'source': 'modification' },
-			{ 'sequenceIndex': 1, 'position': 164, 'note': 'PTM residue: K164-ub<br>PTM Type: Ubiquitination', 'source': 'modification' },
-			{ 'sequenceIndex': 1, 'position': 166, 'note': 'PTM residue: K166-ub<br>PTM Type: Ubiquitination', 'source': 'modification' },
-			{ 'sequenceIndex': 1, 'position': 172, 'note': 'PTM residue: Y172-p<br>PTM Type: Phosphorylation', 'source': 'modification' },
-			{ 'sequenceIndex': 1, 'position': 185, 'note': 'PTM residue: Y185-p<br>PTM Type: Phosphorylation', 'source': 'modification' },
-			{ 'sequenceIndex': 1, 'position': 187, 'note': 'PTM residue: S187-p<br>PTM Type: Phosphorylation', 'source': 'modification' },
-			{ 'sequenceIndex': 1, 'position': 190, 'note': 'PTM residue: T190-p<br>PTM Type: Phosphorylation', 'source': 'modification' },
-			{ 'sequenceIndex': 1, 'position': 191, 'note': 'PTM residue: T191-p<br>PTM Type: Phosphorylation', 'source': 'modification' },
-			{ 'sequenceIndex': 1, 'position': 193, 'note': 'PTM residue: T193-p<br>PTM Type: Phosphorylation', 'source': 'modification' },
-			{ 'sequenceIndex': 1, 'position': 194, 'note': 'PTM residue: T194-p<br>PTM Type: Phosphorylation', 'source': 'modification' },
-			{ 'sequenceIndex': 1, 'position': 198, 'note': 'PTM residue: S198-p<br>PTM Type: Phosphorylation', 'source': 'modification' },
-			{ 'sequenceIndex': 1, 'position': 210, 'note': 'PTM residue: Y210-p<br>PTM Type: Phosphorylation', 'source': 'modification' },
-			{ 'sequenceIndex': 1, 'position': 223, 'note': 'PTM residue: T223-p<br>PTM Type: Phosphorylation', 'source': 'modification' },
-			{ 'sequenceIndex': 1, 'position': 224, 'note': 'PTM residue: Y224-p<br>PTM Type: Phosphorylation', 'source': 'modification' },
-			{ 'sequenceIndex': 1, 'position': 225, 'note': 'PTM residue: T225-p<br>PTM Type: Phosphorylation', 'source': 'modification' },
-			{ 'sequenceIndex': 1, 'position': 236, 'note': 'PTM residue: S236-p<br>PTM Type: Phosphorylation', 'source': 'modification' },
-			{ 'sequenceIndex': 1, 'position': 237, 'note': 'PTM residue: S237-p<br>PTM Type: Phosphorylation', 'source': 'modification' },
-			{ 'sequenceIndex': 1, 'position': 24, 'note': 'PTM residue: Y24-p<br>PTM Type: Phosphorylation', 'source': 'modification' },
-			{ 'sequenceIndex': 1, 'position': 253, 'note': 'PTM residue: T253-p<br>PTM Type: Phosphorylation', 'source': 'modification' },
-			{ 'sequenceIndex': 1, 'position': 257, 'note': 'PTM residue: T257-p<br>PTM Type: Phosphorylation', 'source': 'modification' },
-			{ 'sequenceIndex': 1, 'position': 262, 'note': 'PTM residue: Y262-p<br>PTM Type: Phosphorylation', 'source': 'modification' },
-			{ 'sequenceIndex': 1, 'position': 271, 'note': 'PTM residue: T271-p<br>PTM Type: Phosphorylation', 'source': 'modification' },
-			{ 'sequenceIndex': 1, 'position': 272, 'note': 'PTM residue: Y272-p<br>PTM Type: Phosphorylation', 'source': 'modification' },
-			{ 'sequenceIndex': 1, 'position': 277, 'note': 'PTM residue: S277-p<br>PTM Type: Phosphorylation', 'source': 'modification' },
-			{ 'sequenceIndex': 1, 'position': 280, 'note': 'PTM residue: K280-ub<br>PTM Type: Ubiquitination', 'source': 'modification' },
-			{ 'sequenceIndex': 1, 'position': 282, 'note': 'PTM residue: Y282-p<br>PTM Type: Phosphorylation', 'source': 'modification' },
-			{ 'sequenceIndex': 1, 'position': 287, 'note': 'PTM residue: S287-p<br>PTM Type: Phosphorylation', 'source': 'modification' },
-			{ 'sequenceIndex': 1, 'position': 292, 'note': 'PTM residue: T292-p<br>PTM Type: Phosphorylation', 'source': 'modification' },
-			{ 'sequenceIndex': 1, 'position': 304, 'note': 'PTM residue: K304-ub<br>PTM Type: Ubiquitination', 'source': 'modification' },
-			{ 'sequenceIndex': 1, 'position': 311, 'note': 'PTM residue: K311-ub<br>PTM Type: Ubiquitination', 'source': 'modification' },
-			{ 'sequenceIndex': 1, 'position': 311, 'note': 'PTM residue: K311-ac<br>PTM Type: Acetylation', 'source': 'modification' },
-			{ 'sequenceIndex': 1, 'position': 312, 'note': 'PTM residue: Y312-p<br>PTM Type: Phosphorylation', 'source': 'modification' },
-			{ 'sequenceIndex': 1, 'position': 319, 'note': 'PTM residue: Y319-p<br>PTM Type: Phosphorylation', 'source': 'modification' },
-			{ 'sequenceIndex': 1, 'position': 326, 'note': 'PTM residue: K326-ub<br>PTM Type: Ubiquitination', 'source': 'modification' },
-			{ 'sequenceIndex': 1, 'position': 326, 'note': 'PTM residue: K326-ac<br>PTM Type: Acetylation', 'source': 'modification' },
-			{ 'sequenceIndex': 1, 'position': 326, 'note': 'PTM residue: K326-sm<br>PTM Type: Sumoylation', 'source': 'modification' },
-			{ 'sequenceIndex': 1, 'position': 334, 'note': 'PTM residue: T334-p<br>PTM Type: Phosphorylation', 'source': 'modification' },
-			{ 'sequenceIndex': 1, 'position': 336, 'note': 'PTM residue: K336-ub<br>PTM Type: Ubiquitination', 'source': 'modification' },
-			{ 'sequenceIndex': 1, 'position': 336, 'note': 'PTM residue: K336-ac<br>PTM Type: Acetylation', 'source': 'modification' },
-			{ 'sequenceIndex': 1, 'position': 336, 'note': 'PTM residue: K336-sm<br>PTM Type: Sumoylation', 'source': 'modification' },
-			{ 'sequenceIndex': 1, 'position': 337, 'note': 'PTM residue: T337-p<br>PTM Type: Phosphorylation', 'source': 'modification' },
-			{ 'sequenceIndex': 1, 'position': 338, 'note': 'PTM residue: K338-ub<br>PTM Type: Ubiquitination', 'source': 'modification' },
-			{ 'sequenceIndex': 1, 'position': 338, 'note': 'PTM residue: K338-m1<br>PTM Type: Methylation', 'source': 'modification' },
-			{ 'sequenceIndex': 1, 'position': 340, 'note': 'PTM residue: T340-p<br>PTM Type: Phosphorylation', 'source': 'modification' },
-			{ 'sequenceIndex': 1, 'position': 349, 'note': 'PTM residue: T349-p<br>PTM Type: Phosphorylation', 'source': 'modification' },
-			{ 'sequenceIndex': 1, 'position': 352, 'note': 'PTM residue: K352-ub<br>PTM Type: Ubiquitination', 'source': 'modification' },
-			{ 'sequenceIndex': 1, 'position': 352, 'note': 'PTM residue: K352-ac<br>PTM Type: Acetylation', 'source': 'modification' },
-			{ 'sequenceIndex': 1, 'position': 352, 'note': 'PTM residue: K352-sm<br>PTM Type: Sumoylation', 'source': 'modification' },
-			{ 'sequenceIndex': 1, 'position': 357, 'note': 'PTM residue: Y357-p<br>PTM Type: Phosphorylation', 'source': 'modification' },
-			{ 'sequenceIndex': 1, 'position': 361, 'note': 'PTM residue: T361-p<br>PTM Type: Phosphorylation', 'source': 'modification' },
-			{ 'sequenceIndex': 1, 'position': 370, 'note': 'PTM residue: K370-ub<br>PTM Type: Ubiquitination', 'source': 'modification' },
-			{ 'sequenceIndex': 1, 'position': 370, 'note': 'PTM residue: K370-ac<br>PTM Type: Acetylation', 'source': 'modification' },
-			{ 'sequenceIndex': 1, 'position': 370, 'note': 'PTM residue: K370-sm<br>PTM Type: Sumoylation', 'source': 'modification' },
-			{ 'sequenceIndex': 1, 'position': 379, 'note': 'PTM residue: S379-p<br>PTM Type: Phosphorylation', 'source': 'modification' },
-			{ 'sequenceIndex': 1, 'position': 38, 'note': 'PTM residue: S38-p<br>PTM Type: Phosphorylation', 'source': 'modification' },
-			{ 'sequenceIndex': 1, 'position': 394, 'note': 'PTM residue: K394-ub<br>PTM Type: Ubiquitination', 'source': 'modification' },
-			{ 'sequenceIndex': 1, 'position': 394, 'note': 'PTM residue: K394-ac<br>PTM Type: Acetylation', 'source': 'modification' },
-			{ 'sequenceIndex': 1, 'position': 394, 'note': 'PTM residue: K394-sm<br>PTM Type: Sumoylation', 'source': 'modification' },
-			{ 'sequenceIndex': 1, 'position': 399, 'note': 'PTM residue: Y399-p<br>PTM Type: Phosphorylation', 'source': 'modification' },
-			{ 'sequenceIndex': 1, 'position': 40, 'note': 'PTM residue: K40-ub<br>PTM Type: Ubiquitination', 'source': 'modification' },
-			{ 'sequenceIndex': 1, 'position': 40, 'note': 'PTM residue: K40-ac<br>PTM Type: Acetylation', 'source': 'modification' },
-			{ 'sequenceIndex': 1, 'position': 40, 'note': 'PTM residue: K40-m3<br>PTM Type: Methylation', 'source': 'modification' },
-			{ 'sequenceIndex': 1, 'position': 401, 'note': 'PTM residue: K401-ub<br>PTM Type: Ubiquitination', 'source': 'modification' },
-			{ 'sequenceIndex': 1, 'position': 401, 'note': 'PTM residue: K401-ac<br>PTM Type: Acetylation', 'source': 'modification' },
-			{ 'sequenceIndex': 1, 'position': 401, 'note': 'PTM residue: K401-sm<br>PTM Type: Sumoylation', 'source': 'modification' },
-			{ 'sequenceIndex': 1, 'position': 408, 'note': 'PTM residue: Y408-p<br>PTM Type: Phosphorylation', 'source': 'modification' },
-			{ 'sequenceIndex': 1, 'position': 41, 'note': 'PTM residue: T41-p<br>PTM Type: Phosphorylation', 'source': 'modification' },
-			{ 'sequenceIndex': 1, 'position': 419, 'note': 'PTM residue: S419-p<br>PTM Type: Phosphorylation', 'source': 'modification' },
-			{ 'sequenceIndex': 1, 'position': 430, 'note': 'PTM residue: K430-ub<br>PTM Type: Ubiquitination', 'source': 'modification' },
-			{ 'sequenceIndex': 1, 'position': 432, 'note': 'PTM residue: Y432-p<br>PTM Type: Phosphorylation', 'source': 'modification' },
-			{ 'sequenceIndex': 1, 'position': 439, 'note': 'PTM residue: S439-p<br>PTM Type: Phosphorylation', 'source': 'modification' },
-			{ 'sequenceIndex': 1, 'position': 451, 'note': 'PTM residue: Y451-p<br>PTM Type: Phosphorylation', 'source': 'modification' },
-			{ 'sequenceIndex': 1, 'position': 48, 'note': 'PTM residue: S48-p<br>PTM Type: Phosphorylation', 'source': 'modification' },
-			{ 'sequenceIndex': 1, 'position': 51, 'note': 'PTM residue: T51-p<br>PTM Type: Phosphorylation', 'source': 'modification' },
-			{ 'sequenceIndex': 1, 'position': 54, 'note': 'PTM residue: S54-p<br>PTM Type: Phosphorylation', 'source': 'modification' },
-			{ 'sequenceIndex': 1, 'position': 56, 'note': 'PTM residue: T56-p<br>PTM Type: Phosphorylation', 'source': 'modification' },
-			{ 'sequenceIndex': 1, 'position': 6, 'note': 'PTM residue: S6-p<br>PTM Type: Phosphorylation', 'source': 'modification' },
-			{ 'sequenceIndex': 1, 'position': 60, 'note': 'PTM residue: K60-ub<br>PTM Type: Ubiquitination', 'source': 'modification' },
-			{ 'sequenceIndex': 1, 'position': 60, 'note': 'PTM residue: K60-ac<br>PTM Type: Acetylation', 'source': 'modification' },
-			{ 'sequenceIndex': 1, 'position': 60, 'note': 'PTM residue: K60-sm<br>PTM Type: Sumoylation', 'source': 'modification' },
-			{ 'sequenceIndex': 1, 'position': 73, 'note': 'PTM residue: T73-p<br>PTM Type: Phosphorylation', 'source': 'modification' },
-			{ 'sequenceIndex': 1, 'position': 80, 'note': 'PTM residue: T80-p<br>PTM Type: Phosphorylation', 'source': 'modification' },
-			{ 'sequenceIndex': 1, 'position': 82, 'note': 'PTM residue: T82-p<br>PTM Type: Phosphorylation', 'source': 'modification' },
-			{ 'sequenceIndex': 1, 'position': 83, 'note': 'PTM residue: Y83-p<br>PTM Type: Phosphorylation', 'source': 'modification' },
-			{ 'sequenceIndex': 1, 'position': 94, 'note': 'PTM residue: T94-p<br>PTM Type: Phosphorylation', 'source': 'modification' },
-			{ 'sequenceIndex': 1, 'position': 96, 'note': 'PTM residue: K96-ub<br>PTM Type: Ubiquitination', 'source': 'modification' },
-			{ 'sequenceIndex': 1, 'position': 96, 'note': 'PTM residue: K96-ac<br>PTM Type: Acetylation', 'source': 'modification' },
-			{ 'sequenceIndex': 1, 'position': 96, 'note': 'PTM residue: K96-sm<br>PTM Type: Sumoylation', 'source': 'modification' },
+            // Modifications
+            {
+                'sequenceIndex': 1,
+                'position': 103,
+                'note': 'PTM residue: Y103-p<br>PTM Type: Phosphorylation',
+                'source': 'modification'
+            }, {
+                'sequenceIndex': 1,
+                'position': 108,
+                'note': 'PTM residue: Y108-p<br>PTM Type: Phosphorylation',
+                'source': 'modification'
+            }, {
+                'sequenceIndex': 1,
+                'position': 109,
+                'note': 'PTM residue: T109-p<br>PTM Type: Phosphorylation',
+                'source': 'modification'
+            }, {
+                'sequenceIndex': 1,
+                'position': 112,
+                'note': 'PTM residue: K112-ub<br>PTM Type: Ubiquitination',
+                'source': 'modification'
+            }, {
+                'sequenceIndex': 1,
+                'position': 112,
+                'note': 'PTM residue: K112-ac<br>PTM Type: Acetylation',
+                'source': 'modification'
+            }, {
+                'sequenceIndex': 1,
+                'position': 112,
+                'note': 'PTM residue: K112-sm<br>PTM Type: Sumoylation',
+                'source': 'modification'
+            }, {
+                'sequenceIndex': 1,
+                'position': 124,
+                'note': 'PTM residue: K124-ub<br>PTM Type: Ubiquitination',
+                'source': 'modification'
+            }, {
+                'sequenceIndex': 1,
+                'position': 124,
+                'note': 'PTM residue: K124-ac<br>PTM Type: Acetylation',
+                'source': 'modification'
+            }, {
+                'sequenceIndex': 1,
+                'position': 151,
+                'note': 'PTM residue: S151-p<br>PTM Type: Phosphorylation',
+                'source': 'modification'
+            }, {
+                'sequenceIndex': 1,
+                'position': 158,
+                'note': 'PTM residue: S158-p<br>PTM Type: Phosphorylation',
+                'source': 'modification'
+            }, {
+                'sequenceIndex': 1,
+                'position': 161,
+                'note': 'PTM residue: Y161-p<br>PTM Type: Phosphorylation',
+                'source': 'modification'
+            }, {
+                'sequenceIndex': 1,
+                'position': 163,
+                'note': 'PTM residue: K163-ub<br>PTM Type: Ubiquitination',
+                'source': 'modification'
+            }, {
+                'sequenceIndex': 1,
+                'position': 163,
+                'note': 'PTM residue: K163-ac<br>PTM Type: Acetylation',
+                'source': 'modification'
+            }, {
+                'sequenceIndex': 1,
+                'position': 163,
+                'note': 'PTM residue: K163-m1<br>PTM Type: Methylation',
+                'source': 'modification'
+            }, {
+                'sequenceIndex': 1,
+                'position': 164,
+                'note': 'PTM residue: K164-ub<br>PTM Type: Ubiquitination',
+                'source': 'modification'
+            }, {
+                'sequenceIndex': 1,
+                'position': 166,
+                'note': 'PTM residue: K166-ub<br>PTM Type: Ubiquitination',
+                'source': 'modification'
+            }, {
+                'sequenceIndex': 1,
+                'position': 172,
+                'note': 'PTM residue: Y172-p<br>PTM Type: Phosphorylation',
+                'source': 'modification'
+            }, {
+                'sequenceIndex': 1,
+                'position': 185,
+                'note': 'PTM residue: Y185-p<br>PTM Type: Phosphorylation',
+                'source': 'modification'
+            }, {
+                'sequenceIndex': 1,
+                'position': 187,
+                'note': 'PTM residue: S187-p<br>PTM Type: Phosphorylation',
+                'source': 'modification'
+            }, {
+                'sequenceIndex': 1,
+                'position': 190,
+                'note': 'PTM residue: T190-p<br>PTM Type: Phosphorylation',
+                'source': 'modification'
+            }, {
+                'sequenceIndex': 1,
+                'position': 191,
+                'note': 'PTM residue: T191-p<br>PTM Type: Phosphorylation',
+                'source': 'modification'
+            }, {
+                'sequenceIndex': 1,
+                'position': 193,
+                'note': 'PTM residue: T193-p<br>PTM Type: Phosphorylation',
+                'source': 'modification'
+            }, {
+                'sequenceIndex': 1,
+                'position': 194,
+                'note': 'PTM residue: T194-p<br>PTM Type: Phosphorylation',
+                'source': 'modification'
+            }, {
+                'sequenceIndex': 1,
+                'position': 198,
+                'note': 'PTM residue: S198-p<br>PTM Type: Phosphorylation',
+                'source': 'modification'
+            }, {
+                'sequenceIndex': 1,
+                'position': 210,
+                'note': 'PTM residue: Y210-p<br>PTM Type: Phosphorylation',
+                'source': 'modification'
+            }, {
+                'sequenceIndex': 1,
+                'position': 223,
+                'note': 'PTM residue: T223-p<br>PTM Type: Phosphorylation',
+                'source': 'modification'
+            }, {
+                'sequenceIndex': 1,
+                'position': 224,
+                'note': 'PTM residue: Y224-p<br>PTM Type: Phosphorylation',
+                'source': 'modification'
+            }, {
+                'sequenceIndex': 1,
+                'position': 225,
+                'note': 'PTM residue: T225-p<br>PTM Type: Phosphorylation',
+                'source': 'modification'
+            }, {
+                'sequenceIndex': 1,
+                'position': 236,
+                'note': 'PTM residue: S236-p<br>PTM Type: Phosphorylation',
+                'source': 'modification'
+            }, {
+                'sequenceIndex': 1,
+                'position': 237,
+                'note': 'PTM residue: S237-p<br>PTM Type: Phosphorylation',
+                'source': 'modification'
+            }, {
+                'sequenceIndex': 1,
+                'position': 24,
+                'note': 'PTM residue: Y24-p<br>PTM Type: Phosphorylation',
+                'source': 'modification'
+            }, {
+                'sequenceIndex': 1,
+                'position': 253,
+                'note': 'PTM residue: T253-p<br>PTM Type: Phosphorylation',
+                'source': 'modification'
+            }, {
+                'sequenceIndex': 1,
+                'position': 257,
+                'note': 'PTM residue: T257-p<br>PTM Type: Phosphorylation',
+                'source': 'modification'
+            }, {
+                'sequenceIndex': 1,
+                'position': 262,
+                'note': 'PTM residue: Y262-p<br>PTM Type: Phosphorylation',
+                'source': 'modification'
+            }, {
+                'sequenceIndex': 1,
+                'position': 271,
+                'note': 'PTM residue: T271-p<br>PTM Type: Phosphorylation',
+                'source': 'modification'
+            }, {
+                'sequenceIndex': 1,
+                'position': 272,
+                'note': 'PTM residue: Y272-p<br>PTM Type: Phosphorylation',
+                'source': 'modification'
+            }, {
+                'sequenceIndex': 1,
+                'position': 277,
+                'note': 'PTM residue: S277-p<br>PTM Type: Phosphorylation',
+                'source': 'modification'
+            }, {
+                'sequenceIndex': 1,
+                'position': 280,
+                'note': 'PTM residue: K280-ub<br>PTM Type: Ubiquitination',
+                'source': 'modification'
+            }, {
+                'sequenceIndex': 1,
+                'position': 282,
+                'note': 'PTM residue: Y282-p<br>PTM Type: Phosphorylation',
+                'source': 'modification'
+            }, {
+                'sequenceIndex': 1,
+                'position': 287,
+                'note': 'PTM residue: S287-p<br>PTM Type: Phosphorylation',
+                'source': 'modification'
+            }, {
+                'sequenceIndex': 1,
+                'position': 292,
+                'note': 'PTM residue: T292-p<br>PTM Type: Phosphorylation',
+                'source': 'modification'
+            }, {
+                'sequenceIndex': 1,
+                'position': 304,
+                'note': 'PTM residue: K304-ub<br>PTM Type: Ubiquitination',
+                'source': 'modification'
+            }, {
+                'sequenceIndex': 1,
+                'position': 311,
+                'note': 'PTM residue: K311-ub<br>PTM Type: Ubiquitination',
+                'source': 'modification'
+            }, {
+                'sequenceIndex': 1,
+                'position': 311,
+                'note': 'PTM residue: K311-ac<br>PTM Type: Acetylation',
+                'source': 'modification'
+            }, {
+                'sequenceIndex': 1,
+                'position': 312,
+                'note': 'PTM residue: Y312-p<br>PTM Type: Phosphorylation',
+                'source': 'modification'
+            }, {
+                'sequenceIndex': 1,
+                'position': 319,
+                'note': 'PTM residue: Y319-p<br>PTM Type: Phosphorylation',
+                'source': 'modification'
+            }, {
+                'sequenceIndex': 1,
+                'position': 326,
+                'note': 'PTM residue: K326-ub<br>PTM Type: Ubiquitination',
+                'source': 'modification'
+            }, {
+                'sequenceIndex': 1,
+                'position': 326,
+                'note': 'PTM residue: K326-ac<br>PTM Type: Acetylation',
+                'source': 'modification'
+            }, {
+                'sequenceIndex': 1,
+                'position': 326,
+                'note': 'PTM residue: K326-sm<br>PTM Type: Sumoylation',
+                'source': 'modification'
+            }, {
+                'sequenceIndex': 1,
+                'position': 334,
+                'note': 'PTM residue: T334-p<br>PTM Type: Phosphorylation',
+                'source': 'modification'
+            }, {
+                'sequenceIndex': 1,
+                'position': 336,
+                'note': 'PTM residue: K336-ub<br>PTM Type: Ubiquitination',
+                'source': 'modification'
+            }, {
+                'sequenceIndex': 1,
+                'position': 336,
+                'note': 'PTM residue: K336-ac<br>PTM Type: Acetylation',
+                'source': 'modification'
+            }, {
+                'sequenceIndex': 1,
+                'position': 336,
+                'note': 'PTM residue: K336-sm<br>PTM Type: Sumoylation',
+                'source': 'modification'
+            }, {
+                'sequenceIndex': 1,
+                'position': 337,
+                'note': 'PTM residue: T337-p<br>PTM Type: Phosphorylation',
+                'source': 'modification'
+            }, {
+                'sequenceIndex': 1,
+                'position': 338,
+                'note': 'PTM residue: K338-ub<br>PTM Type: Ubiquitination',
+                'source': 'modification'
+            }, {
+                'sequenceIndex': 1,
+                'position': 338,
+                'note': 'PTM residue: K338-m1<br>PTM Type: Methylation',
+                'source': 'modification'
+            }, {
+                'sequenceIndex': 1,
+                'position': 340,
+                'note': 'PTM residue: T340-p<br>PTM Type: Phosphorylation',
+                'source': 'modification'
+            }, {
+                'sequenceIndex': 1,
+                'position': 349,
+                'note': 'PTM residue: T349-p<br>PTM Type: Phosphorylation',
+                'source': 'modification'
+            }, {
+                'sequenceIndex': 1,
+                'position': 352,
+                'note': 'PTM residue: K352-ub<br>PTM Type: Ubiquitination',
+                'source': 'modification'
+            }, {
+                'sequenceIndex': 1,
+                'position': 352,
+                'note': 'PTM residue: K352-ac<br>PTM Type: Acetylation',
+                'source': 'modification'
+            }, {
+                'sequenceIndex': 1,
+                'position': 352,
+                'note': 'PTM residue: K352-sm<br>PTM Type: Sumoylation',
+                'source': 'modification'
+            }, {
+                'sequenceIndex': 1,
+                'position': 357,
+                'note': 'PTM residue: Y357-p<br>PTM Type: Phosphorylation',
+                'source': 'modification'
+            }, {
+                'sequenceIndex': 1,
+                'position': 361,
+                'note': 'PTM residue: T361-p<br>PTM Type: Phosphorylation',
+                'source': 'modification'
+            }, {
+                'sequenceIndex': 1,
+                'position': 370,
+                'note': 'PTM residue: K370-ub<br>PTM Type: Ubiquitination',
+                'source': 'modification'
+            }, {
+                'sequenceIndex': 1,
+                'position': 370,
+                'note': 'PTM residue: K370-ac<br>PTM Type: Acetylation',
+                'source': 'modification'
+            }, {
+                'sequenceIndex': 1,
+                'position': 370,
+                'note': 'PTM residue: K370-sm<br>PTM Type: Sumoylation',
+                'source': 'modification'
+            }, {
+                'sequenceIndex': 1,
+                'position': 379,
+                'note': 'PTM residue: S379-p<br>PTM Type: Phosphorylation',
+                'source': 'modification'
+            }, {
+                'sequenceIndex': 1,
+                'position': 38,
+                'note': 'PTM residue: S38-p<br>PTM Type: Phosphorylation',
+                'source': 'modification'
+            }, {
+                'sequenceIndex': 1,
+                'position': 394,
+                'note': 'PTM residue: K394-ub<br>PTM Type: Ubiquitination',
+                'source': 'modification'
+            }, {
+                'sequenceIndex': 1,
+                'position': 394,
+                'note': 'PTM residue: K394-ac<br>PTM Type: Acetylation',
+                'source': 'modification'
+            }, {
+                'sequenceIndex': 1,
+                'position': 394,
+                'note': 'PTM residue: K394-sm<br>PTM Type: Sumoylation',
+                'source': 'modification'
+            }, {
+                'sequenceIndex': 1,
+                'position': 399,
+                'note': 'PTM residue: Y399-p<br>PTM Type: Phosphorylation',
+                'source': 'modification'
+            }, {
+                'sequenceIndex': 1,
+                'position': 40,
+                'note': 'PTM residue: K40-ub<br>PTM Type: Ubiquitination',
+                'source': 'modification'
+            }, {
+                'sequenceIndex': 1,
+                'position': 40,
+                'note': 'PTM residue: K40-ac<br>PTM Type: Acetylation',
+                'source': 'modification'
+            }, {
+                'sequenceIndex': 1,
+                'position': 40,
+                'note': 'PTM residue: K40-m3<br>PTM Type: Methylation',
+                'source': 'modification'
+            }, {
+                'sequenceIndex': 1,
+                'position': 401,
+                'note': 'PTM residue: K401-ub<br>PTM Type: Ubiquitination',
+                'source': 'modification'
+            }, {
+                'sequenceIndex': 1,
+                'position': 401,
+                'note': 'PTM residue: K401-ac<br>PTM Type: Acetylation',
+                'source': 'modification'
+            }, {
+                'sequenceIndex': 1,
+                'position': 401,
+                'note': 'PTM residue: K401-sm<br>PTM Type: Sumoylation',
+                'source': 'modification'
+            }, {
+                'sequenceIndex': 1,
+                'position': 408,
+                'note': 'PTM residue: Y408-p<br>PTM Type: Phosphorylation',
+                'source': 'modification'
+            }, {
+                'sequenceIndex': 1,
+                'position': 41,
+                'note': 'PTM residue: T41-p<br>PTM Type: Phosphorylation',
+                'source': 'modification'
+            }, {
+                'sequenceIndex': 1,
+                'position': 419,
+                'note': 'PTM residue: S419-p<br>PTM Type: Phosphorylation',
+                'source': 'modification'
+            }, {
+                'sequenceIndex': 1,
+                'position': 430,
+                'note': 'PTM residue: K430-ub<br>PTM Type: Ubiquitination',
+                'source': 'modification'
+            }, {
+                'sequenceIndex': 1,
+                'position': 432,
+                'note': 'PTM residue: Y432-p<br>PTM Type: Phosphorylation',
+                'source': 'modification'
+            }, {
+                'sequenceIndex': 1,
+                'position': 439,
+                'note': 'PTM residue: S439-p<br>PTM Type: Phosphorylation',
+                'source': 'modification'
+            }, {
+                'sequenceIndex': 1,
+                'position': 451,
+                'note': 'PTM residue: Y451-p<br>PTM Type: Phosphorylation',
+                'source': 'modification'
+            }, {
+                'sequenceIndex': 1,
+                'position': 48,
+                'note': 'PTM residue: S48-p<br>PTM Type: Phosphorylation',
+                'source': 'modification'
+            }, {
+                'sequenceIndex': 1,
+                'position': 51,
+                'note': 'PTM residue: T51-p<br>PTM Type: Phosphorylation',
+                'source': 'modification'
+            }, {
+                'sequenceIndex': 1,
+                'position': 54,
+                'note': 'PTM residue: S54-p<br>PTM Type: Phosphorylation',
+                'source': 'modification'
+            }, {
+                'sequenceIndex': 1,
+                'position': 56,
+                'note': 'PTM residue: T56-p<br>PTM Type: Phosphorylation',
+                'source': 'modification'
+            }, {
+                'sequenceIndex': 1,
+                'position': 6,
+                'note': 'PTM residue: S6-p<br>PTM Type: Phosphorylation',
+                'source': 'modification'
+            }, {
+                'sequenceIndex': 1,
+                'position': 60,
+                'note': 'PTM residue: K60-ub<br>PTM Type: Ubiquitination',
+                'source': 'modification'
+            }, {
+                'sequenceIndex': 1,
+                'position': 60,
+                'note': 'PTM residue: K60-ac<br>PTM Type: Acetylation',
+                'source': 'modification'
+            }, {
+                'sequenceIndex': 1,
+                'position': 60,
+                'note': 'PTM residue: K60-sm<br>PTM Type: Sumoylation',
+                'source': 'modification'
+            }, {
+                'sequenceIndex': 1,
+                'position': 73,
+                'note': 'PTM residue: T73-p<br>PTM Type: Phosphorylation',
+                'source': 'modification'
+            }, {
+                'sequenceIndex': 1,
+                'position': 80,
+                'note': 'PTM residue: T80-p<br>PTM Type: Phosphorylation',
+                'source': 'modification'
+            }, {
+                'sequenceIndex': 1,
+                'position': 82,
+                'note': 'PTM residue: T82-p<br>PTM Type: Phosphorylation',
+                'source': 'modification'
+            }, {
+                'sequenceIndex': 1,
+                'position': 83,
+                'note': 'PTM residue: Y83-p<br>PTM Type: Phosphorylation',
+                'source': 'modification'
+            }, {
+                'sequenceIndex': 1,
+                'position': 94,
+                'note': 'PTM residue: T94-p<br>PTM Type: Phosphorylation',
+                'source': 'modification'
+            }, {
+                'sequenceIndex': 1,
+                'position': 96,
+                'note': 'PTM residue: K96-ub<br>PTM Type: Ubiquitination',
+                'source': 'modification'
+            }, {
+                'sequenceIndex': 1,
+                'position': 96,
+                'note': 'PTM residue: K96-ac<br>PTM Type: Acetylation',
+                'source': 'modification'
+            }, {
+                'sequenceIndex': 1,
+                'position': 96,
+                'note': 'PTM residue: K96-sm<br>PTM Type: Sumoylation',
+                'source': 'modification'
+            },
 
-			// gnomAD Data
-			{ 'sequenceIndex': 1, 'position': 42, 'note': 'Variation ID:<a style="color:#1976D2 !important; font-size:15px !important;" href="https://gnomad.broadinstitute.org/variant/12-49580495-A-G" target="_blank"> 12-49580495-A-G</a> <br> Frequency: 4.0E-6 <br> rsNumber: rs1247802698<br> p.Ile42Thr <br> missense_variant', 'source': 'gnomAD' },
-			{ 'sequenceIndex': 1, 'position': 84, 'note': 'Variation ID:<a style="color:#1976D2 !important; font-size:15px !important;" href="https://gnomad.broadinstitute.org/variant/12-49580217-C-T" target="_blank"> 12-49580217-C-T</a> <br> Frequency: 0 <br> rsNumber: rs1400284461<br> p.Arg84His <br> missense_variant', 'source': 'gnomAD' },
-			{ 'sequenceIndex': 1, 'position': 105, 'note': 'Variation ID:<a style="color:#1976D2 !important; font-size:15px !important;" href="https://gnomad.broadinstitute.org/variant/12-49580155-G-C" target="_blank"> 12-49580155-G-C</a> <br> Frequency: 0 <br> rsNumber: rs1237540680<br> p.Arg105Gly <br> missense_variant', 'source': 'gnomAD' },
-			{ 'sequenceIndex': 1, 'position': 173, 'note': 'Variation ID:<a style="color:#1976D2 !important; font-size:15px !important;" href="https://gnomad.broadinstitute.org/variant/12-49579632-G-A" target="_blank"> 12-49579632-G-A</a> <br> Frequency: 4.0E-6 <br> rsNumber: rs1488125532<br> p.Pro173Ser <br> missense_variant', 'source': 'gnomAD' },
-			{ 'sequenceIndex': 1, 'position': 194, 'note': 'Variation ID:<a style="color:#1976D2 !important; font-size:15px !important;" href="https://gnomad.broadinstitute.org/variant/12-49579568-G-A" target="_blank"> 12-49579568-G-A</a> <br> Frequency: 4.0E-6 <br> rsNumber: rs1397581823<br> p.Thr194Ile <br> missense_variant', 'source': 'gnomAD' },
-			{ 'sequenceIndex': 1, 'position': 274, 'note': 'Variation ID:<a style="color:#1976D2 !important; font-size:15px !important;" href="https://gnomad.broadinstitute.org/variant/12-49579326-CAG-C" target="_blank"> 12-49579326-CAG-C</a> <br> Frequency: 0 <br> rsNumber: <br> p.Pro274ArgfsTer5 <br> frameshift_variant', 'source': 'gnomAD' },
-			{ 'sequenceIndex': 1, 'position': 287, 'note': 'Variation ID:<a style="color:#1976D2 !important; font-size:15px !important;" href="https://gnomad.broadinstitute.org/variant/12-49579290-A-T" target="_blank"> 12-49579290-A-T</a> <br> Frequency: 4.4E-5 <br> rsNumber: rs150978489<br> p.Ser287Thr <br> missense_variant', 'source': 'gnomAD' },
-			{ 'sequenceIndex': 1, 'position': 339, 'note': 'Variation ID:<a style="color:#1976D2 !important; font-size:15px !important;" href="https://gnomad.broadinstitute.org/variant/12-49579133-C-T" target="_blank"> 12-49579133-C-T</a> <br> Frequency: 4.0E-6 <br> rsNumber: rs1258159775<br> p.Arg339His <br> missense_variant', 'source': 'gnomAD' },
-			{ 'sequenceIndex': 1, 'position': 380, 'note': 'Variation ID:<a style="color:#1976D2 !important; font-size:15px !important;" href="https://gnomad.broadinstitute.org/variant/12-49579011-T-TG" target="_blank"> 12-49579011-T-TG</a> <br> Frequency: 0 <br> rsNumber: rs1400864801<br> p.Asn380GlnfsTer7 <br> frameshift_variant', 'source': 'gnomAD' },
-			{ 'sequenceIndex': 1, 'position': 427, 'note': 'Variation ID:<a style="color:#1976D2 !important; font-size:15px !important;" href="https://gnomad.broadinstitute.org/variant/12-49578869-G-C" target="_blank"> 12-49578869-G-C</a> <br> Frequency: 1.2E-5 <br> rsNumber: rs773920941<br> p.Ala427Gly <br> missense_variant', 'source': 'gnomAD' },
-			{ 'sequenceIndex': 1, 'position': 431, 'note': 'Variation ID:<a style="color:#1976D2 !important; font-size:15px !important;" href="https://gnomad.broadinstitute.org/variant/12-49578858-C-T" target="_blank"> 12-49578858-C-T</a> <br> Frequency: 0 <br> rsNumber: rs1361084932<br> p.Asp431Asn <br> missense_variant', 'source': 'gnomAD' },
-			{ 'sequenceIndex': 1, 'position': 440, 'note': 'Variation ID:<a style="color:#1976D2 !important; font-size:15px !important;" href="https://gnomad.broadinstitute.org/variant/12-49578831-C-T" target="_blank"> 12-49578831-C-T</a> <br> Frequency: 4.0E-6 <br> rsNumber: rs749746325<br> p.Val440Ile <br> missense_variant', 'source': 'gnomAD' },
-			{ 'sequenceIndex': 1, 'position': 444, 'note': 'Variation ID:<a style="color:#1976D2 !important; font-size:15px !important;" href="https://gnomad.broadinstitute.org/variant/12-49578818-C-G" target="_blank"> 12-49578818-C-G</a> <br> Frequency: 4.0E-6 <br> rsNumber: rs770156445<br> p.Gly444Ala <br> missense_variant', 'source': 'gnomAD' },
-			{ 'sequenceIndex': 1, 'position': 448, 'note': 'Variation ID:<a style="color:#1976D2 !important; font-size:15px !important;" href="https://gnomad.broadinstitute.org/variant/12-49578806-C-T" target="_blank"> 12-49578806-C-T</a> <br> Frequency: 4.0E-6 <br> rsNumber: rs1324228374<br> p.Gly448Glu <br> missense_variant', 'source': 'gnomAD' },
+            // gnomAD Data
+            {
+                'sequenceIndex': 1,
+                'position': 42,
+                'note': 'Variation ID:<a style="color:#1976D2 !important; font-size:15px !important;" href="https://gnomad.broadinstitute.org/variant/12-49580495-A-G" target="_blank"> 12-49580495-A-G</a> <br> Frequency: 4.0E-6 <br> rsNumber: rs1247802698<br> p.Ile42Thr <br> missense_variant',
+                'source': 'gnomAD'
+            }, {
+                'sequenceIndex': 1,
+                'position': 84,
+                'note': 'Variation ID:<a style="color:#1976D2 !important; font-size:15px !important;" href="https://gnomad.broadinstitute.org/variant/12-49580217-C-T" target="_blank"> 12-49580217-C-T</a> <br> Frequency: 0 <br> rsNumber: rs1400284461<br> p.Arg84His <br> missense_variant',
+                'source': 'gnomAD'
+            }, {
+                'sequenceIndex': 1,
+                'position': 105,
+                'note': 'Variation ID:<a style="color:#1976D2 !important; font-size:15px !important;" href="https://gnomad.broadinstitute.org/variant/12-49580155-G-C" target="_blank"> 12-49580155-G-C</a> <br> Frequency: 0 <br> rsNumber: rs1237540680<br> p.Arg105Gly <br> missense_variant',
+                'source': 'gnomAD'
+            }, {
+                'sequenceIndex': 1,
+                'position': 173,
+                'note': 'Variation ID:<a style="color:#1976D2 !important; font-size:15px !important;" href="https://gnomad.broadinstitute.org/variant/12-49579632-G-A" target="_blank"> 12-49579632-G-A</a> <br> Frequency: 4.0E-6 <br> rsNumber: rs1488125532<br> p.Pro173Ser <br> missense_variant',
+                'source': 'gnomAD'
+            }, {
+                'sequenceIndex': 1,
+                'position': 194,
+                'note': 'Variation ID:<a style="color:#1976D2 !important; font-size:15px !important;" href="https://gnomad.broadinstitute.org/variant/12-49579568-G-A" target="_blank"> 12-49579568-G-A</a> <br> Frequency: 4.0E-6 <br> rsNumber: rs1397581823<br> p.Thr194Ile <br> missense_variant',
+                'source': 'gnomAD'
+            }, {
+                'sequenceIndex': 1,
+                'position': 274,
+                'note': 'Variation ID:<a style="color:#1976D2 !important; font-size:15px !important;" href="https://gnomad.broadinstitute.org/variant/12-49579326-CAG-C" target="_blank"> 12-49579326-CAG-C</a> <br> Frequency: 0 <br> rsNumber: <br> p.Pro274ArgfsTer5 <br> frameshift_variant',
+                'source': 'gnomAD'
+            }, {
+                'sequenceIndex': 1,
+                'position': 287,
+                'note': 'Variation ID:<a style="color:#1976D2 !important; font-size:15px !important;" href="https://gnomad.broadinstitute.org/variant/12-49579290-A-T" target="_blank"> 12-49579290-A-T</a> <br> Frequency: 4.4E-5 <br> rsNumber: rs150978489<br> p.Ser287Thr <br> missense_variant',
+                'source': 'gnomAD'
+            }, {
+                'sequenceIndex': 1,
+                'position': 339,
+                'note': 'Variation ID:<a style="color:#1976D2 !important; font-size:15px !important;" href="https://gnomad.broadinstitute.org/variant/12-49579133-C-T" target="_blank"> 12-49579133-C-T</a> <br> Frequency: 4.0E-6 <br> rsNumber: rs1258159775<br> p.Arg339His <br> missense_variant',
+                'source': 'gnomAD'
+            }, {
+                'sequenceIndex': 1,
+                'position': 380,
+                'note': 'Variation ID:<a style="color:#1976D2 !important; font-size:15px !important;" href="https://gnomad.broadinstitute.org/variant/12-49579011-T-TG" target="_blank"> 12-49579011-T-TG</a> <br> Frequency: 0 <br> rsNumber: rs1400864801<br> p.Asn380GlnfsTer7 <br> frameshift_variant',
+                'source': 'gnomAD'
+            }, {
+                'sequenceIndex': 1,
+                'position': 427,
+                'note': 'Variation ID:<a style="color:#1976D2 !important; font-size:15px !important;" href="https://gnomad.broadinstitute.org/variant/12-49578869-G-C" target="_blank"> 12-49578869-G-C</a> <br> Frequency: 1.2E-5 <br> rsNumber: rs773920941<br> p.Ala427Gly <br> missense_variant',
+                'source': 'gnomAD'
+            }, {
+                'sequenceIndex': 1,
+                'position': 431,
+                'note': 'Variation ID:<a style="color:#1976D2 !important; font-size:15px !important;" href="https://gnomad.broadinstitute.org/variant/12-49578858-C-T" target="_blank"> 12-49578858-C-T</a> <br> Frequency: 0 <br> rsNumber: rs1361084932<br> p.Asp431Asn <br> missense_variant',
+                'source': 'gnomAD'
+            }, {
+                'sequenceIndex': 1,
+                'position': 440,
+                'note': 'Variation ID:<a style="color:#1976D2 !important; font-size:15px !important;" href="https://gnomad.broadinstitute.org/variant/12-49578831-C-T" target="_blank"> 12-49578831-C-T</a> <br> Frequency: 4.0E-6 <br> rsNumber: rs749746325<br> p.Val440Ile <br> missense_variant',
+                'source': 'gnomAD'
+            }, {
+                'sequenceIndex': 1,
+                'position': 444,
+                'note': 'Variation ID:<a style="color:#1976D2 !important; font-size:15px !important;" href="https://gnomad.broadinstitute.org/variant/12-49578818-C-G" target="_blank"> 12-49578818-C-G</a> <br> Frequency: 4.0E-6 <br> rsNumber: rs770156445<br> p.Gly444Ala <br> missense_variant',
+                'source': 'gnomAD'
+            }, {
+                'sequenceIndex': 1,
+                'position': 448,
+                'note': 'Variation ID:<a style="color:#1976D2 !important; font-size:15px !important;" href="https://gnomad.broadinstitute.org/variant/12-49578806-C-T" target="_blank"> 12-49578806-C-T</a> <br> Frequency: 4.0E-6 <br> rsNumber: rs1324228374<br> p.Gly448Glu <br> missense_variant',
+                'source': 'gnomAD'
+            },
 
-			// ClinVar
-			{ 'sequenceIndex': 1, 'position': 101, 'note': 'Variation ID: 625515 <br> rsNumber: N/A<br> p.Asn101Ser <br> single nucleotide variant <br> Pathogenic<br>Tubulinopathies', 'source': 'ClinVar' },
-			{ 'sequenceIndex': 1, 'position': 107, 'note': 'Variation ID: 562207 <br> rsNumber: N/A<br> p.His107Gln <br> single nucleotide variant <br> Likely pathogenic<br>Lissencephaly 3', 'source': 'ClinVar' },
-			{ 'sequenceIndex': 1, 'position': 107, 'note': 'Variation ID: 625510 <br> rsNumber: N/A<br> p.His107Arg <br> single nucleotide variant <br> Pathogenic<br>Tubulinopathies', 'source': 'ClinVar' },
-			{ 'sequenceIndex': 1, 'position': 113, 'note': 'Variation ID: 625503 <br> rsNumber: N/A<br> p.Glu113Lys <br> single nucleotide variant <br> Pathogenic<br>Tubulinopathies', 'source': 'ClinVar' },
-			{ 'sequenceIndex': 1, 'position': 115, 'note': 'Variation ID: 426626 <br> rsNumber: rs1085307716<br> p.Ile115Thr <br> single nucleotide variant <br> Uncertain significance<br>not provided', 'source': 'ClinVar' },
-			{ 'sequenceIndex': 1, 'position': 118, 'note': 'Variation ID: 217023 <br> rsNumber: rs863224938<br> p.Val118Met <br> single nucleotide variant <br> Pathogenic/Likely pathogenic<br>Lissencephaly 3;Tubulinopathies', 'source': 'ClinVar' },
-			{ 'sequenceIndex': 1, 'position': 118, 'note': 'Variation ID: 625508 <br> rsNumber: N/A<br> p.Val118Leu <br> single nucleotide variant <br> Pathogenic<br>Tubulinopathies', 'source': 'ClinVar' },
-			{ 'sequenceIndex': 1, 'position': 123, 'note': 'Variation ID: 265378 <br> rsNumber: rs886039513<br> p.Arg123Cys <br> single nucleotide variant <br> Pathogenic<br>Tubulinopathies;not provided', 'source': 'ClinVar' },
-			{ 'sequenceIndex': 1, 'position': 123, 'note': 'Variation ID: 437122 <br> rsNumber: rs1555162456<br> p.Arg123His <br> single nucleotide variant <br> Pathogenic/Likely pathogenic<br>Lissencephaly 3;Tubulinopathies', 'source': 'ClinVar' },
-			{ 'sequenceIndex': 1, 'position': 126, 'note': 'Variation ID: 437117 <br> rsNumber: rs1135224<br> p.Ala126= <br> single nucleotide variant <br> Likely benign<br>not specified', 'source': 'ClinVar' },
-			{ 'sequenceIndex': 1, 'position': 127, 'note': 'Variation ID: 427180 <br> rsNumber: rs1085308005<br> p.Asp127Asn <br> single nucleotide variant <br> Conflicting interpretations of pathogenicity<br>Inborn genetic diseases;Tubulinopathies;not provided', 'source': 'ClinVar' },
-			{ 'sequenceIndex': 1, 'position': 127, 'note': 'Variation ID: 625521 <br> rsNumber: N/A<br> p.Asp127Glu <br> single nucleotide variant <br> Pathogenic<br>Tubulinopathies', 'source': 'ClinVar' },
-			{ 'sequenceIndex': 1, 'position': 130, 'note': 'Variation ID: 309112 <br> rsNumber: rs1143559<br> p.Thr130= <br> single nucleotide variant <br> Uncertain significance<br>Lissencephaly, Dominant', 'source': 'ClinVar' },
-			{ 'sequenceIndex': 1, 'position': 132, 'note': 'Variation ID: 160155 <br> rsNumber: rs1143560<br> p.Leu132= <br> single nucleotide variant <br> Benign/Likely benign<br>Lissencephaly, Dominant;not specified', 'source': 'ClinVar' },
-			{ 'sequenceIndex': 1, 'position': 137, 'note': 'Variation ID: 625498 <br> rsNumber: N/A<br> p.Val137Asp <br> single nucleotide variant <br> Likely pathogenic<br>Tubulinopathies', 'source': 'ClinVar' },
-			{ 'sequenceIndex': 1, 'position': 14, 'note': 'Variation ID: 625489 <br> rsNumber: N/A<br> p.Val14Ile <br> single nucleotide variant <br> Likely pathogenic<br>Tubulinopathies', 'source': 'ClinVar' },
-			{ 'sequenceIndex': 1, 'position': 140, 'note': 'Variation ID: 625492 <br> rsNumber: N/A<br> p.Ser140Gly <br> single nucleotide variant <br> Likely pathogenic<br>Tubulinopathies', 'source': 'ClinVar' },
-			{ 'sequenceIndex': 1, 'position': 142, 'note': 'Variation ID: 431839 <br> rsNumber: rs1555162407<br> p.Gly142Cys <br> single nucleotide variant <br> Likely pathogenic<br>Tubulinopathies;not provided', 'source': 'ClinVar' },
-			{ 'sequenceIndex': 1, 'position': 142, 'note': 'Variation ID: 520702 <br> rsNumber: rs1555162407<br> p.Gly142Ser <br> single nucleotide variant <br> Pathogenic/Likely pathogenic<br>Inborn genetic diseases;Tubulinopathies', 'source': 'ClinVar' },
-			{ 'sequenceIndex': 1, 'position': 143, 'note': 'Variation ID: 429321 <br> rsNumber: rs1131691318<br> p.Gly143Arg <br> single nucleotide variant <br> Likely pathogenic<br>Tubulinopathies;not provided', 'source': 'ClinVar' },
-			{ 'sequenceIndex': 1, 'position': 145, 'note': 'Variation ID: 625494 <br> rsNumber: N/A<br> p.Thr145Ala <br> single nucleotide variant <br> Pathogenic<br>Tubulinopathies', 'source': 'ClinVar' },
-			{ 'sequenceIndex': 1, 'position': 150, 'note': 'Variation ID: 625509 <br> rsNumber: N/A<br> p.Thr150Ile <br> single nucleotide variant <br> Pathogenic<br>Tubulinopathies', 'source': 'ClinVar' },
-			{ 'sequenceIndex': 1, 'position': 151, 'note': 'Variation ID: 160157 <br> rsNumber: rs697624<br> p.Ser151= <br> single nucleotide variant <br> Benign<br>Lissencephaly, Dominant;not provided;not specified', 'source': 'ClinVar' },
-			{ 'sequenceIndex': 1, 'position': 152, 'note': 'Variation ID: 381536 <br> rsNumber: rs1057521063<br> p.Leu152Gln <br> single nucleotide variant <br> Likely pathogenic<br>Tubulinopathies;not provided', 'source': 'ClinVar' },
-			{ 'sequenceIndex': 1, 'position': 158, 'note': 'Variation ID: 625517 <br> rsNumber: N/A<br> p.Ser158Leu <br> single nucleotide variant <br> Pathogenic<br>Tubulinopathies', 'source': 'ClinVar' },
-			{ 'sequenceIndex': 1, 'position': 161, 'note': 'Variation ID: 160158 <br> rsNumber: rs587784488<br> p.Tyr161Asp <br> single nucleotide variant <br> Pathogenic/Likely pathogenic<br>Lissencephaly 3;Tubulinopathies', 'source': 'ClinVar' },
-			{ 'sequenceIndex': 1, 'position': 161, 'note': 'Variation ID: 625477 <br> rsNumber: N/A<br> p.Tyr161His <br> single nucleotide variant <br> Pathogenic<br>Tubulinopathies', 'source': 'ClinVar' },
-			{ 'sequenceIndex': 1, 'position': 170, 'note': 'Variation ID: 137849 <br> rsNumber: rs112023543<br> p.Ser170= <br> single nucleotide variant <br> Benign<br>Lissencephaly, Dominant;not specified', 'source': 'ClinVar' },
-			{ 'sequenceIndex': 1, 'position': 173, 'note': 'Variation ID: 625511 <br> rsNumber: N/A<br> p.Pro173Leu <br> single nucleotide variant <br> Pathogenic<br>Tubulinopathies', 'source': 'ClinVar' },
-			{ 'sequenceIndex': 1, 'position': 174, 'note': 'Variation ID: 137850 <br> rsNumber: rs61730859<br> p.Ala174= <br> single nucleotide variant <br> Benign<br>Lissencephaly, Dominant;not specified', 'source': 'ClinVar' },
-			{ 'sequenceIndex': 1, 'position': 174, 'note': 'Variation ID: 160159 <br> rsNumber: rs587784489<br> p.Ala174Val <br> single nucleotide variant <br> Conflicting interpretations of pathogenicity<br>Lissencephaly 3;Tubulinopathies;not provided', 'source': 'ClinVar' },
-			{ 'sequenceIndex': 1, 'position': 174, 'note': 'Variation ID: 546297 <br> rsNumber: rs1555162392<br> p.Ala174Pro <br> single nucleotide variant <br> Likely pathogenic<br>not provided', 'source': 'ClinVar' },
-			{ 'sequenceIndex': 1, 'position': 18, 'note': 'Variation ID: 421567 <br> rsNumber: rs1064795213<br> p.Asn18Ser <br> single nucleotide variant <br> Conflicting interpretations of pathogenicity<br>Tubulinopathies;not provided;not specified', 'source': 'ClinVar' },
-			{ 'sequenceIndex': 1, 'position': 182, 'note': 'Variation ID: 625490 <br> rsNumber: N/A<br> p.Val182Phe <br> single nucleotide variant <br> Likely pathogenic<br>Tubulinopathies', 'source': 'ClinVar' },
-			{ 'sequenceIndex': 1, 'position': 188, 'note': 'Variation ID: 7072 <br> rsNumber: rs137853045<br> p.Ile188Leu <br> single nucleotide variant <br> Pathogenic<br>Lissencephaly 3;Tubulinopathies', 'source': 'ClinVar' },
-			{ 'sequenceIndex': 1, 'position': 188, 'note': 'Variation ID: 160160 <br> rsNumber: rs587784490<br> p.Ile188_Leu189insIle <br> duplication <br> Uncertain significance<br>Lissencephaly 3', 'source': 'ClinVar' },
-			{ 'sequenceIndex': 1, 'position': 189, 'note': 'Variation ID: 625519 <br> rsNumber: N/A<br> p.Leu189Val <br> single nucleotide variant <br> Pathogenic<br>Tubulinopathies', 'source': 'ClinVar' },
-			{ 'sequenceIndex': 1, 'position': 199, 'note': 'Variation ID: 191038 <br> rsNumber: rs786205479<br> p.Asp199Gly <br> single nucleotide variant <br> Likely pathogenic<br>Tubulinopathies;not provided', 'source': 'ClinVar' },
-			{ 'sequenceIndex': 1, 'position': 2, 'note': 'Variation ID: 160161 <br> rsNumber: rs587784491<br> p.Arg2His <br> single nucleotide variant <br> Pathogenic/Likely pathogenic<br>Inborn genetic diseases;Lissencephaly 3;Tubulinopathies;not provided', 'source': 'ClinVar' },
-			{ 'sequenceIndex': 1, 'position': 2, 'note': 'Variation ID: 625482 <br> rsNumber: N/A<br> p.Arg2Ser <br> single nucleotide variant <br> Pathogenic<br>Tubulinopathies', 'source': 'ClinVar' },
-			{ 'sequenceIndex': 1, 'position': 200, 'note': 'Variation ID: 625501 <br> rsNumber: N/A<br> p.Cys200Tyr <br> single nucleotide variant <br> Pathogenic<br>Tubulinopathies', 'source': 'ClinVar' },
-			{ 'sequenceIndex': 1, 'position': 210, 'note': 'Variation ID: 625474 <br> rsNumber: N/A<br> p.Tyr210Cys <br> single nucleotide variant <br> Pathogenic<br>Tubulinopathies', 'source': 'ClinVar' },
-			{ 'sequenceIndex': 1, 'position': 214, 'note': 'Variation ID: 290845 <br> rsNumber: rs886044568<br> p.Arg214Ser <br> single nucleotide variant <br> Uncertain significance<br>not provided', 'source': 'ClinVar' },
-			{ 'sequenceIndex': 1, 'position': 214, 'note': 'Variation ID: 432708 <br> rsNumber: rs1057517843<br> p.Arg214Leu <br> single nucleotide variant <br> Pathogenic/Likely pathogenic<br>Tubulinopathies;not provided', 'source': 'ClinVar' },
-			{ 'sequenceIndex': 1, 'position': 214, 'note': 'Variation ID: 372542 <br> rsNumber: rs1057517843<br> p.Arg214His <br> single nucleotide variant <br> Pathogenic<br>Lissencephaly 3;Tubulinopathies;not provided', 'source': 'ClinVar' },
-			{ 'sequenceIndex': 1, 'position': 218, 'note': 'Variation ID: 372561 <br> rsNumber: rs1057517858<br> p.Asp218Asn <br> single nucleotide variant <br> Likely pathogenic<br>Agenesis of corpus callosum;Genetic syndrome with a Dandy-Walker malformation as major feature;Inborn genetic diseases;Lissencephaly 3;Tubulinopathies;not provided', 'source': 'ClinVar' },
-			{ 'sequenceIndex': 1, 'position': 218, 'note': 'Variation ID: 625499 <br> rsNumber: N/A<br> p.Asp218Tyr <br> single nucleotide variant <br> Pathogenic<br>Tubulinopathies', 'source': 'ClinVar' },
-			{ 'sequenceIndex': 1, 'position': 219, 'note': 'Variation ID: 625480 <br> rsNumber: N/A<br> p.Ile219Val <br> single nucleotide variant <br> Likely pathogenic<br>Tubulinopathies', 'source': 'ClinVar' },
-			{ 'sequenceIndex': 1, 'position': 221, 'note': 'Variation ID: 309111 <br> rsNumber: rs754280693<br> p.Arg221= <br> single nucleotide variant <br> Uncertain significance<br>Lissencephaly, Dominant', 'source': 'ClinVar' },
-			{ 'sequenceIndex': 1, 'position': 231, 'note': 'Variation ID: 625493 <br> rsNumber: N/A<br> p.Ile231Leu <br> single nucleotide variant <br> Likely pathogenic<br>Tubulinopathies', 'source': 'ClinVar' },
-			{ 'sequenceIndex': 1, 'position': 233, 'note': 'Variation ID: 160162 <br> rsNumber: rs587784492<br> p.Gln233Arg <br> single nucleotide variant <br> Likely pathogenic<br>Lissencephaly 3;Tubulinopathies', 'source': 'ClinVar' },
-			{ 'sequenceIndex': 1, 'position': 235, 'note': 'Variation ID: 625478 <br> rsNumber: N/A<br> p.Val235Leu <br> single nucleotide variant <br> Pathogenic<br>Tubulinopathies', 'source': 'ClinVar' },
-			{ 'sequenceIndex': 1, 'position': 238, 'note': 'Variation ID: 625484 <br> rsNumber: N/A<br> p.Ile238Val <br> single nucleotide variant <br> Likely pathogenic<br>Tubulinopathies', 'source': 'ClinVar' },
-			{ 'sequenceIndex': 1, 'position': 239, 'note': 'Variation ID: 422375 <br> rsNumber: rs1064795738<br> p.Thr239Pro <br> single nucleotide variant <br> Likely pathogenic<br>Tubulinopathies;not provided', 'source': 'ClinVar' },
-			{ 'sequenceIndex': 1, 'position': 245, 'note': 'Variation ID: 450468 <br> rsNumber: rs1555162357<br> p.Asp245Asn <br> single nucleotide variant <br> Uncertain significance<br>not provided', 'source': 'ClinVar' },
-			{ 'sequenceIndex': 1, 'position': 245, 'note': 'Variation ID: 625495 <br> rsNumber: N/A<br> p.Asp245Gly <br> single nucleotide variant <br> Likely pathogenic<br>Tubulinopathies', 'source': 'ClinVar' },
-			{ 'sequenceIndex': 1, 'position': 25, 'note': 'Variation ID: 625481 <br> rsNumber: N/A<br> p.Cys25Phe <br> single nucleotide variant <br> Pathogenic<br>Tubulinopathies', 'source': 'ClinVar' },
-			{ 'sequenceIndex': 1, 'position': 253, 'note': 'Variation ID: 160163 <br> rsNumber: rs587784493<br> p.Thr253Arg <br> single nucleotide variant <br> Uncertain significance<br>Lissencephaly 3', 'source': 'ClinVar' },
-			{ 'sequenceIndex': 1, 'position': 262, 'note': 'Variation ID: 212493 <br> rsNumber: rs762008241<br> p.Tyr262= <br> single nucleotide variant <br> Likely benign<br>Lissencephaly, Dominant;not specified', 'source': 'ClinVar' },
-			{ 'sequenceIndex': 1, 'position': 263, 'note': 'Variation ID: 7073 <br> rsNumber: rs137853046<br> p.Pro263Thr <br> single nucleotide variant <br> Pathogenic<br>Lissencephaly 3;Tubulinopathies', 'source': 'ClinVar' },
-			{ 'sequenceIndex': 1, 'position': 264, 'note': 'Variation ID: 7070 <br> rsNumber: rs137853043<br> p.Arg264Cys <br> single nucleotide variant <br> Pathogenic<br>Inborn genetic diseases;Lissencephaly 3;Tubulinopathies', 'source': 'ClinVar' },
-			{ 'sequenceIndex': 1, 'position': 264, 'note': 'Variation ID: 265283 <br> rsNumber: rs137853043<br> p.Arg264Gly <br> single nucleotide variant <br> Pathogenic/Likely pathogenic<br>Tubulinopathies;not provided', 'source': 'ClinVar' },
-			{ 'sequenceIndex': 1, 'position': 264, 'note': 'Variation ID: 287392 <br> rsNumber: rs886043627<br> p.Arg264His <br> single nucleotide variant <br> Conflicting interpretations of pathogenicity<br>Lissencephaly 3;Tubulinopathies;not provided', 'source': 'ClinVar' },
-			{ 'sequenceIndex': 1, 'position': 27, 'note': 'Variation ID: 381537 <br> rsNumber: rs1057521064<br> p.Glu27Gln <br> single nucleotide variant <br> Pathogenic<br>Tubulinopathies;not provided', 'source': 'ClinVar' },
-			{ 'sequenceIndex': 1, 'position': 270, 'note': 'Variation ID: 160164 <br> rsNumber: rs587784494<br> p.Ala270Ser <br> single nucleotide variant <br> Pathogenic/Likely pathogenic<br>Lissencephaly 3;Tubulinopathies', 'source': 'ClinVar' },
-			{ 'sequenceIndex': 1, 'position': 270, 'note': 'Variation ID: 625500 <br> rsNumber: N/A<br> p.Ala270Thr <br> single nucleotide variant <br> Likely pathogenic<br>Tubulinopathies', 'source': 'ClinVar' },
-			{ 'sequenceIndex': 1, 'position': 272, 'note': 'Variation ID: 421873 <br> rsNumber: rs1064795417<br> p.Tyr272Cys <br> single nucleotide variant <br> Likely pathogenic<br>Tubulinopathies;not provided', 'source': 'ClinVar' },
-			{ 'sequenceIndex': 1, 'position': 273, 'note': 'Variation ID: 437118 <br> rsNumber: rs140795162<br> p.Ala273= <br> single nucleotide variant <br> Likely benign<br>not specified', 'source': 'ClinVar' },
-			{ 'sequenceIndex': 1, 'position': 28, 'note': 'Variation ID: 432052 <br> rsNumber: rs1555162549<br> p.His28Tyr <br> single nucleotide variant <br> Likely pathogenic<br>Tubulinopathies;not provided', 'source': 'ClinVar' },
-			{ 'sequenceIndex': 1, 'position': 286, 'note': 'Variation ID: 625483 <br> rsNumber: N/A<br> p.Leu286Phe <br> single nucleotide variant <br> Likely pathogenic<br>Tubulinopathies', 'source': 'ClinVar' },
-			{ 'sequenceIndex': 1, 'position': 296, 'note': 'Variation ID: 429793 <br> rsNumber: rs1131691597<br> p.Phe296Ser <br> single nucleotide variant <br> Likely pathogenic<br>Tubulinopathies;not provided', 'source': 'ClinVar' },
-			{ 'sequenceIndex': 1, 'position': 303, 'note': 'Variation ID: 625485 <br> rsNumber: N/A<br> p.Val303Gly <br> single nucleotide variant <br> Pathogenic<br>Tubulinopathies', 'source': 'ClinVar' },
-			{ 'sequenceIndex': 1, 'position': 306, 'note': 'Variation ID: 452573 <br> rsNumber: rs1555162330<br> p.Asp306Tyr <br> single nucleotide variant <br> Likely pathogenic<br>Tubulinopathies;not provided', 'source': 'ClinVar' },
-			{ 'sequenceIndex': 1, 'position': 307, 'note': 'Variation ID: 431850 <br> rsNumber: rs1555162327<br> p.Pro307Ser <br> single nucleotide variant <br> Likely pathogenic<br>Tubulinopathies;not provided', 'source': 'ClinVar' },
-			{ 'sequenceIndex': 1, 'position': 307, 'note': 'Variation ID: 438589 <br> rsNumber: rs1555162325<br> p.Pro307Leu <br> single nucleotide variant <br> Pathogenic/Likely pathogenic<br>Lissencephaly 3;Tubulinopathies', 'source': 'ClinVar' },
-			{ 'sequenceIndex': 1, 'position': 32, 'note': 'Variation ID: 160166 <br> rsNumber: rs139102191<br> p.Pro32= <br> single nucleotide variant <br> Uncertain significance<br>Lissencephaly 3', 'source': 'ClinVar' },
-			{ 'sequenceIndex': 1, 'position': 320, 'note': 'Variation ID: 521647 <br> rsNumber: rs1555162323<br> p.Arg320His <br> single nucleotide variant <br> Pathogenic/Likely pathogenic<br>Inborn genetic diseases;Tubulinopathies', 'source': 'ClinVar' },
-			{ 'sequenceIndex': 1, 'position': 321, 'note': 'Variation ID: 620024 <br> rsNumber: N/A<br> p.Gly321Asp <br> single nucleotide variant <br> Likely pathogenic<br>Lissencephaly 3', 'source': 'ClinVar' },
-			{ 'sequenceIndex': 1, 'position': 322, 'note': 'Variation ID: 160165 <br> rsNumber: rs142641191<br> p.Asp322= <br> single nucleotide variant <br> Benign/Likely benign<br>Lissencephaly, Dominant;not specified', 'source': 'ClinVar' },
-			{ 'sequenceIndex': 1, 'position': 324, 'note': 'Variation ID: 212494 <br> rsNumber: rs797046073<br> p.Val324Leu <br> single nucleotide variant <br> Likely pathogenic<br>Lissencephaly 3;Tubulinopathies', 'source': 'ClinVar' },
-			{ 'sequenceIndex': 1, 'position': 326, 'note': 'Variation ID: 625487 <br> rsNumber: N/A<br> p.Lys326Asn <br> single nucleotide variant <br> Pathogenic<br>Tubulinopathies', 'source': 'ClinVar' },
-			{ 'sequenceIndex': 1, 'position': 329, 'note': 'Variation ID: 160167 <br> rsNumber: rs587784495<br> p.Asn329Ser <br> single nucleotide variant <br> Pathogenic<br>Lissencephaly 3;Tubulinopathies', 'source': 'ClinVar' },
-			{ 'sequenceIndex': 1, 'position': 331, 'note': 'Variation ID: 160168 <br> rsNumber: rs587784496<br> p.Ala331Thr <br> single nucleotide variant <br> Uncertain significance<br>Lissencephaly 3', 'source': 'ClinVar' },
-			{ 'sequenceIndex': 1, 'position': 332, 'note': 'Variation ID: 160169 <br> rsNumber: rs587784497<br> p.Ile332Thr <br> single nucleotide variant <br> Likely pathogenic<br>Lissencephaly 3;Tubulinopathies', 'source': 'ClinVar' },
-			{ 'sequenceIndex': 1, 'position': 333, 'note': 'Variation ID: 625476 <br> rsNumber: N/A<br> p.Ala333Val <br> single nucleotide variant <br> Pathogenic<br>Tubulinopathies', 'source': 'ClinVar' },
-			{ 'sequenceIndex': 1, 'position': 336, 'note': 'Variation ID: 160141 <br> rsNumber: rs11829764<br> p.Lys336= <br> single nucleotide variant <br> Benign/Likely benign<br>Lissencephaly, Dominant;not specified', 'source': 'ClinVar' },
-			{ 'sequenceIndex': 1, 'position': 336, 'note': 'Variation ID: 625496 <br> rsNumber: N/A<br> p.Lys336Arg <br> single nucleotide variant <br> Pathogenic<br>Tubulinopathies', 'source': 'ClinVar' },
-			{ 'sequenceIndex': 1, 'position': 342, 'note': 'Variation ID: 449112 <br> rsNumber: rs1555162307<br> p.Gln342Pro <br> single nucleotide variant <br> Likely pathogenic<br>Tubulinopathies;not provided', 'source': 'ClinVar' },
-			{ 'sequenceIndex': 1, 'position': 348, 'note': 'Variation ID: 381030 <br> rsNumber: rs144574983<br> p.Pro348= <br> single nucleotide variant <br> Likely benign<br>not specified', 'source': 'ClinVar' },
-			{ 'sequenceIndex': 1, 'position': 352, 'note': 'Variation ID: 521592 <br> rsNumber: rs1555162303<br> p.Lys352Met <br> single nucleotide variant <br> Likely pathogenic<br>Inborn genetic diseases;Tubulinopathies', 'source': 'ClinVar' },
-			{ 'sequenceIndex': 1, 'position': 353, 'note': 'Variation ID: 625479 <br> rsNumber: N/A<br> p.Val353Ile <br> single nucleotide variant <br> Likely pathogenic<br>Tubulinopathies', 'source': 'ClinVar' },
-			{ 'sequenceIndex': 1, 'position': 359, 'note': 'Variation ID: 426640 <br> rsNumber: rs1085307724<br> p.Pro359Leu <br> single nucleotide variant <br> Likely pathogenic<br>Tubulinopathies;not provided', 'source': 'ClinVar' },
-			{ 'sequenceIndex': 1, 'position': 361, 'note': 'Variation ID: 520901 <br> rsNumber: rs1555162301<br> p.Thr361Ile <br> single nucleotide variant <br> Uncertain significance<br>Inborn genetic diseases', 'source': 'ClinVar' },
-			{ 'sequenceIndex': 1, 'position': 364, 'note': 'Variation ID: 429374 <br> rsNumber: rs1131691349<br> p.Pro364Arg <br> single nucleotide variant <br> Likely pathogenic<br>Tubulinopathies;not provided', 'source': 'ClinVar' },
-			{ 'sequenceIndex': 1, 'position': 366, 'note': 'Variation ID: 449342 <br> rsNumber: rs1555162299<br> p.Gly366Arg <br> single nucleotide variant <br> Pathogenic/Likely pathogenic<br>Tubulinopathies;not provided', 'source': 'ClinVar' },
-			{ 'sequenceIndex': 1, 'position': 369, 'note': 'Variation ID: 212488 <br> rsNumber: rs797046071<br> p.Ala369Thr <br> single nucleotide variant <br> Pathogenic/Likely pathogenic<br>Lissencephaly 3;Tubulinopathies', 'source': 'ClinVar' },
-			{ 'sequenceIndex': 1, 'position': 371, 'note': 'Variation ID: 625514 <br> rsNumber: N/A<br> p.Val371Glu <br> single nucleotide variant <br> Pathogenic<br>Tubulinopathies', 'source': 'ClinVar' },
-			{ 'sequenceIndex': 1, 'position': 377, 'note': 'Variation ID: 160142 <br> rsNumber: rs587784481<br> p.Met377Val <br> single nucleotide variant <br> Likely pathogenic<br>Lissencephaly 3;Tubulinopathies', 'source': 'ClinVar' },
-			{ 'sequenceIndex': 1, 'position': 382, 'note': 'Variation ID: 437121 <br> rsNumber: rs1555162294<br> p.Thr382Ala <br> single nucleotide variant <br> Likely pathogenic<br>Lissencephaly 3;Tubulinopathies', 'source': 'ClinVar' },
-			{ 'sequenceIndex': 1, 'position': 383, 'note': 'Variation ID: 160143 <br> rsNumber: rs587784482<br> p.Ala383Val <br> single nucleotide variant <br> Pathogenic/Likely pathogenic<br>Abnormality of neuronal migration;Lissencephaly 3;Tubulinopathies', 'source': 'ClinVar' },
-			{ 'sequenceIndex': 1, 'position': 383, 'note': 'Variation ID: 427202 <br> rsNumber: rs587784482<br> p.Ala383Asp <br> single nucleotide variant <br> Pathogenic/Likely pathogenic<br>Tubulinopathies;not provided', 'source': 'ClinVar' },
-			{ 'sequenceIndex': 1, 'position': 384, 'note': 'Variation ID: 585140 <br> rsNumber: N/A<br> p.Ile384Asn <br> single nucleotide variant <br> not provided<br>Lissencephaly 3', 'source': 'ClinVar' },
-			{ 'sequenceIndex': 1, 'position': 387, 'note': 'Variation ID: 625502 <br> rsNumber: N/A<br> p.Ala387Val <br> single nucleotide variant <br> Pathogenic<br>Tubulinopathies', 'source': 'ClinVar' },
-			{ 'sequenceIndex': 1, 'position': 390, 'note': 'Variation ID: 423490 <br> rsNumber: rs1064796460<br> p.Arg390Pro <br> single nucleotide variant <br> Pathogenic/Likely pathogenic<br>Lissencephaly 3;Tubulinopathies;not provided', 'source': 'ClinVar' },
-			{ 'sequenceIndex': 1, 'position': 390, 'note': 'Variation ID: 418531 <br> rsNumber: rs1064793286<br> p.Arg390Cys <br> single nucleotide variant <br> Pathogenic<br>Tubulinopathies;not provided', 'source': 'ClinVar' },
-			{ 'sequenceIndex': 1, 'position': 390, 'note': 'Variation ID: 450183 <br> rsNumber: rs1064793286<br> p.Arg390Gly <br> single nucleotide variant <br> Pathogenic/Likely pathogenic<br>Tubulinopathies;not provided', 'source': 'ClinVar' },
-			{ 'sequenceIndex': 1, 'position': 390, 'note': 'Variation ID: 488628 <br> rsNumber: rs1064796460<br> p.Arg390His <br> single nucleotide variant <br> Pathogenic<br>Lissencephaly 3;Tubulinopathies', 'source': 'ClinVar' },
-			{ 'sequenceIndex': 1, 'position': 393, 'note': 'Variation ID: 438298 <br> rsNumber: rs1555162288<br> p.His393Tyr <br> single nucleotide variant <br> Pathogenic<br>Tubulinopathies;Tubulinopathy', 'source': 'ClinVar' },
-			{ 'sequenceIndex': 1, 'position': 396, 'note': 'Variation ID: 625505 <br> rsNumber: N/A<br> p.Asp396Tyr <br> single nucleotide variant <br> Pathogenic<br>Tubulinopathies', 'source': 'ClinVar' },
-			{ 'sequenceIndex': 1, 'position': 397, 'note': 'Variation ID: 7075 <br> rsNumber: rs137853048<br> p.Leu397Pro <br> single nucleotide variant <br> Pathogenic<br>Lissencephaly 3;Tubulinopathies', 'source': 'ClinVar' },
-			{ 'sequenceIndex': 1, 'position': 401, 'note': 'Variation ID: 160144 <br> rsNumber: rs1065724<br> p.Lys401= <br> single nucleotide variant <br> Benign<br>not specified', 'source': 'ClinVar' },
-			{ 'sequenceIndex': 1, 'position': 402, 'note': 'Variation ID: 7071 <br> rsNumber: rs137853044<br> p.Arg402His <br> single nucleotide variant <br> Pathogenic<br>Lissencephaly 3;Tubulinopathies', 'source': 'ClinVar' },
-			{ 'sequenceIndex': 1, 'position': 402, 'note': 'Variation ID: 160147 <br> rsNumber: rs137853044<br> p.Arg402Leu <br> single nucleotide variant <br> Pathogenic<br>Lissencephaly 3;Tubulinopathies', 'source': 'ClinVar' },
-			{ 'sequenceIndex': 1, 'position': 402, 'note': 'Variation ID: 160146 <br> rsNumber: rs587784483<br> p.Arg402Cys <br> single nucleotide variant <br> Pathogenic<br>Limb-girdle muscular dystrophy, type 2D;Lissencephaly 3;Tubulinopathies;not provided', 'source': 'ClinVar' },
-			{ 'sequenceIndex': 1, 'position': 402, 'note': 'Variation ID: 160145 <br> rsNumber: rs587784483<br> p.Arg402Ser <br> single nucleotide variant <br> Likely pathogenic<br>Lissencephaly 3;Tubulinopathies', 'source': 'ClinVar' },
-			{ 'sequenceIndex': 1, 'position': 408, 'note': 'Variation ID: 209200 <br> rsNumber: rs753719501<br> p.Tyr408Ter <br> single nucleotide variant <br> Conflicting interpretations of pathogenicity<br>Lissencephaly 3;Tubulinopathies', 'source': 'ClinVar' },
-			{ 'sequenceIndex': 1, 'position': 409, 'note': 'Variation ID: 208490 <br> rsNumber: rs797045005<br> p.Val409Ala <br> single nucleotide variant <br> Pathogenic/Likely pathogenic<br>Lissencephaly 3;Tubulinopathies;not provided', 'source': 'ClinVar' },
-			{ 'sequenceIndex': 1, 'position': 409, 'note': 'Variation ID: 378996 <br> rsNumber: rs766135902<br> p.Val409= <br> single nucleotide variant <br> Likely benign<br>not specified', 'source': 'ClinVar' },
-			{ 'sequenceIndex': 1, 'position': 409, 'note': 'Variation ID: 625504 <br> rsNumber: N/A<br> p.Val409Ile <br> single nucleotide variant <br> Pathogenic<br>Tubulinopathies', 'source': 'ClinVar' },
-			{ 'sequenceIndex': 1, 'position': 410, 'note': 'Variation ID: 379050 <br> rsNumber: rs772809398<br> p.Gly410= <br> single nucleotide variant <br> Likely benign<br>not specified', 'source': 'ClinVar' },
-			{ 'sequenceIndex': 1, 'position': 410, 'note': 'Variation ID: 586915 <br> rsNumber: N/A<br> p.Gly410= <br> single nucleotide variant <br> Likely benign<br>not provided', 'source': 'ClinVar' },
-			{ 'sequenceIndex': 1, 'position': 411, 'note': 'Variation ID: 620053 <br> rsNumber: N/A<br> p.Glu411Gly <br> single nucleotide variant <br> Uncertain significance<br>Lissencephaly 3', 'source': 'ClinVar' },
-			{ 'sequenceIndex': 1, 'position': 416, 'note': 'Variation ID: 212489 <br> rsNumber: rs3206694<br> p.Gly416= <br> single nucleotide variant <br> Uncertain significance<br>not specified', 'source': 'ClinVar' },
-			{ 'sequenceIndex': 1, 'position': 416, 'note': 'Variation ID: 384538 <br> rsNumber: rs1057521986<br> p.Gly416Ser <br> single nucleotide variant <br> Likely pathogenic<br>Tubulinopathies;not provided', 'source': 'ClinVar' },
-			{ 'sequenceIndex': 1, 'position': 416, 'note': 'Variation ID: 591001 <br> rsNumber: N/A<br> p.Gly416Asp <br> single nucleotide variant <br> Uncertain significance<br>Lissencephaly 3', 'source': 'ClinVar' },
-			{ 'sequenceIndex': 1, 'position': 419, 'note': 'Variation ID: 7074 <br> rsNumber: rs137853047<br> p.Ser419Leu <br> single nucleotide variant <br> Pathogenic<br>Lissencephaly 3;Tubulinopathies', 'source': 'ClinVar' },
-			{ 'sequenceIndex': 1, 'position': 419, 'note': 'Variation ID: 384472 <br> rsNumber: rs865953916<br> p.Ser419= <br> single nucleotide variant <br> Likely benign<br>not specified', 'source': 'ClinVar' },
-			{ 'sequenceIndex': 1, 'position': 422, 'note': 'Variation ID: 7076 <br> rsNumber: rs137853049<br> p.Arg422Cys <br> single nucleotide variant <br> Pathogenic<br>Inborn genetic diseases;Lissencephaly 3;Tubulinopathies;not provided', 'source': 'ClinVar' },
-			{ 'sequenceIndex': 1, 'position': 422, 'note': 'Variation ID: 7077 <br> rsNumber: rs137853050<br> p.Arg422His <br> single nucleotide variant <br> Pathogenic<br>Lissencephaly 3;Tubulinopathies;not provided', 'source': 'ClinVar' },
-			{ 'sequenceIndex': 1, 'position': 425, 'note': 'Variation ID: 160148 <br> rsNumber: rs587784484<br> p.Met425Lys <br> single nucleotide variant <br> Pathogenic/Likely pathogenic<br>Lissencephaly 3;Tubulinopathies', 'source': 'ClinVar' },
-			{ 'sequenceIndex': 1, 'position': 429, 'note': 'Variation ID: 625488 <br> rsNumber: N/A<br> p.Glu429Gln <br> single nucleotide variant <br> Pathogenic<br>Tubulinopathies', 'source': 'ClinVar' },
-			{ 'sequenceIndex': 1, 'position': 431, 'note': 'Variation ID: 623807 <br> rsNumber: N/A<br> p.Asp431Asn <br> single nucleotide variant <br> Uncertain significance<br>not provided', 'source': 'ClinVar' },
-			{ 'sequenceIndex': 1, 'position': 434, 'note': 'Variation ID: 437119 <br> rsNumber: rs1555162244<br> p.Glu434del <br> deletion <br> Uncertain significance<br>not specified', 'source': 'ClinVar' },
-			{ 'sequenceIndex': 1, 'position': 435, 'note': 'Variation ID: 437120 <br> rsNumber: rs1555162242<br> p.Val435Ala <br> single nucleotide variant <br> Likely pathogenic<br>Lissencephaly 3;Tubulinopathies', 'source': 'ClinVar' },
-			{ 'sequenceIndex': 1, 'position': 436, 'note': 'Variation ID: 625512 <br> rsNumber: N/A<br> p.Gly436Asp <br> single nucleotide variant <br> Pathogenic<br>Tubulinopathies', 'source': 'ClinVar' },
-			{ 'sequenceIndex': 1, 'position': 436, 'note': 'Variation ID: 625497 <br> rsNumber: N/A<br> p.Gly436Arg <br> single nucleotide variant <br> Pathogenic<br>Tubulinopathies', 'source': 'ClinVar' },
-			{ 'sequenceIndex': 1, 'position': 47, 'note': 'Variation ID: 431912 <br> rsNumber: rs1555162536<br> p.Asp47His <br> single nucleotide variant <br> Likely pathogenic<br>Tubulinopathies;not provided', 'source': 'ClinVar' },
-			{ 'sequenceIndex': 1, 'position': 5, 'note': 'Variation ID: 30268 <br> rsNumber: rs387906840<br> p.Ile5Leu <br> single nucleotide variant <br> Likely pathogenic<br>Lissencephaly 3;Tubulinopathies', 'source': 'ClinVar' },
-			{ 'sequenceIndex': 1, 'position': 51, 'note': 'Variation ID: 160149 <br> rsNumber: rs587784485<br> p.Thr51Ile <br> single nucleotide variant <br> Likely pathogenic<br>Lissencephaly 3;Tubulinopathies', 'source': 'ClinVar' },
-			{ 'sequenceIndex': 1, 'position': 54, 'note': 'Variation ID: 160150 <br> rsNumber: rs587784486<br> p.Ser54Arg <br> single nucleotide variant <br> Likely pathogenic<br>Lissencephaly 3;Tubulinopathies', 'source': 'ClinVar' },
-			{ 'sequenceIndex': 1, 'position': 54, 'note': 'Variation ID: 625506 <br> rsNumber: N/A<br> p.Ser54Asn <br> single nucleotide variant <br> Pathogenic<br>Tubulinopathies', 'source': 'ClinVar' },
-			{ 'sequenceIndex': 1, 'position': 55, 'note': 'Variation ID: 625472 <br> rsNumber: N/A<br> p.Glu55Lys <br> single nucleotide variant <br> Pathogenic<br>Tubulinopathies', 'source': 'ClinVar' },
-			{ 'sequenceIndex': 1, 'position': 56, 'note': 'Variation ID: 625513 <br> rsNumber: N/A<br> p.Thr56Met <br> single nucleotide variant <br> Pathogenic<br>Tubulinopathies', 'source': 'ClinVar' },
-			{ 'sequenceIndex': 1, 'position': 58, 'note': 'Variation ID: 625520 <br> rsNumber: N/A<br> p.Ala58Pro <br> single nucleotide variant <br> Pathogenic<br>Tubulinopathies', 'source': 'ClinVar' },
-			{ 'sequenceIndex': 1, 'position': 59, 'note': 'Variation ID: 625507 <br> rsNumber: N/A<br> p.Gly59Ser <br> single nucleotide variant <br> Pathogenic<br>Tubulinopathies', 'source': 'ClinVar' },
-			{ 'sequenceIndex': 1, 'position': 6, 'note': 'Variation ID: 379329 <br> rsNumber: rs1057520574<br> p.Ser6Cys <br> single nucleotide variant <br> Pathogenic/Likely pathogenic<br>Tubulinopathies;not provided', 'source': 'ClinVar' },
-			{ 'sequenceIndex': 1, 'position': 60, 'note': 'Variation ID: 632599 <br> rsNumber: N/A<br> p.Lys60Asn <br> single nucleotide variant <br> Likely pathogenic<br>Agenesis of corpus callosum;Cerebellar vermis hypoplasia;Lissencephaly 3', 'source': 'ClinVar' },
-			{ 'sequenceIndex': 1, 'position': 63, 'note': 'Variation ID: 160151 <br> rsNumber: rs147273934<br> p.Pro63= <br> single nucleotide variant <br> Benign/Likely benign<br>not specified', 'source': 'ClinVar' },
-			{ 'sequenceIndex': 1, 'position': 64, 'note': 'Variation ID: 420581 <br> rsNumber: rs1064794568<br> p.Arg64Trp <br> single nucleotide variant <br> Pathogenic<br>Tubulinopathies;not provided', 'source': 'ClinVar' },
-			{ 'sequenceIndex': 1, 'position': 70, 'note': 'Variation ID: 625475 <br> rsNumber: N/A<br> p.Leu70Ser <br> single nucleotide variant <br> Pathogenic<br>Tubulinopathies', 'source': 'ClinVar' },
-			{ 'sequenceIndex': 1, 'position': 72, 'note': 'Variation ID: 625518 <br> rsNumber: N/A<br> p.Pro72Arg <br> single nucleotide variant <br> Pathogenic<br>Tubulinopathies', 'source': 'ClinVar' },
-			{ 'sequenceIndex': 1, 'position': 72, 'note': 'Variation ID: 625516 <br> rsNumber: N/A<br> p.Pro72Ser <br> single nucleotide variant <br> Pathogenic<br>Tubulinopathies', 'source': 'ClinVar' },
-			{ 'sequenceIndex': 1, 'position': 79, 'note': 'Variation ID: 431845 <br> rsNumber: rs1555162507<br> p.Arg79Cys <br> single nucleotide variant <br> Uncertain significance<br>not specified', 'source': 'ClinVar' },
-			{ 'sequenceIndex': 1, 'position': 82, 'note': 'Variation ID: 212490 <br> rsNumber: rs1134868<br> p.Thr82= <br> single nucleotide variant <br> Likely benign<br>not specified', 'source': 'ClinVar' },
-			{ 'sequenceIndex': 1, 'position': 9, 'note': 'Variation ID: 625491 <br> rsNumber: N/A<br> p.Val9Ala <br> single nucleotide variant <br> Pathogenic<br>Tubulinopathies', 'source': 'ClinVar' },
-			{ 'sequenceIndex': 1, 'position': 90, 'note': 'Variation ID: 212491 <br> rsNumber: rs797046072<br> p.Glu90Gly <br> single nucleotide variant <br> Likely pathogenic<br>Lissencephaly 3;Tubulinopathies', 'source': 'ClinVar' },
-			{ 'sequenceIndex': 1, 'position': 91, 'note': 'Variation ID: 212492 <br> rsNumber: rs765483435<br> p.Gln91= <br> single nucleotide variant <br> Uncertain significance<br>not specified', 'source': 'ClinVar' },
-			{ 'sequenceIndex': 1, 'position': 92, 'note': 'Variation ID: 160153 <br> rsNumber: rs1065671<br> p.Leu92= <br> single nucleotide variant <br> Uncertain significance<br>not specified', 'source': 'ClinVar' },
-			{ 'sequenceIndex': 1, 'position': 92, 'note': 'Variation ID: 625486 <br> rsNumber: N/A<br> p.Leu92Val <br> single nucleotide variant <br> Pathogenic<br>Tubulinopathies', 'source': 'ClinVar' },
-			{ 'sequenceIndex': 1, 'position': 95, 'note': 'Variation ID: 520585 <br> rsNumber: rs1555162486<br> p.Gly95Cys <br> single nucleotide variant <br> Pathogenic<br>Inborn genetic diseases;Tubulinopathies', 'source': 'ClinVar' },
-			{ 'sequenceIndex': 1, 'position': 96, 'note': 'Variation ID: 160154 <br> rsNumber: rs1056875<br> p.Lys96= <br> single nucleotide variant <br> Benign<br>Lissencephaly, Dominant;not provided;not specified', 'source': 'ClinVar' },
+            // ClinVar
+            {
+                'sequenceIndex': 1,
+                'position': 101,
+                'note': 'Variation ID: 625515 <br> rsNumber: N/A<br> p.Asn101Ser <br> single nucleotide variant <br> Pathogenic<br>Tubulinopathies',
+                'source': 'ClinVar'
+            }, {
+                'sequenceIndex': 1,
+                'position': 107,
+                'note': 'Variation ID: 562207 <br> rsNumber: N/A<br> p.His107Gln <br> single nucleotide variant <br> Likely pathogenic<br>Lissencephaly 3',
+                'source': 'ClinVar'
+            }, {
+                'sequenceIndex': 1,
+                'position': 107,
+                'note': 'Variation ID: 625510 <br> rsNumber: N/A<br> p.His107Arg <br> single nucleotide variant <br> Pathogenic<br>Tubulinopathies',
+                'source': 'ClinVar'
+            }, {
+                'sequenceIndex': 1,
+                'position': 113,
+                'note': 'Variation ID: 625503 <br> rsNumber: N/A<br> p.Glu113Lys <br> single nucleotide variant <br> Pathogenic<br>Tubulinopathies',
+                'source': 'ClinVar'
+            }, {
+                'sequenceIndex': 1,
+                'position': 115,
+                'note': 'Variation ID: 426626 <br> rsNumber: rs1085307716<br> p.Ile115Thr <br> single nucleotide variant <br> Uncertain significance<br>not provided',
+                'source': 'ClinVar'
+            }, {
+                'sequenceIndex': 1,
+                'position': 118,
+                'note': 'Variation ID: 217023 <br> rsNumber: rs863224938<br> p.Val118Met <br> single nucleotide variant <br> Pathogenic/Likely pathogenic<br>Lissencephaly 3;Tubulinopathies',
+                'source': 'ClinVar'
+            }, {
+                'sequenceIndex': 1,
+                'position': 118,
+                'note': 'Variation ID: 625508 <br> rsNumber: N/A<br> p.Val118Leu <br> single nucleotide variant <br> Pathogenic<br>Tubulinopathies',
+                'source': 'ClinVar'
+            }, {
+                'sequenceIndex': 1,
+                'position': 123,
+                'note': 'Variation ID: 265378 <br> rsNumber: rs886039513<br> p.Arg123Cys <br> single nucleotide variant <br> Pathogenic<br>Tubulinopathies;not provided',
+                'source': 'ClinVar'
+            }, {
+                'sequenceIndex': 1,
+                'position': 123,
+                'note': 'Variation ID: 437122 <br> rsNumber: rs1555162456<br> p.Arg123His <br> single nucleotide variant <br> Pathogenic/Likely pathogenic<br>Lissencephaly 3;Tubulinopathies',
+                'source': 'ClinVar'
+            }, {
+                'sequenceIndex': 1,
+                'position': 126,
+                'note': 'Variation ID: 437117 <br> rsNumber: rs1135224<br> p.Ala126= <br> single nucleotide variant <br> Likely benign<br>not specified',
+                'source': 'ClinVar'
+            }, {
+                'sequenceIndex': 1,
+                'position': 127,
+                'note': 'Variation ID: 427180 <br> rsNumber: rs1085308005<br> p.Asp127Asn <br> single nucleotide variant <br> Conflicting interpretations of pathogenicity<br>Inborn genetic diseases;Tubulinopathies;not provided',
+                'source': 'ClinVar'
+            }, {
+                'sequenceIndex': 1,
+                'position': 127,
+                'note': 'Variation ID: 625521 <br> rsNumber: N/A<br> p.Asp127Glu <br> single nucleotide variant <br> Pathogenic<br>Tubulinopathies',
+                'source': 'ClinVar'
+            }, {
+                'sequenceIndex': 1,
+                'position': 130,
+                'note': 'Variation ID: 309112 <br> rsNumber: rs1143559<br> p.Thr130= <br> single nucleotide variant <br> Uncertain significance<br>Lissencephaly, Dominant',
+                'source': 'ClinVar'
+            }, {
+                'sequenceIndex': 1,
+                'position': 132,
+                'note': 'Variation ID: 160155 <br> rsNumber: rs1143560<br> p.Leu132= <br> single nucleotide variant <br> Benign/Likely benign<br>Lissencephaly, Dominant;not specified',
+                'source': 'ClinVar'
+            }, {
+                'sequenceIndex': 1,
+                'position': 137,
+                'note': 'Variation ID: 625498 <br> rsNumber: N/A<br> p.Val137Asp <br> single nucleotide variant <br> Likely pathogenic<br>Tubulinopathies',
+                'source': 'ClinVar'
+            }, {
+                'sequenceIndex': 1,
+                'position': 14,
+                'note': 'Variation ID: 625489 <br> rsNumber: N/A<br> p.Val14Ile <br> single nucleotide variant <br> Likely pathogenic<br>Tubulinopathies',
+                'source': 'ClinVar'
+            }, {
+                'sequenceIndex': 1,
+                'position': 140,
+                'note': 'Variation ID: 625492 <br> rsNumber: N/A<br> p.Ser140Gly <br> single nucleotide variant <br> Likely pathogenic<br>Tubulinopathies',
+                'source': 'ClinVar'
+            }, {
+                'sequenceIndex': 1,
+                'position': 142,
+                'note': 'Variation ID: 431839 <br> rsNumber: rs1555162407<br> p.Gly142Cys <br> single nucleotide variant <br> Likely pathogenic<br>Tubulinopathies;not provided',
+                'source': 'ClinVar'
+            }, {
+                'sequenceIndex': 1,
+                'position': 142,
+                'note': 'Variation ID: 520702 <br> rsNumber: rs1555162407<br> p.Gly142Ser <br> single nucleotide variant <br> Pathogenic/Likely pathogenic<br>Inborn genetic diseases;Tubulinopathies',
+                'source': 'ClinVar'
+            }, {
+                'sequenceIndex': 1,
+                'position': 143,
+                'note': 'Variation ID: 429321 <br> rsNumber: rs1131691318<br> p.Gly143Arg <br> single nucleotide variant <br> Likely pathogenic<br>Tubulinopathies;not provided',
+                'source': 'ClinVar'
+            }, {
+                'sequenceIndex': 1,
+                'position': 145,
+                'note': 'Variation ID: 625494 <br> rsNumber: N/A<br> p.Thr145Ala <br> single nucleotide variant <br> Pathogenic<br>Tubulinopathies',
+                'source': 'ClinVar'
+            }, {
+                'sequenceIndex': 1,
+                'position': 150,
+                'note': 'Variation ID: 625509 <br> rsNumber: N/A<br> p.Thr150Ile <br> single nucleotide variant <br> Pathogenic<br>Tubulinopathies',
+                'source': 'ClinVar'
+            }, {
+                'sequenceIndex': 1,
+                'position': 151,
+                'note': 'Variation ID: 160157 <br> rsNumber: rs697624<br> p.Ser151= <br> single nucleotide variant <br> Benign<br>Lissencephaly, Dominant;not provided;not specified',
+                'source': 'ClinVar'
+            }, {
+                'sequenceIndex': 1,
+                'position': 152,
+                'note': 'Variation ID: 381536 <br> rsNumber: rs1057521063<br> p.Leu152Gln <br> single nucleotide variant <br> Likely pathogenic<br>Tubulinopathies;not provided',
+                'source': 'ClinVar'
+            }, {
+                'sequenceIndex': 1,
+                'position': 158,
+                'note': 'Variation ID: 625517 <br> rsNumber: N/A<br> p.Ser158Leu <br> single nucleotide variant <br> Pathogenic<br>Tubulinopathies',
+                'source': 'ClinVar'
+            }, {
+                'sequenceIndex': 1,
+                'position': 161,
+                'note': 'Variation ID: 160158 <br> rsNumber: rs587784488<br> p.Tyr161Asp <br> single nucleotide variant <br> Pathogenic/Likely pathogenic<br>Lissencephaly 3;Tubulinopathies',
+                'source': 'ClinVar'
+            }, {
+                'sequenceIndex': 1,
+                'position': 161,
+                'note': 'Variation ID: 625477 <br> rsNumber: N/A<br> p.Tyr161His <br> single nucleotide variant <br> Pathogenic<br>Tubulinopathies',
+                'source': 'ClinVar'
+            }, {
+                'sequenceIndex': 1,
+                'position': 170,
+                'note': 'Variation ID: 137849 <br> rsNumber: rs112023543<br> p.Ser170= <br> single nucleotide variant <br> Benign<br>Lissencephaly, Dominant;not specified',
+                'source': 'ClinVar'
+            }, {
+                'sequenceIndex': 1,
+                'position': 173,
+                'note': 'Variation ID: 625511 <br> rsNumber: N/A<br> p.Pro173Leu <br> single nucleotide variant <br> Pathogenic<br>Tubulinopathies',
+                'source': 'ClinVar'
+            }, {
+                'sequenceIndex': 1,
+                'position': 174,
+                'note': 'Variation ID: 137850 <br> rsNumber: rs61730859<br> p.Ala174= <br> single nucleotide variant <br> Benign<br>Lissencephaly, Dominant;not specified',
+                'source': 'ClinVar'
+            }, {
+                'sequenceIndex': 1,
+                'position': 174,
+                'note': 'Variation ID: 160159 <br> rsNumber: rs587784489<br> p.Ala174Val <br> single nucleotide variant <br> Conflicting interpretations of pathogenicity<br>Lissencephaly 3;Tubulinopathies;not provided',
+                'source': 'ClinVar'
+            }, {
+                'sequenceIndex': 1,
+                'position': 174,
+                'note': 'Variation ID: 546297 <br> rsNumber: rs1555162392<br> p.Ala174Pro <br> single nucleotide variant <br> Likely pathogenic<br>not provided',
+                'source': 'ClinVar'
+            }, {
+                'sequenceIndex': 1,
+                'position': 18,
+                'note': 'Variation ID: 421567 <br> rsNumber: rs1064795213<br> p.Asn18Ser <br> single nucleotide variant <br> Conflicting interpretations of pathogenicity<br>Tubulinopathies;not provided;not specified',
+                'source': 'ClinVar'
+            }, {
+                'sequenceIndex': 1,
+                'position': 182,
+                'note': 'Variation ID: 625490 <br> rsNumber: N/A<br> p.Val182Phe <br> single nucleotide variant <br> Likely pathogenic<br>Tubulinopathies',
+                'source': 'ClinVar'
+            }, {
+                'sequenceIndex': 1,
+                'position': 188,
+                'note': 'Variation ID: 7072 <br> rsNumber: rs137853045<br> p.Ile188Leu <br> single nucleotide variant <br> Pathogenic<br>Lissencephaly 3;Tubulinopathies',
+                'source': 'ClinVar'
+            }, {
+                'sequenceIndex': 1,
+                'position': 188,
+                'note': 'Variation ID: 160160 <br> rsNumber: rs587784490<br> p.Ile188_Leu189insIle <br> duplication <br> Uncertain significance<br>Lissencephaly 3',
+                'source': 'ClinVar'
+            }, {
+                'sequenceIndex': 1,
+                'position': 189,
+                'note': 'Variation ID: 625519 <br> rsNumber: N/A<br> p.Leu189Val <br> single nucleotide variant <br> Pathogenic<br>Tubulinopathies',
+                'source': 'ClinVar'
+            }, {
+                'sequenceIndex': 1,
+                'position': 199,
+                'note': 'Variation ID: 191038 <br> rsNumber: rs786205479<br> p.Asp199Gly <br> single nucleotide variant <br> Likely pathogenic<br>Tubulinopathies;not provided',
+                'source': 'ClinVar'
+            }, {
+                'sequenceIndex': 1,
+                'position': 2,
+                'note': 'Variation ID: 160161 <br> rsNumber: rs587784491<br> p.Arg2His <br> single nucleotide variant <br> Pathogenic/Likely pathogenic<br>Inborn genetic diseases;Lissencephaly 3;Tubulinopathies;not provided',
+                'source': 'ClinVar'
+            }, {
+                'sequenceIndex': 1,
+                'position': 2,
+                'note': 'Variation ID: 625482 <br> rsNumber: N/A<br> p.Arg2Ser <br> single nucleotide variant <br> Pathogenic<br>Tubulinopathies',
+                'source': 'ClinVar'
+            }, {
+                'sequenceIndex': 1,
+                'position': 200,
+                'note': 'Variation ID: 625501 <br> rsNumber: N/A<br> p.Cys200Tyr <br> single nucleotide variant <br> Pathogenic<br>Tubulinopathies',
+                'source': 'ClinVar'
+            }, {
+                'sequenceIndex': 1,
+                'position': 210,
+                'note': 'Variation ID: 625474 <br> rsNumber: N/A<br> p.Tyr210Cys <br> single nucleotide variant <br> Pathogenic<br>Tubulinopathies',
+                'source': 'ClinVar'
+            }, {
+                'sequenceIndex': 1,
+                'position': 214,
+                'note': 'Variation ID: 290845 <br> rsNumber: rs886044568<br> p.Arg214Ser <br> single nucleotide variant <br> Uncertain significance<br>not provided',
+                'source': 'ClinVar'
+            }, {
+                'sequenceIndex': 1,
+                'position': 214,
+                'note': 'Variation ID: 432708 <br> rsNumber: rs1057517843<br> p.Arg214Leu <br> single nucleotide variant <br> Pathogenic/Likely pathogenic<br>Tubulinopathies;not provided',
+                'source': 'ClinVar'
+            }, {
+                'sequenceIndex': 1,
+                'position': 214,
+                'note': 'Variation ID: 372542 <br> rsNumber: rs1057517843<br> p.Arg214His <br> single nucleotide variant <br> Pathogenic<br>Lissencephaly 3;Tubulinopathies;not provided',
+                'source': 'ClinVar'
+            }, {
+                'sequenceIndex': 1,
+                'position': 218,
+                'note': 'Variation ID: 372561 <br> rsNumber: rs1057517858<br> p.Asp218Asn <br> single nucleotide variant <br> Likely pathogenic<br>Agenesis of corpus callosum;Genetic syndrome with a Dandy-Walker malformation as major feature;Inborn genetic diseases;Lissencephaly 3;Tubulinopathies;not provided',
+                'source': 'ClinVar'
+            }, {
+                'sequenceIndex': 1,
+                'position': 218,
+                'note': 'Variation ID: 625499 <br> rsNumber: N/A<br> p.Asp218Tyr <br> single nucleotide variant <br> Pathogenic<br>Tubulinopathies',
+                'source': 'ClinVar'
+            }, {
+                'sequenceIndex': 1,
+                'position': 219,
+                'note': 'Variation ID: 625480 <br> rsNumber: N/A<br> p.Ile219Val <br> single nucleotide variant <br> Likely pathogenic<br>Tubulinopathies',
+                'source': 'ClinVar'
+            }, {
+                'sequenceIndex': 1,
+                'position': 221,
+                'note': 'Variation ID: 309111 <br> rsNumber: rs754280693<br> p.Arg221= <br> single nucleotide variant <br> Uncertain significance<br>Lissencephaly, Dominant',
+                'source': 'ClinVar'
+            }, {
+                'sequenceIndex': 1,
+                'position': 231,
+                'note': 'Variation ID: 625493 <br> rsNumber: N/A<br> p.Ile231Leu <br> single nucleotide variant <br> Likely pathogenic<br>Tubulinopathies',
+                'source': 'ClinVar'
+            }, {
+                'sequenceIndex': 1,
+                'position': 233,
+                'note': 'Variation ID: 160162 <br> rsNumber: rs587784492<br> p.Gln233Arg <br> single nucleotide variant <br> Likely pathogenic<br>Lissencephaly 3;Tubulinopathies',
+                'source': 'ClinVar'
+            }, {
+                'sequenceIndex': 1,
+                'position': 235,
+                'note': 'Variation ID: 625478 <br> rsNumber: N/A<br> p.Val235Leu <br> single nucleotide variant <br> Pathogenic<br>Tubulinopathies',
+                'source': 'ClinVar'
+            }, {
+                'sequenceIndex': 1,
+                'position': 238,
+                'note': 'Variation ID: 625484 <br> rsNumber: N/A<br> p.Ile238Val <br> single nucleotide variant <br> Likely pathogenic<br>Tubulinopathies',
+                'source': 'ClinVar'
+            }, {
+                'sequenceIndex': 1,
+                'position': 239,
+                'note': 'Variation ID: 422375 <br> rsNumber: rs1064795738<br> p.Thr239Pro <br> single nucleotide variant <br> Likely pathogenic<br>Tubulinopathies;not provided',
+                'source': 'ClinVar'
+            }, {
+                'sequenceIndex': 1,
+                'position': 245,
+                'note': 'Variation ID: 450468 <br> rsNumber: rs1555162357<br> p.Asp245Asn <br> single nucleotide variant <br> Uncertain significance<br>not provided',
+                'source': 'ClinVar'
+            }, {
+                'sequenceIndex': 1,
+                'position': 245,
+                'note': 'Variation ID: 625495 <br> rsNumber: N/A<br> p.Asp245Gly <br> single nucleotide variant <br> Likely pathogenic<br>Tubulinopathies',
+                'source': 'ClinVar'
+            }, {
+                'sequenceIndex': 1,
+                'position': 25,
+                'note': 'Variation ID: 625481 <br> rsNumber: N/A<br> p.Cys25Phe <br> single nucleotide variant <br> Pathogenic<br>Tubulinopathies',
+                'source': 'ClinVar'
+            }, {
+                'sequenceIndex': 1,
+                'position': 253,
+                'note': 'Variation ID: 160163 <br> rsNumber: rs587784493<br> p.Thr253Arg <br> single nucleotide variant <br> Uncertain significance<br>Lissencephaly 3',
+                'source': 'ClinVar'
+            }, {
+                'sequenceIndex': 1,
+                'position': 262,
+                'note': 'Variation ID: 212493 <br> rsNumber: rs762008241<br> p.Tyr262= <br> single nucleotide variant <br> Likely benign<br>Lissencephaly, Dominant;not specified',
+                'source': 'ClinVar'
+            }, {
+                'sequenceIndex': 1,
+                'position': 263,
+                'note': 'Variation ID: 7073 <br> rsNumber: rs137853046<br> p.Pro263Thr <br> single nucleotide variant <br> Pathogenic<br>Lissencephaly 3;Tubulinopathies',
+                'source': 'ClinVar'
+            }, {
+                'sequenceIndex': 1,
+                'position': 264,
+                'note': 'Variation ID: 7070 <br> rsNumber: rs137853043<br> p.Arg264Cys <br> single nucleotide variant <br> Pathogenic<br>Inborn genetic diseases;Lissencephaly 3;Tubulinopathies',
+                'source': 'ClinVar'
+            }, {
+                'sequenceIndex': 1,
+                'position': 264,
+                'note': 'Variation ID: 265283 <br> rsNumber: rs137853043<br> p.Arg264Gly <br> single nucleotide variant <br> Pathogenic/Likely pathogenic<br>Tubulinopathies;not provided',
+                'source': 'ClinVar'
+            }, {
+                'sequenceIndex': 1,
+                'position': 264,
+                'note': 'Variation ID: 287392 <br> rsNumber: rs886043627<br> p.Arg264His <br> single nucleotide variant <br> Conflicting interpretations of pathogenicity<br>Lissencephaly 3;Tubulinopathies;not provided',
+                'source': 'ClinVar'
+            }, {
+                'sequenceIndex': 1,
+                'position': 27,
+                'note': 'Variation ID: 381537 <br> rsNumber: rs1057521064<br> p.Glu27Gln <br> single nucleotide variant <br> Pathogenic<br>Tubulinopathies;not provided',
+                'source': 'ClinVar'
+            }, {
+                'sequenceIndex': 1,
+                'position': 270,
+                'note': 'Variation ID: 160164 <br> rsNumber: rs587784494<br> p.Ala270Ser <br> single nucleotide variant <br> Pathogenic/Likely pathogenic<br>Lissencephaly 3;Tubulinopathies',
+                'source': 'ClinVar'
+            }, {
+                'sequenceIndex': 1,
+                'position': 270,
+                'note': 'Variation ID: 625500 <br> rsNumber: N/A<br> p.Ala270Thr <br> single nucleotide variant <br> Likely pathogenic<br>Tubulinopathies',
+                'source': 'ClinVar'
+            }, {
+                'sequenceIndex': 1,
+                'position': 272,
+                'note': 'Variation ID: 421873 <br> rsNumber: rs1064795417<br> p.Tyr272Cys <br> single nucleotide variant <br> Likely pathogenic<br>Tubulinopathies;not provided',
+                'source': 'ClinVar'
+            }, {
+                'sequenceIndex': 1,
+                'position': 273,
+                'note': 'Variation ID: 437118 <br> rsNumber: rs140795162<br> p.Ala273= <br> single nucleotide variant <br> Likely benign<br>not specified',
+                'source': 'ClinVar'
+            }, {
+                'sequenceIndex': 1,
+                'position': 28,
+                'note': 'Variation ID: 432052 <br> rsNumber: rs1555162549<br> p.His28Tyr <br> single nucleotide variant <br> Likely pathogenic<br>Tubulinopathies;not provided',
+                'source': 'ClinVar'
+            }, {
+                'sequenceIndex': 1,
+                'position': 286,
+                'note': 'Variation ID: 625483 <br> rsNumber: N/A<br> p.Leu286Phe <br> single nucleotide variant <br> Likely pathogenic<br>Tubulinopathies',
+                'source': 'ClinVar'
+            }, {
+                'sequenceIndex': 1,
+                'position': 296,
+                'note': 'Variation ID: 429793 <br> rsNumber: rs1131691597<br> p.Phe296Ser <br> single nucleotide variant <br> Likely pathogenic<br>Tubulinopathies;not provided',
+                'source': 'ClinVar'
+            }, {
+                'sequenceIndex': 1,
+                'position': 303,
+                'note': 'Variation ID: 625485 <br> rsNumber: N/A<br> p.Val303Gly <br> single nucleotide variant <br> Pathogenic<br>Tubulinopathies',
+                'source': 'ClinVar'
+            }, {
+                'sequenceIndex': 1,
+                'position': 306,
+                'note': 'Variation ID: 452573 <br> rsNumber: rs1555162330<br> p.Asp306Tyr <br> single nucleotide variant <br> Likely pathogenic<br>Tubulinopathies;not provided',
+                'source': 'ClinVar'
+            }, {
+                'sequenceIndex': 1,
+                'position': 307,
+                'note': 'Variation ID: 431850 <br> rsNumber: rs1555162327<br> p.Pro307Ser <br> single nucleotide variant <br> Likely pathogenic<br>Tubulinopathies;not provided',
+                'source': 'ClinVar'
+            }, {
+                'sequenceIndex': 1,
+                'position': 307,
+                'note': 'Variation ID: 438589 <br> rsNumber: rs1555162325<br> p.Pro307Leu <br> single nucleotide variant <br> Pathogenic/Likely pathogenic<br>Lissencephaly 3;Tubulinopathies',
+                'source': 'ClinVar'
+            }, {
+                'sequenceIndex': 1,
+                'position': 32,
+                'note': 'Variation ID: 160166 <br> rsNumber: rs139102191<br> p.Pro32= <br> single nucleotide variant <br> Uncertain significance<br>Lissencephaly 3',
+                'source': 'ClinVar'
+            }, {
+                'sequenceIndex': 1,
+                'position': 320,
+                'note': 'Variation ID: 521647 <br> rsNumber: rs1555162323<br> p.Arg320His <br> single nucleotide variant <br> Pathogenic/Likely pathogenic<br>Inborn genetic diseases;Tubulinopathies',
+                'source': 'ClinVar'
+            }, {
+                'sequenceIndex': 1,
+                'position': 321,
+                'note': 'Variation ID: 620024 <br> rsNumber: N/A<br> p.Gly321Asp <br> single nucleotide variant <br> Likely pathogenic<br>Lissencephaly 3',
+                'source': 'ClinVar'
+            }, {
+                'sequenceIndex': 1,
+                'position': 322,
+                'note': 'Variation ID: 160165 <br> rsNumber: rs142641191<br> p.Asp322= <br> single nucleotide variant <br> Benign/Likely benign<br>Lissencephaly, Dominant;not specified',
+                'source': 'ClinVar'
+            }, {
+                'sequenceIndex': 1,
+                'position': 324,
+                'note': 'Variation ID: 212494 <br> rsNumber: rs797046073<br> p.Val324Leu <br> single nucleotide variant <br> Likely pathogenic<br>Lissencephaly 3;Tubulinopathies',
+                'source': 'ClinVar'
+            }, {
+                'sequenceIndex': 1,
+                'position': 326,
+                'note': 'Variation ID: 625487 <br> rsNumber: N/A<br> p.Lys326Asn <br> single nucleotide variant <br> Pathogenic<br>Tubulinopathies',
+                'source': 'ClinVar'
+            }, {
+                'sequenceIndex': 1,
+                'position': 329,
+                'note': 'Variation ID: 160167 <br> rsNumber: rs587784495<br> p.Asn329Ser <br> single nucleotide variant <br> Pathogenic<br>Lissencephaly 3;Tubulinopathies',
+                'source': 'ClinVar'
+            }, {
+                'sequenceIndex': 1,
+                'position': 331,
+                'note': 'Variation ID: 160168 <br> rsNumber: rs587784496<br> p.Ala331Thr <br> single nucleotide variant <br> Uncertain significance<br>Lissencephaly 3',
+                'source': 'ClinVar'
+            }, {
+                'sequenceIndex': 1,
+                'position': 332,
+                'note': 'Variation ID: 160169 <br> rsNumber: rs587784497<br> p.Ile332Thr <br> single nucleotide variant <br> Likely pathogenic<br>Lissencephaly 3;Tubulinopathies',
+                'source': 'ClinVar'
+            }, {
+                'sequenceIndex': 1,
+                'position': 333,
+                'note': 'Variation ID: 625476 <br> rsNumber: N/A<br> p.Ala333Val <br> single nucleotide variant <br> Pathogenic<br>Tubulinopathies',
+                'source': 'ClinVar'
+            }, {
+                'sequenceIndex': 1,
+                'position': 336,
+                'note': 'Variation ID: 160141 <br> rsNumber: rs11829764<br> p.Lys336= <br> single nucleotide variant <br> Benign/Likely benign<br>Lissencephaly, Dominant;not specified',
+                'source': 'ClinVar'
+            }, {
+                'sequenceIndex': 1,
+                'position': 336,
+                'note': 'Variation ID: 625496 <br> rsNumber: N/A<br> p.Lys336Arg <br> single nucleotide variant <br> Pathogenic<br>Tubulinopathies',
+                'source': 'ClinVar'
+            }, {
+                'sequenceIndex': 1,
+                'position': 342,
+                'note': 'Variation ID: 449112 <br> rsNumber: rs1555162307<br> p.Gln342Pro <br> single nucleotide variant <br> Likely pathogenic<br>Tubulinopathies;not provided',
+                'source': 'ClinVar'
+            }, {
+                'sequenceIndex': 1,
+                'position': 348,
+                'note': 'Variation ID: 381030 <br> rsNumber: rs144574983<br> p.Pro348= <br> single nucleotide variant <br> Likely benign<br>not specified',
+                'source': 'ClinVar'
+            }, {
+                'sequenceIndex': 1,
+                'position': 352,
+                'note': 'Variation ID: 521592 <br> rsNumber: rs1555162303<br> p.Lys352Met <br> single nucleotide variant <br> Likely pathogenic<br>Inborn genetic diseases;Tubulinopathies',
+                'source': 'ClinVar'
+            }, {
+                'sequenceIndex': 1,
+                'position': 353,
+                'note': 'Variation ID: 625479 <br> rsNumber: N/A<br> p.Val353Ile <br> single nucleotide variant <br> Likely pathogenic<br>Tubulinopathies',
+                'source': 'ClinVar'
+            }, {
+                'sequenceIndex': 1,
+                'position': 359,
+                'note': 'Variation ID: 426640 <br> rsNumber: rs1085307724<br> p.Pro359Leu <br> single nucleotide variant <br> Likely pathogenic<br>Tubulinopathies;not provided',
+                'source': 'ClinVar'
+            }, {
+                'sequenceIndex': 1,
+                'position': 361,
+                'note': 'Variation ID: 520901 <br> rsNumber: rs1555162301<br> p.Thr361Ile <br> single nucleotide variant <br> Uncertain significance<br>Inborn genetic diseases',
+                'source': 'ClinVar'
+            }, {
+                'sequenceIndex': 1,
+                'position': 364,
+                'note': 'Variation ID: 429374 <br> rsNumber: rs1131691349<br> p.Pro364Arg <br> single nucleotide variant <br> Likely pathogenic<br>Tubulinopathies;not provided',
+                'source': 'ClinVar'
+            }, {
+                'sequenceIndex': 1,
+                'position': 366,
+                'note': 'Variation ID: 449342 <br> rsNumber: rs1555162299<br> p.Gly366Arg <br> single nucleotide variant <br> Pathogenic/Likely pathogenic<br>Tubulinopathies;not provided',
+                'source': 'ClinVar'
+            }, {
+                'sequenceIndex': 1,
+                'position': 369,
+                'note': 'Variation ID: 212488 <br> rsNumber: rs797046071<br> p.Ala369Thr <br> single nucleotide variant <br> Pathogenic/Likely pathogenic<br>Lissencephaly 3;Tubulinopathies',
+                'source': 'ClinVar'
+            }, {
+                'sequenceIndex': 1,
+                'position': 371,
+                'note': 'Variation ID: 625514 <br> rsNumber: N/A<br> p.Val371Glu <br> single nucleotide variant <br> Pathogenic<br>Tubulinopathies',
+                'source': 'ClinVar'
+            }, {
+                'sequenceIndex': 1,
+                'position': 377,
+                'note': 'Variation ID: 160142 <br> rsNumber: rs587784481<br> p.Met377Val <br> single nucleotide variant <br> Likely pathogenic<br>Lissencephaly 3;Tubulinopathies',
+                'source': 'ClinVar'
+            }, {
+                'sequenceIndex': 1,
+                'position': 382,
+                'note': 'Variation ID: 437121 <br> rsNumber: rs1555162294<br> p.Thr382Ala <br> single nucleotide variant <br> Likely pathogenic<br>Lissencephaly 3;Tubulinopathies',
+                'source': 'ClinVar'
+            }, {
+                'sequenceIndex': 1,
+                'position': 383,
+                'note': 'Variation ID: 160143 <br> rsNumber: rs587784482<br> p.Ala383Val <br> single nucleotide variant <br> Pathogenic/Likely pathogenic<br>Abnormality of neuronal migration;Lissencephaly 3;Tubulinopathies',
+                'source': 'ClinVar'
+            }, {
+                'sequenceIndex': 1,
+                'position': 383,
+                'note': 'Variation ID: 427202 <br> rsNumber: rs587784482<br> p.Ala383Asp <br> single nucleotide variant <br> Pathogenic/Likely pathogenic<br>Tubulinopathies;not provided',
+                'source': 'ClinVar'
+            }, {
+                'sequenceIndex': 1,
+                'position': 384,
+                'note': 'Variation ID: 585140 <br> rsNumber: N/A<br> p.Ile384Asn <br> single nucleotide variant <br> not provided<br>Lissencephaly 3',
+                'source': 'ClinVar'
+            }, {
+                'sequenceIndex': 1,
+                'position': 387,
+                'note': 'Variation ID: 625502 <br> rsNumber: N/A<br> p.Ala387Val <br> single nucleotide variant <br> Pathogenic<br>Tubulinopathies',
+                'source': 'ClinVar'
+            }, {
+                'sequenceIndex': 1,
+                'position': 390,
+                'note': 'Variation ID: 423490 <br> rsNumber: rs1064796460<br> p.Arg390Pro <br> single nucleotide variant <br> Pathogenic/Likely pathogenic<br>Lissencephaly 3;Tubulinopathies;not provided',
+                'source': 'ClinVar'
+            }, {
+                'sequenceIndex': 1,
+                'position': 390,
+                'note': 'Variation ID: 418531 <br> rsNumber: rs1064793286<br> p.Arg390Cys <br> single nucleotide variant <br> Pathogenic<br>Tubulinopathies;not provided',
+                'source': 'ClinVar'
+            }, {
+                'sequenceIndex': 1,
+                'position': 390,
+                'note': 'Variation ID: 450183 <br> rsNumber: rs1064793286<br> p.Arg390Gly <br> single nucleotide variant <br> Pathogenic/Likely pathogenic<br>Tubulinopathies;not provided',
+                'source': 'ClinVar'
+            }, {
+                'sequenceIndex': 1,
+                'position': 390,
+                'note': 'Variation ID: 488628 <br> rsNumber: rs1064796460<br> p.Arg390His <br> single nucleotide variant <br> Pathogenic<br>Lissencephaly 3;Tubulinopathies',
+                'source': 'ClinVar'
+            }, {
+                'sequenceIndex': 1,
+                'position': 393,
+                'note': 'Variation ID: 438298 <br> rsNumber: rs1555162288<br> p.His393Tyr <br> single nucleotide variant <br> Pathogenic<br>Tubulinopathies;Tubulinopathy',
+                'source': 'ClinVar'
+            }, {
+                'sequenceIndex': 1,
+                'position': 396,
+                'note': 'Variation ID: 625505 <br> rsNumber: N/A<br> p.Asp396Tyr <br> single nucleotide variant <br> Pathogenic<br>Tubulinopathies',
+                'source': 'ClinVar'
+            }, {
+                'sequenceIndex': 1,
+                'position': 397,
+                'note': 'Variation ID: 7075 <br> rsNumber: rs137853048<br> p.Leu397Pro <br> single nucleotide variant <br> Pathogenic<br>Lissencephaly 3;Tubulinopathies',
+                'source': 'ClinVar'
+            }, {
+                'sequenceIndex': 1,
+                'position': 401,
+                'note': 'Variation ID: 160144 <br> rsNumber: rs1065724<br> p.Lys401= <br> single nucleotide variant <br> Benign<br>not specified',
+                'source': 'ClinVar'
+            }, {
+                'sequenceIndex': 1,
+                'position': 402,
+                'note': 'Variation ID: 7071 <br> rsNumber: rs137853044<br> p.Arg402His <br> single nucleotide variant <br> Pathogenic<br>Lissencephaly 3;Tubulinopathies',
+                'source': 'ClinVar'
+            }, {
+                'sequenceIndex': 1,
+                'position': 402,
+                'note': 'Variation ID: 160147 <br> rsNumber: rs137853044<br> p.Arg402Leu <br> single nucleotide variant <br> Pathogenic<br>Lissencephaly 3;Tubulinopathies',
+                'source': 'ClinVar'
+            }, {
+                'sequenceIndex': 1,
+                'position': 402,
+                'note': 'Variation ID: 160146 <br> rsNumber: rs587784483<br> p.Arg402Cys <br> single nucleotide variant <br> Pathogenic<br>Limb-girdle muscular dystrophy, type 2D;Lissencephaly 3;Tubulinopathies;not provided',
+                'source': 'ClinVar'
+            }, {
+                'sequenceIndex': 1,
+                'position': 402,
+                'note': 'Variation ID: 160145 <br> rsNumber: rs587784483<br> p.Arg402Ser <br> single nucleotide variant <br> Likely pathogenic<br>Lissencephaly 3;Tubulinopathies',
+                'source': 'ClinVar'
+            }, {
+                'sequenceIndex': 1,
+                'position': 408,
+                'note': 'Variation ID: 209200 <br> rsNumber: rs753719501<br> p.Tyr408Ter <br> single nucleotide variant <br> Conflicting interpretations of pathogenicity<br>Lissencephaly 3;Tubulinopathies',
+                'source': 'ClinVar'
+            }, {
+                'sequenceIndex': 1,
+                'position': 409,
+                'note': 'Variation ID: 208490 <br> rsNumber: rs797045005<br> p.Val409Ala <br> single nucleotide variant <br> Pathogenic/Likely pathogenic<br>Lissencephaly 3;Tubulinopathies;not provided',
+                'source': 'ClinVar'
+            }, {
+                'sequenceIndex': 1,
+                'position': 409,
+                'note': 'Variation ID: 378996 <br> rsNumber: rs766135902<br> p.Val409= <br> single nucleotide variant <br> Likely benign<br>not specified',
+                'source': 'ClinVar'
+            }, {
+                'sequenceIndex': 1,
+                'position': 409,
+                'note': 'Variation ID: 625504 <br> rsNumber: N/A<br> p.Val409Ile <br> single nucleotide variant <br> Pathogenic<br>Tubulinopathies',
+                'source': 'ClinVar'
+            }, {
+                'sequenceIndex': 1,
+                'position': 410,
+                'note': 'Variation ID: 379050 <br> rsNumber: rs772809398<br> p.Gly410= <br> single nucleotide variant <br> Likely benign<br>not specified',
+                'source': 'ClinVar'
+            }, {
+                'sequenceIndex': 1,
+                'position': 410,
+                'note': 'Variation ID: 586915 <br> rsNumber: N/A<br> p.Gly410= <br> single nucleotide variant <br> Likely benign<br>not provided',
+                'source': 'ClinVar'
+            }, {
+                'sequenceIndex': 1,
+                'position': 411,
+                'note': 'Variation ID: 620053 <br> rsNumber: N/A<br> p.Glu411Gly <br> single nucleotide variant <br> Uncertain significance<br>Lissencephaly 3',
+                'source': 'ClinVar'
+            }, {
+                'sequenceIndex': 1,
+                'position': 416,
+                'note': 'Variation ID: 212489 <br> rsNumber: rs3206694<br> p.Gly416= <br> single nucleotide variant <br> Uncertain significance<br>not specified',
+                'source': 'ClinVar'
+            }, {
+                'sequenceIndex': 1,
+                'position': 416,
+                'note': 'Variation ID: 384538 <br> rsNumber: rs1057521986<br> p.Gly416Ser <br> single nucleotide variant <br> Likely pathogenic<br>Tubulinopathies;not provided',
+                'source': 'ClinVar'
+            }, {
+                'sequenceIndex': 1,
+                'position': 416,
+                'note': 'Variation ID: 591001 <br> rsNumber: N/A<br> p.Gly416Asp <br> single nucleotide variant <br> Uncertain significance<br>Lissencephaly 3',
+                'source': 'ClinVar'
+            }, {
+                'sequenceIndex': 1,
+                'position': 419,
+                'note': 'Variation ID: 7074 <br> rsNumber: rs137853047<br> p.Ser419Leu <br> single nucleotide variant <br> Pathogenic<br>Lissencephaly 3;Tubulinopathies',
+                'source': 'ClinVar'
+            }, {
+                'sequenceIndex': 1,
+                'position': 419,
+                'note': 'Variation ID: 384472 <br> rsNumber: rs865953916<br> p.Ser419= <br> single nucleotide variant <br> Likely benign<br>not specified',
+                'source': 'ClinVar'
+            }, {
+                'sequenceIndex': 1,
+                'position': 422,
+                'note': 'Variation ID: 7076 <br> rsNumber: rs137853049<br> p.Arg422Cys <br> single nucleotide variant <br> Pathogenic<br>Inborn genetic diseases;Lissencephaly 3;Tubulinopathies;not provided',
+                'source': 'ClinVar'
+            }, {
+                'sequenceIndex': 1,
+                'position': 422,
+                'note': 'Variation ID: 7077 <br> rsNumber: rs137853050<br> p.Arg422His <br> single nucleotide variant <br> Pathogenic<br>Lissencephaly 3;Tubulinopathies;not provided',
+                'source': 'ClinVar'
+            }, {
+                'sequenceIndex': 1,
+                'position': 425,
+                'note': 'Variation ID: 160148 <br> rsNumber: rs587784484<br> p.Met425Lys <br> single nucleotide variant <br> Pathogenic/Likely pathogenic<br>Lissencephaly 3;Tubulinopathies',
+                'source': 'ClinVar'
+            }, {
+                'sequenceIndex': 1,
+                'position': 429,
+                'note': 'Variation ID: 625488 <br> rsNumber: N/A<br> p.Glu429Gln <br> single nucleotide variant <br> Pathogenic<br>Tubulinopathies',
+                'source': 'ClinVar'
+            }, {
+                'sequenceIndex': 1,
+                'position': 431,
+                'note': 'Variation ID: 623807 <br> rsNumber: N/A<br> p.Asp431Asn <br> single nucleotide variant <br> Uncertain significance<br>not provided',
+                'source': 'ClinVar'
+            }, {
+                'sequenceIndex': 1,
+                'position': 434,
+                'note': 'Variation ID: 437119 <br> rsNumber: rs1555162244<br> p.Glu434del <br> deletion <br> Uncertain significance<br>not specified',
+                'source': 'ClinVar'
+            }, {
+                'sequenceIndex': 1,
+                'position': 435,
+                'note': 'Variation ID: 437120 <br> rsNumber: rs1555162242<br> p.Val435Ala <br> single nucleotide variant <br> Likely pathogenic<br>Lissencephaly 3;Tubulinopathies',
+                'source': 'ClinVar'
+            }, {
+                'sequenceIndex': 1,
+                'position': 436,
+                'note': 'Variation ID: 625512 <br> rsNumber: N/A<br> p.Gly436Asp <br> single nucleotide variant <br> Pathogenic<br>Tubulinopathies',
+                'source': 'ClinVar'
+            }, {
+                'sequenceIndex': 1,
+                'position': 436,
+                'note': 'Variation ID: 625497 <br> rsNumber: N/A<br> p.Gly436Arg <br> single nucleotide variant <br> Pathogenic<br>Tubulinopathies',
+                'source': 'ClinVar'
+            }, {
+                'sequenceIndex': 1,
+                'position': 47,
+                'note': 'Variation ID: 431912 <br> rsNumber: rs1555162536<br> p.Asp47His <br> single nucleotide variant <br> Likely pathogenic<br>Tubulinopathies;not provided',
+                'source': 'ClinVar'
+            }, {
+                'sequenceIndex': 1,
+                'position': 5,
+                'note': 'Variation ID: 30268 <br> rsNumber: rs387906840<br> p.Ile5Leu <br> single nucleotide variant <br> Likely pathogenic<br>Lissencephaly 3;Tubulinopathies',
+                'source': 'ClinVar'
+            }, {
+                'sequenceIndex': 1,
+                'position': 51,
+                'note': 'Variation ID: 160149 <br> rsNumber: rs587784485<br> p.Thr51Ile <br> single nucleotide variant <br> Likely pathogenic<br>Lissencephaly 3;Tubulinopathies',
+                'source': 'ClinVar'
+            }, {
+                'sequenceIndex': 1,
+                'position': 54,
+                'note': 'Variation ID: 160150 <br> rsNumber: rs587784486<br> p.Ser54Arg <br> single nucleotide variant <br> Likely pathogenic<br>Lissencephaly 3;Tubulinopathies',
+                'source': 'ClinVar'
+            }, {
+                'sequenceIndex': 1,
+                'position': 54,
+                'note': 'Variation ID: 625506 <br> rsNumber: N/A<br> p.Ser54Asn <br> single nucleotide variant <br> Pathogenic<br>Tubulinopathies',
+                'source': 'ClinVar'
+            }, {
+                'sequenceIndex': 1,
+                'position': 55,
+                'note': 'Variation ID: 625472 <br> rsNumber: N/A<br> p.Glu55Lys <br> single nucleotide variant <br> Pathogenic<br>Tubulinopathies',
+                'source': 'ClinVar'
+            }, {
+                'sequenceIndex': 1,
+                'position': 56,
+                'note': 'Variation ID: 625513 <br> rsNumber: N/A<br> p.Thr56Met <br> single nucleotide variant <br> Pathogenic<br>Tubulinopathies',
+                'source': 'ClinVar'
+            }, {
+                'sequenceIndex': 1,
+                'position': 58,
+                'note': 'Variation ID: 625520 <br> rsNumber: N/A<br> p.Ala58Pro <br> single nucleotide variant <br> Pathogenic<br>Tubulinopathies',
+                'source': 'ClinVar'
+            }, {
+                'sequenceIndex': 1,
+                'position': 59,
+                'note': 'Variation ID: 625507 <br> rsNumber: N/A<br> p.Gly59Ser <br> single nucleotide variant <br> Pathogenic<br>Tubulinopathies',
+                'source': 'ClinVar'
+            }, {
+                'sequenceIndex': 1,
+                'position': 6,
+                'note': 'Variation ID: 379329 <br> rsNumber: rs1057520574<br> p.Ser6Cys <br> single nucleotide variant <br> Pathogenic/Likely pathogenic<br>Tubulinopathies;not provided',
+                'source': 'ClinVar'
+            }, {
+                'sequenceIndex': 1,
+                'position': 60,
+                'note': 'Variation ID: 632599 <br> rsNumber: N/A<br> p.Lys60Asn <br> single nucleotide variant <br> Likely pathogenic<br>Agenesis of corpus callosum;Cerebellar vermis hypoplasia;Lissencephaly 3',
+                'source': 'ClinVar'
+            }, {
+                'sequenceIndex': 1,
+                'position': 63,
+                'note': 'Variation ID: 160151 <br> rsNumber: rs147273934<br> p.Pro63= <br> single nucleotide variant <br> Benign/Likely benign<br>not specified',
+                'source': 'ClinVar'
+            }, {
+                'sequenceIndex': 1,
+                'position': 64,
+                'note': 'Variation ID: 420581 <br> rsNumber: rs1064794568<br> p.Arg64Trp <br> single nucleotide variant <br> Pathogenic<br>Tubulinopathies;not provided',
+                'source': 'ClinVar'
+            }, {
+                'sequenceIndex': 1,
+                'position': 70,
+                'note': 'Variation ID: 625475 <br> rsNumber: N/A<br> p.Leu70Ser <br> single nucleotide variant <br> Pathogenic<br>Tubulinopathies',
+                'source': 'ClinVar'
+            }, {
+                'sequenceIndex': 1,
+                'position': 72,
+                'note': 'Variation ID: 625518 <br> rsNumber: N/A<br> p.Pro72Arg <br> single nucleotide variant <br> Pathogenic<br>Tubulinopathies',
+                'source': 'ClinVar'
+            }, {
+                'sequenceIndex': 1,
+                'position': 72,
+                'note': 'Variation ID: 625516 <br> rsNumber: N/A<br> p.Pro72Ser <br> single nucleotide variant <br> Pathogenic<br>Tubulinopathies',
+                'source': 'ClinVar'
+            }, {
+                'sequenceIndex': 1,
+                'position': 79,
+                'note': 'Variation ID: 431845 <br> rsNumber: rs1555162507<br> p.Arg79Cys <br> single nucleotide variant <br> Uncertain significance<br>not specified',
+                'source': 'ClinVar'
+            }, {
+                'sequenceIndex': 1,
+                'position': 82,
+                'note': 'Variation ID: 212490 <br> rsNumber: rs1134868<br> p.Thr82= <br> single nucleotide variant <br> Likely benign<br>not specified',
+                'source': 'ClinVar'
+            }, {
+                'sequenceIndex': 1,
+                'position': 9,
+                'note': 'Variation ID: 625491 <br> rsNumber: N/A<br> p.Val9Ala <br> single nucleotide variant <br> Pathogenic<br>Tubulinopathies',
+                'source': 'ClinVar'
+            }, {
+                'sequenceIndex': 1,
+                'position': 90,
+                'note': 'Variation ID: 212491 <br> rsNumber: rs797046072<br> p.Glu90Gly <br> single nucleotide variant <br> Likely pathogenic<br>Lissencephaly 3;Tubulinopathies',
+                'source': 'ClinVar'
+            }, {
+                'sequenceIndex': 1,
+                'position': 91,
+                'note': 'Variation ID: 212492 <br> rsNumber: rs765483435<br> p.Gln91= <br> single nucleotide variant <br> Uncertain significance<br>not specified',
+                'source': 'ClinVar'
+            }, {
+                'sequenceIndex': 1,
+                'position': 92,
+                'note': 'Variation ID: 160153 <br> rsNumber: rs1065671<br> p.Leu92= <br> single nucleotide variant <br> Uncertain significance<br>not specified',
+                'source': 'ClinVar'
+            }, {
+                'sequenceIndex': 1,
+                'position': 92,
+                'note': 'Variation ID: 625486 <br> rsNumber: N/A<br> p.Leu92Val <br> single nucleotide variant <br> Pathogenic<br>Tubulinopathies',
+                'source': 'ClinVar'
+            }, {
+                'sequenceIndex': 1,
+                'position': 95,
+                'note': 'Variation ID: 520585 <br> rsNumber: rs1555162486<br> p.Gly95Cys <br> single nucleotide variant <br> Pathogenic<br>Inborn genetic diseases;Tubulinopathies',
+                'source': 'ClinVar'
+            }, {
+                'sequenceIndex': 1,
+                'position': 96,
+                'note': 'Variation ID: 160154 <br> rsNumber: rs1056875<br> p.Lys96= <br> single nucleotide variant <br> Benign<br>Lissencephaly, Dominant;not provided;not specified',
+                'source': 'ClinVar'
+            },
 
-			// COSMIC
-			{ 'sequenceIndex': 1, 'position': 450, 'note': 'Mutation: p.E450K<br>COSM5375291 <br>skin<br>Fathmm:PATHOGENIC|.93583<br>', 'source': 'COSMIC' },
-			{ 'sequenceIndex': 1, 'position': 448, 'note': 'Mutation: p.G448R<br>COSM6291071 <br>liver<br>Fathmm:PATHOGENIC|.87995<br>', 'source': 'COSMIC' },
-			{ 'sequenceIndex': 1, 'position': 447, 'note': 'Mutation: p.E447K<br>COSM4834766 <br>cervix<br>Fathmm:PATHOGENIC|.98616<br>', 'source': 'COSMIC' },
-			{ 'sequenceIndex': 1, 'position': 447, 'note': 'Mutation: p.E447K<br>COSM4834766 <br>urinary_tract<br>Fathmm:PATHOGENIC|.98616<br>', 'source': 'COSMIC' },
-			{ 'sequenceIndex': 1, 'position': 442, 'note': 'Mutation: p.G442R<br>COSM6813955 <br>large_intestine<br>Fathmm:PATHOGENIC|.97239<br>', 'source': 'COSMIC' },
-			{ 'sequenceIndex': 1, 'position': 441, 'note': 'Mutation: p.E441Q<br>COSM6072843 <br>lung<br>Fathmm:PATHOGENIC|.98333<br>', 'source': 'COSMIC' },
-			{ 'sequenceIndex': 1, 'position': 431, 'note': 'Mutation: p.D431Y<br>COSM5724126 <br>skin<br>Fathmm:PATHOGENIC|.9863<br>', 'source': 'COSMIC' },
-			{ 'sequenceIndex': 1, 'position': 431, 'note': 'Mutation: p.D431Y<br>COSM5724126 <br>skin<br>Fathmm:PATHOGENIC|.9863<br>', 'source': 'COSMIC' },
-			{ 'sequenceIndex': 1, 'position': 431, 'note': 'Mutation: p.D431Y<br>COSM5724126 <br>skin<br>Fathmm:PATHOGENIC|.9863<br>', 'source': 'COSMIC' },
-			{ 'sequenceIndex': 1, 'position': 431, 'note': 'Mutation: p.D431Y<br>COSM5724126 <br>skin<br>Fathmm:PATHOGENIC|.9863<br>', 'source': 'COSMIC' },
-			{ 'sequenceIndex': 1, 'position': 429, 'note': 'Mutation: p.E429Q<br>COSM6897174 <br>skin<br>Fathmm:PATHOGENIC|.98406<br>', 'source': 'COSMIC' },
-			{ 'sequenceIndex': 1, 'position': 425, 'note': 'Mutation: p.M425T<br>COSM4920884 <br>liver<br>Fathmm:PATHOGENIC|.9886<br>', 'source': 'COSMIC' },
-			{ 'sequenceIndex': 1, 'position': 424, 'note': 'Mutation: p.D424D<br>COSM6290587 <br>liver<br>Fathmm:PATHOGENIC|.90339<br>', 'source': 'COSMIC' },
-			{ 'sequenceIndex': 1, 'position': 422, 'note': 'Mutation: p.R422G<br>COSM4462861 <br>skin<br>Fathmm:PATHOGENIC|.96015<br>', 'source': 'COSMIC' },
-			{ 'sequenceIndex': 1, 'position': 422, 'note': 'Mutation: p.R422S<br>COSM6813954 <br>large_intestine<br>Fathmm:PATHOGENIC|.92673<br>', 'source': 'COSMIC' },
-			{ 'sequenceIndex': 1, 'position': 422, 'note': 'Mutation: p.R422C<br>COSM5898464 <br>skin<br>Fathmm:PATHOGENIC|.95341<br>', 'source': 'COSMIC' },
-			{ 'sequenceIndex': 1, 'position': 416, 'note': 'Mutation: p.G416G<br>COSM7287864 <br>large_intestine<br>Fathmm:NEUTRAL|.14769<br>', 'source': 'COSMIC' },
-			{ 'sequenceIndex': 1, 'position': 412, 'note': 'Mutation: p.G412A<br>COSM6241913 <br>liver<br>Fathmm:PATHOGENIC|.99545<br>', 'source': 'COSMIC' },
-			{ 'sequenceIndex': 1, 'position': 412, 'note': 'Mutation: p.G412E<br>COSM3398780 <br>central_nervous_system<br>Fathmm:PATHOGENIC|.99472<br>', 'source': 'COSMIC' },
-			{ 'sequenceIndex': 1, 'position': 405, 'note': 'Mutation: p.V405V<br>COSM5035540 <br>oesophagus<br>Fathmm:NEUTRAL|.13071<br>', 'source': 'COSMIC' },
-			{ 'sequenceIndex': 1, 'position': 402, 'note': 'Mutation: p.R402H<br>COSM1195822 <br>lung<br>Fathmm:PATHOGENIC|.98255<br>', 'source': 'COSMIC' },
-			{ 'sequenceIndex': 1, 'position': 402, 'note': 'Mutation: p.R402H<br>COSM1195822 <br>lung<br>Fathmm:PATHOGENIC|.98255<br>', 'source': 'COSMIC' },
-			{ 'sequenceIndex': 1, 'position': 400, 'note': 'Mutation: p.A400V<br>COSM1586517 <br>endometrium<br>Fathmm:PATHOGENIC|.98987<br>', 'source': 'COSMIC' },
-			{ 'sequenceIndex': 1, 'position': 390, 'note': 'Mutation: p.R390H<br>COSM1318009 <br>haematopoietic_and_lymphoid_tissue<br>Fathmm:PATHOGENIC|.99375<br>', 'source': 'COSMIC' },
-			{ 'sequenceIndex': 1, 'position': 390, 'note': 'Mutation: p.R390R<br>COSM6339227 <br>liver<br>Fathmm:PATHOGENIC|.85691<br>', 'source': 'COSMIC' },
-			{ 'sequenceIndex': 1, 'position': 379, 'note': 'Mutation: p.S379N<br>COSM1135387 <br>kidney<br>Fathmm:PATHOGENIC|.98547<br>', 'source': 'COSMIC' },
-			{ 'sequenceIndex': 1, 'position': 360, 'note': 'Mutation: p.P360L<br>COSM3461645 <br>skin<br>Fathmm:PATHOGENIC|.99666<br>', 'source': 'COSMIC' },
-			{ 'sequenceIndex': 1, 'position': 360, 'note': 'Mutation: p.P360S<br>COSM3461646 <br>skin<br>Fathmm:PATHOGENIC|.99666<br>', 'source': 'COSMIC' },
-			{ 'sequenceIndex': 1, 'position': 360, 'note': 'Mutation: p.P360L<br>COSM3461645 <br>skin<br>Fathmm:PATHOGENIC|.99666<br>', 'source': 'COSMIC' },
-			{ 'sequenceIndex': 1, 'position': 359, 'note': 'Mutation: p.P359T<br>COSM4333372 <br>biliary_tract<br>Fathmm:PATHOGENIC|.99336<br>', 'source': 'COSMIC' },
-			{ 'sequenceIndex': 1, 'position': 356, 'note': 'Mutation: p.N356Y<br>COSM1152523 <br>endometrium<br>Fathmm:PATHOGENIC|.99448<br>', 'source': 'COSMIC' },
-			{ 'sequenceIndex': 1, 'position': 354, 'note': 'Mutation: p.G354G<br>COSM384256 <br>lung<br>Fathmm:PATHOGENIC|.9189<br>', 'source': 'COSMIC' },
-			{ 'sequenceIndex': 1, 'position': 345, 'note': 'Mutation: p.D345D<br>COSM2007687 <br>large_intestine<br>Fathmm:NEUTRAL|.10371<br>', 'source': 'COSMIC' },
-			{ 'sequenceIndex': 1, 'position': 345, 'note': 'Mutation: p.D345D<br>COSM2007687 <br>large_intestine<br>Fathmm:NEUTRAL|.10371<br>', 'source': 'COSMIC' },
-			{ 'sequenceIndex': 1, 'position': 339, 'note': 'Mutation: p.R339C<br>COSM4877491 <br>prostate<br>Fathmm:PATHOGENIC|.98558<br>', 'source': 'COSMIC' },
-			{ 'sequenceIndex': 1, 'position': 332, 'note': 'Mutation: p.I332I<br>COSM4042431 <br>stomach<br>Fathmm:|.61943<br>', 'source': 'COSMIC' },
-			{ 'sequenceIndex': 1, 'position': 331, 'note': 'Mutation: p.A331V<br>COSM7092659 <br>urinary_tract<br>Fathmm:PATHOGENIC|.97322<br>', 'source': 'COSMIC' },
-			{ 'sequenceIndex': 1, 'position': 327, 'note': 'Mutation: p.D327Y<br>COSM1586516 <br>endometrium<br>Fathmm:PATHOGENIC|.99286<br>', 'source': 'COSMIC' },
-			{ 'sequenceIndex': 1, 'position': 322, 'note': 'Mutation: p.D322D<br>COSM5650646 <br>large_intestine<br>Fathmm:NEUTRAL|.02591<br>', 'source': 'COSMIC' },
-			{ 'sequenceIndex': 1, 'position': 322, 'note': 'Mutation: p.D322D<br>COSM5650646 <br>haematopoietic_and_lymphoid_tissue<br>Fathmm:NEUTRAL|.02591<br>', 'source': 'COSMIC' },
-			{ 'sequenceIndex': 1, 'position': 322, 'note': 'Mutation: p.D322D<br>COSM5650646 <br>large_intestine<br>Fathmm:NEUTRAL|.02591<br>', 'source': 'COSMIC' },
-			{ 'sequenceIndex': 1, 'position': 318, 'note': 'Mutation: p.L318L<br>COSM2007690 <br>large_intestine<br>Fathmm:|.50126<br>', 'source': 'COSMIC' },
-			{ 'sequenceIndex': 1, 'position': 297, 'note': 'Mutation: p.E297K<br>COSM1269501 <br>oesophagus<br>Fathmm:PATHOGENIC|.98405<br>', 'source': 'COSMIC' },
-			{ 'sequenceIndex': 1, 'position': 297, 'note': 'Mutation: p.E297Q<br>COSM6574910 <br>breast<br>Fathmm:PATHOGENIC|.98737<br>', 'source': 'COSMIC' },
-			{ 'sequenceIndex': 1, 'position': 287, 'note': 'Mutation: p.S287T<br>COSM6418235 <br>thyroid<br>Fathmm:PATHOGENIC|.94328<br>', 'source': 'COSMIC' },
-			{ 'sequenceIndex': 1, 'position': 287, 'note': 'Mutation: p.S287T<br>COSM6418235 <br>thyroid<br>Fathmm:PATHOGENIC|.94328<br>', 'source': 'COSMIC' },
-			{ 'sequenceIndex': 1, 'position': 286, 'note': 'Mutation: p.L286R<br>COSM5897051 <br>skin<br>Fathmm:PATHOGENIC|.9945<br>', 'source': 'COSMIC' },
-			{ 'sequenceIndex': 1, 'position': 281, 'note': 'Mutation: p.A281T<br>COSM5470030 <br>large_intestine<br>Fathmm:PATHOGENIC|.98878<br>', 'source': 'COSMIC' },
-			{ 'sequenceIndex': 1, 'position': 271, 'note': 'Mutation: p.T271T<br>COSM2007699 <br>large_intestine<br>Fathmm:PATHOGENIC|.80034<br>', 'source': 'COSMIC' },
-			{ 'sequenceIndex': 1, 'position': 271, 'note': 'Mutation: p.T271T<br>COSM2007699 <br>large_intestine<br>Fathmm:PATHOGENIC|.80034<br>', 'source': 'COSMIC' },
-			{ 'sequenceIndex': 1, 'position': 269, 'note': 'Mutation: p.L269M<br>COSM7152940 <br>urinary_tract<br>Fathmm:PATHOGENIC|.98276<br>', 'source': 'COSMIC' },
-			{ 'sequenceIndex': 1, 'position': 268, 'note': 'Mutation: p.P268S<br>COSM4961324 <br>liver<br>Fathmm:PATHOGENIC|.98112<br>', 'source': 'COSMIC' },
-			{ 'sequenceIndex': 1, 'position': 266, 'note': 'Mutation: p.H266Q<br>COSM1299464 <br>urinary_tract<br>Fathmm:PATHOGENIC|.95657<br>', 'source': 'COSMIC' },
-			{ 'sequenceIndex': 1, 'position': 263, 'note': 'Mutation: p.P263S<br>COSM3461647 <br>skin<br>Fathmm:PATHOGENIC|.99475<br>', 'source': 'COSMIC' },
-			{ 'sequenceIndex': 1, 'position': 262, 'note': 'Mutation: p.Y262Y<br>COSM2007701 <br>kidney<br>Fathmm:NEUTRAL|.17396<br>', 'source': 'COSMIC' },
-			{ 'sequenceIndex': 1, 'position': 261, 'note': 'Mutation: p.P261P<br>COSM6215914 <br>prostate<br>Fathmm:PATHOGENIC|.93897<br>', 'source': 'COSMIC' },
-			{ 'sequenceIndex': 1, 'position': 259, 'note': 'Mutation: p.L259M<br>COSM4738263 <br>large_intestine<br>Fathmm:PATHOGENIC|.94382<br>', 'source': 'COSMIC' },
-			{ 'sequenceIndex': 1, 'position': 257, 'note': 'Mutation: p.T257P<br>COSM5753948 <br>large_intestine<br>Fathmm:PATHOGENIC|.99225<br>', 'source': 'COSMIC' },
-			{ 'sequenceIndex': 1, 'position': 254, 'note': 'Mutation: p.E254Q<br>COSM7161214 <br>urinary_tract<br>Fathmm:PATHOGENIC|.99518<br>', 'source': 'COSMIC' },
-			{ 'sequenceIndex': 1, 'position': 254, 'note': 'Mutation: p.E254K<br>COSM1586515 <br>endometrium<br>Fathmm:PATHOGENIC|.99465<br>', 'source': 'COSMIC' },
-			{ 'sequenceIndex': 1, 'position': 252, 'note': 'Mutation: p.L252L<br>COSM3871744 <br>skin<br>Fathmm:PATHOGENIC|.98908<br>', 'source': 'COSMIC' },
-			{ 'sequenceIndex': 1, 'position': 248, 'note': 'Mutation: p.L248L<br>COSM4902990 <br>skin<br>Fathmm:PATHOGENIC|.98616<br>', 'source': 'COSMIC' },
-			{ 'sequenceIndex': 1, 'position': 244, 'note': 'Mutation: p.F244C<br>COSM5753949 <br>large_intestine<br>Fathmm:PATHOGENIC|.99664<br>', 'source': 'COSMIC' },
-			{ 'sequenceIndex': 1, 'position': 244, 'note': 'Mutation: p.F244C<br>COSM5753949 <br>large_intestine<br>Fathmm:PATHOGENIC|.99664<br>', 'source': 'COSMIC' },
-			{ 'sequenceIndex': 1, 'position': 243, 'note': 'Mutation: p.R243K<br>COSM1176889 <br>endometrium<br>Fathmm:PATHOGENIC|.98993<br>', 'source': 'COSMIC' },
-			{ 'sequenceIndex': 1, 'position': 242, 'note': 'Mutation: p.L242L<br>COSM2007706 <br>skin<br>Fathmm:NEUTRAL|.05868<br>', 'source': 'COSMIC' },
-			{ 'sequenceIndex': 1, 'position': 238, 'note': 'Mutation: p.I238I<br>COSM6813957 <br>large_intestine<br>Fathmm:PATHOGENIC|.94745<br>', 'source': 'COSMIC' },
-			{ 'sequenceIndex': 1, 'position': 232, 'note': 'Mutation: p.G232D<br>COSM1664833 <br>kidney<br>Fathmm:PATHOGENIC|.97803<br>', 'source': 'COSMIC' },
-			{ 'sequenceIndex': 1, 'position': 219, 'note': 'Mutation: p.I219S<br>COSM1152524 <br>endometrium<br>Fathmm:PATHOGENIC|.99571<br>', 'source': 'COSMIC' },
-			{ 'sequenceIndex': 1, 'position': 218, 'note': 'Mutation: p.D218Y<br>COSM1586539 <br>endometrium<br>Fathmm:PATHOGENIC|.99386<br>', 'source': 'COSMIC' },
-			{ 'sequenceIndex': 1, 'position': 218, 'note': 'Mutation: p.D218N<br>COSM4555385 <br>skin<br>Fathmm:PATHOGENIC|.99316<br>', 'source': 'COSMIC' },
-			{ 'sequenceIndex': 1, 'position': 214, 'note': 'Mutation: p.R214C<br>COSM1147033 <br>lung<br>Fathmm:PATHOGENIC|.98361<br>', 'source': 'COSMIC' },
-			{ 'sequenceIndex': 1, 'position': 210, 'note': 'Mutation: p.Y210H<br>COSM5966465 <br>adrenal_gland<br>Fathmm:PATHOGENIC|.99473<br>', 'source': 'COSMIC' },
-			{ 'sequenceIndex': 1, 'position': 208, 'note': 'Mutation: p.A208S<br>COSM6025310 <br>large_intestine<br>Fathmm:PATHOGENIC|.9935<br>', 'source': 'COSMIC' },
-			{ 'sequenceIndex': 1, 'position': 208, 'note': 'Mutation: p.A208S<br>COSM6025310 <br>large_intestine<br>Fathmm:PATHOGENIC|.9935<br>', 'source': 'COSMIC' },
-			{ 'sequenceIndex': 1, 'position': 185, 'note': 'Mutation: p.Y185*<br>COSM7396272 <br>lung<br>Fathmm:PATHOGENIC|.97347<br>', 'source': 'COSMIC' },
-			{ 'sequenceIndex': 1, 'position': 183, 'note': 'Mutation: p.E183Q<br>COSM6897175 <br>skin<br>Fathmm:PATHOGENIC|.97571<br>', 'source': 'COSMIC' },
-			{ 'sequenceIndex': 1, 'position': 176, 'note': 'Mutation: p.Q176R<br>COSM6813958 <br>large_intestine<br>Fathmm:PATHOGENIC|.96539<br>', 'source': 'COSMIC' },
-			{ 'sequenceIndex': 1, 'position': 164, 'note': 'Mutation: p.K164T<br>COSM4042432 <br>stomach<br>Fathmm:PATHOGENIC|.97552<br>', 'source': 'COSMIC' },
-			{ 'sequenceIndex': 1, 'position': 164, 'note': 'Mutation: p.K164R<br>COSM1269502 <br>oesophagus<br>Fathmm:PATHOGENIC|.97061<br>', 'source': 'COSMIC' },
-			{ 'sequenceIndex': 1, 'position': 163, 'note': 'Mutation: p.K163N<br>COSM6585035 <br>breast<br>Fathmm:PATHOGENIC|.93283<br>', 'source': 'COSMIC' },
-			{ 'sequenceIndex': 1, 'position': 162, 'note': 'Mutation: p.G162D<br>COSM1586538 <br>endometrium<br>Fathmm:PATHOGENIC|.97199<br>', 'source': 'COSMIC' },
-			{ 'sequenceIndex': 1, 'position': 156, 'note': 'Mutation: p.R156H<br>COSM4042433 <br>stomach<br>Fathmm:PATHOGENIC|.95749<br>', 'source': 'COSMIC' },
-			{ 'sequenceIndex': 1, 'position': 156, 'note': 'Mutation: p.R156H<br>COSM4042433 <br>biliary_tract<br>Fathmm:PATHOGENIC|.95749<br>', 'source': 'COSMIC' },
-			{ 'sequenceIndex': 1, 'position': 151, 'note': 'Mutation: p.S151S<br>COSM7302503 <br>large_intestine<br>Fathmm:NEUTRAL|.15773<br>', 'source': 'COSMIC' },
-			{ 'sequenceIndex': 1, 'position': 146, 'note': 'Mutation: p.G146S<br>COSM6007851 <br>prostate<br>Fathmm:PATHOGENIC|.98813<br>', 'source': 'COSMIC' },
-			{ 'sequenceIndex': 1, 'position': 136, 'note': 'Mutation: p.L136L<br>COSM122173 <br>upper_aerodigestive_tract<br>Fathmm:NEUTRAL|.49534<br>', 'source': 'COSMIC' },
-			{ 'sequenceIndex': 1, 'position': 128, 'note': 'Mutation: p.Q128K<br>COSM1586537 <br>endometrium<br>Fathmm:PATHOGENIC|.99214<br>', 'source': 'COSMIC' },
-			{ 'sequenceIndex': 1, 'position': 127, 'note': 'Mutation: p.D127N<br>COSM5946407 <br>haematopoietic_and_lymphoid_tissue<br>Fathmm:PATHOGENIC|.9953<br>', 'source': 'COSMIC' },
-			{ 'sequenceIndex': 1, 'position': 124, 'note': 'Mutation: p.K124*<br>COSM6373669 <br>thyroid<br>Fathmm:PATHOGENIC|.97758<br>', 'source': 'COSMIC' },
-			{ 'sequenceIndex': 1, 'position': 124, 'note': 'Mutation: p.K124*<br>COSM6373669 <br>thyroid<br>Fathmm:PATHOGENIC|.97758<br>', 'source': 'COSMIC' },
-			{ 'sequenceIndex': 1, 'position': 123, 'note': 'Mutation: p.R123H<br>COSM6372511 <br>thyroid<br>Fathmm:PATHOGENIC|.97686<br>', 'source': 'COSMIC' },
-			{ 'sequenceIndex': 1, 'position': 123, 'note': 'Mutation: p.R123C<br>COSM1362087 <br>skin<br>Fathmm:PATHOGENIC|.94205<br>', 'source': 'COSMIC' },
-			{ 'sequenceIndex': 1, 'position': 123, 'note': 'Mutation: p.R123C<br>COSM1362087 <br>large_intestine<br>Fathmm:PATHOGENIC|.94205<br>', 'source': 'COSMIC' },
-			{ 'sequenceIndex': 1, 'position': 123, 'note': 'Mutation: p.R123H<br>COSM6372511 <br>thyroid<br>Fathmm:PATHOGENIC|.97686<br>', 'source': 'COSMIC' },
-			{ 'sequenceIndex': 1, 'position': 123, 'note': 'Mutation: p.R123C<br>COSM1362087 <br>skin<br>Fathmm:PATHOGENIC|.94205<br>', 'source': 'COSMIC' },
-			{ 'sequenceIndex': 1, 'position': 117, 'note': 'Mutation: p.L117L<br>COSM3812174 <br>breast<br>Fathmm:NEUTRAL|.03382<br>', 'source': 'COSMIC' },
-			{ 'sequenceIndex': 1, 'position': 113, 'note': 'Mutation: p.E113D<br>COSM1586536 <br>endometrium<br>Fathmm:PATHOGENIC|.85031<br>', 'source': 'COSMIC' },
-			{ 'sequenceIndex': 1, 'position': 106, 'note': 'Mutation: p.G106R<br>COSM1492943 <br>kidney<br>Fathmm:PATHOGENIC|.96015<br>', 'source': 'COSMIC' },
-			{ 'sequenceIndex': 1, 'position': 103, 'note': 'Mutation: p.Y103Y<br>COSM1606214 <br>liver<br>Fathmm:PATHOGENIC|.77048<br>', 'source': 'COSMIC' },
-			{ 'sequenceIndex': 1, 'position': 103, 'note': 'Mutation: p.Y103Y<br>COSM1606214 <br>liver<br>Fathmm:PATHOGENIC|.77048<br>', 'source': 'COSMIC' },
-			{ 'sequenceIndex': 1, 'position': 99, 'note': 'Mutation: p.A99A<br>COSM5804176 <br>liver<br>Fathmm:|.51603<br>', 'source': 'COSMIC' },
-			{ 'sequenceIndex': 1, 'position': 97, 'note': 'Mutation: p.E97*<br>COSM1362088 <br>large_intestine<br>Fathmm:PATHOGENIC|.96381<br>', 'source': 'COSMIC' },
-			{ 'sequenceIndex': 1, 'position': 96, 'note': 'Mutation: p.K96K<br>COSM5459982 <br>large_intestine<br>Fathmm:NEUTRAL|.19868<br>', 'source': 'COSMIC' },
-			{ 'sequenceIndex': 1, 'position': 90, 'note': 'Mutation: p.E90Q<br>COSM7161215 <br>urinary_tract<br>Fathmm:PATHOGENIC|.96512<br>', 'source': 'COSMIC' },
-			{ 'sequenceIndex': 1, 'position': 88, 'note': 'Mutation: p.H88R<br>COSM6813956 <br>large_intestine<br>Fathmm:PATHOGENIC|.94335<br>', 'source': 'COSMIC' },
-			{ 'sequenceIndex': 1, 'position': 88, 'note': 'Mutation: p.H88N<br>COSM7126955 <br>urinary_tract<br>Fathmm:PATHOGENIC|.97371<br>', 'source': 'COSMIC' },
-			{ 'sequenceIndex': 1, 'position': 84, 'note': 'Mutation: p.R84L<br>COSM4886878 <br>upper_aerodigestive_tract<br>Fathmm:PATHOGENIC|.95304<br>', 'source': 'COSMIC' },
-			{ 'sequenceIndex': 1, 'position': 59, 'note': 'Mutation: p.G59G<br>COSM1586535 <br>endometrium<br>Fathmm:PATHOGENIC|.84526<br>', 'source': 'COSMIC' },
-			{ 'sequenceIndex': 1, 'position': 56, 'note': 'Mutation: p.T56M<br>COSM1476610 <br>stomach<br>Fathmm:PATHOGENIC|.98055<br>', 'source': 'COSMIC' },
-			{ 'sequenceIndex': 1, 'position': 56, 'note': 'Mutation: p.T56M<br>COSM147499 <br>stomach<br>Fathmm:PATHOGENIC|.98055<br>', 'source': 'COSMIC' },
-			{ 'sequenceIndex': 1, 'position': 56, 'note': 'Mutation: p.T56T<br>COSM1362089 <br>large_intestine<br>Fathmm:NEUTRAL|.01479<br>', 'source': 'COSMIC' },
-			{ 'sequenceIndex': 1, 'position': 56, 'note': 'Mutation: p.T56M<br>COSM1476610 <br>breast<br>Fathmm:PATHOGENIC|.98055<br>', 'source': 'COSMIC' },
-			{ 'sequenceIndex': 1, 'position': 52, 'note': 'Mutation: p.F52L<br>COSM3812175 <br>breast<br>Fathmm:PATHOGENIC|.96883<br>', 'source': 'COSMIC' },
-			{ 'sequenceIndex': 1, 'position': 43, 'note': 'Mutation: p.G43V<br>COSM6137209 <br>lung<br>Fathmm:PATHOGENIC|.98553<br>', 'source': 'COSMIC' },
-			{ 'sequenceIndex': 1, 'position': 38, 'note': 'Mutation: p.S38R<br>COSM5568238 <br>prostate<br>Fathmm:PATHOGENIC|.98814<br>', 'source': 'COSMIC' },
-			{ 'sequenceIndex': 1, 'position': 35, 'note': 'Mutation: p.Q35*<br>COSM6520232 <br>lung<br>Fathmm:PATHOGENIC|.99722<br>', 'source': 'COSMIC' },
-			{ 'sequenceIndex': 1, 'position': 35, 'note': 'Mutation: p.Q35H<br>COSM4738264 <br>large_intestine<br>Fathmm:PATHOGENIC|.9746<br>', 'source': 'COSMIC' },
-			{ 'sequenceIndex': 1, 'position': 31, 'note': 'Mutation: p.Q31H<br>COSM5777347 <br>breast<br>Fathmm:PATHOGENIC|.98307<br>', 'source': 'COSMIC' },
-			{ 'sequenceIndex': 1, 'position': 29, 'note': 'Mutation: p.G29D<br>COSM6000733 <br>prostate<br>Fathmm:PATHOGENIC|.99551<br>', 'source': 'COSMIC' },
-			{ 'sequenceIndex': 1, 'position': 29, 'note': 'Mutation: p.G29D<br>COSM6000733 <br>prostate<br>Fathmm:PATHOGENIC|.99551<br>', 'source': 'COSMIC' },
-			{ 'sequenceIndex': 1, 'position': 23, 'note': 'Mutation: p.L23F<br>COSM6000245 <br>prostate<br>Fathmm:PATHOGENIC|.99237<br>', 'source': 'COSMIC' },
-			{ 'sequenceIndex': 1, 'position': 23, 'note': 'Mutation: p.L23F<br>COSM6000245 <br>prostate<br>Fathmm:PATHOGENIC|.99237<br>', 'source': 'COSMIC' },
-			{ 'sequenceIndex': 1, 'position': 2, 'note': 'Mutation: p.R2C<br>COSM5753950 <br>large_intestine<br>Fathmm:PATHOGENIC|.99758<br>', 'source': 'COSMIC' },
-			{ 'sequenceIndex': 1, 'position': 2, 'note': 'Mutation: p.R2C<br>COSM5753950 <br>large_intestine<br>Fathmm:PATHOGENIC|.99758<br>', 'source': 'COSMIC' },
-			{ 'sequenceIndex': 1, 'position': 1, 'note': 'Mutation: p.M1I<br>COSM6014936 <br>skin<br>Fathmm:|.65271<br>', 'source': 'COSMIC' },
+            // COSMIC
+            {
+                'sequenceIndex': 1,
+                'position': 450,
+                'note': 'Mutation: p.E450K<br>COSM5375291 <br>skin<br>Fathmm:PATHOGENIC|.93583<br>',
+                'source': 'COSMIC'
+            }, {
+                'sequenceIndex': 1,
+                'position': 448,
+                'note': 'Mutation: p.G448R<br>COSM6291071 <br>liver<br>Fathmm:PATHOGENIC|.87995<br>',
+                'source': 'COSMIC'
+            }, {
+                'sequenceIndex': 1,
+                'position': 447,
+                'note': 'Mutation: p.E447K<br>COSM4834766 <br>cervix<br>Fathmm:PATHOGENIC|.98616<br>',
+                'source': 'COSMIC'
+            }, {
+                'sequenceIndex': 1,
+                'position': 447,
+                'note': 'Mutation: p.E447K<br>COSM4834766 <br>urinary_tract<br>Fathmm:PATHOGENIC|.98616<br>',
+                'source': 'COSMIC'
+            }, {
+                'sequenceIndex': 1,
+                'position': 442,
+                'note': 'Mutation: p.G442R<br>COSM6813955 <br>large_intestine<br>Fathmm:PATHOGENIC|.97239<br>',
+                'source': 'COSMIC'
+            }, {
+                'sequenceIndex': 1,
+                'position': 441,
+                'note': 'Mutation: p.E441Q<br>COSM6072843 <br>lung<br>Fathmm:PATHOGENIC|.98333<br>',
+                'source': 'COSMIC'
+            }, {
+                'sequenceIndex': 1,
+                'position': 431,
+                'note': 'Mutation: p.D431Y<br>COSM5724126 <br>skin<br>Fathmm:PATHOGENIC|.9863<br>',
+                'source': 'COSMIC'
+            }, {
+                'sequenceIndex': 1,
+                'position': 431,
+                'note': 'Mutation: p.D431Y<br>COSM5724126 <br>skin<br>Fathmm:PATHOGENIC|.9863<br>',
+                'source': 'COSMIC'
+            }, {
+                'sequenceIndex': 1,
+                'position': 431,
+                'note': 'Mutation: p.D431Y<br>COSM5724126 <br>skin<br>Fathmm:PATHOGENIC|.9863<br>',
+                'source': 'COSMIC'
+            }, {
+                'sequenceIndex': 1,
+                'position': 431,
+                'note': 'Mutation: p.D431Y<br>COSM5724126 <br>skin<br>Fathmm:PATHOGENIC|.9863<br>',
+                'source': 'COSMIC'
+            }, {
+                'sequenceIndex': 1,
+                'position': 429,
+                'note': 'Mutation: p.E429Q<br>COSM6897174 <br>skin<br>Fathmm:PATHOGENIC|.98406<br>',
+                'source': 'COSMIC'
+            }, {
+                'sequenceIndex': 1,
+                'position': 425,
+                'note': 'Mutation: p.M425T<br>COSM4920884 <br>liver<br>Fathmm:PATHOGENIC|.9886<br>',
+                'source': 'COSMIC'
+            }, {
+                'sequenceIndex': 1,
+                'position': 424,
+                'note': 'Mutation: p.D424D<br>COSM6290587 <br>liver<br>Fathmm:PATHOGENIC|.90339<br>',
+                'source': 'COSMIC'
+            }, {
+                'sequenceIndex': 1,
+                'position': 422,
+                'note': 'Mutation: p.R422G<br>COSM4462861 <br>skin<br>Fathmm:PATHOGENIC|.96015<br>',
+                'source': 'COSMIC'
+            }, {
+                'sequenceIndex': 1,
+                'position': 422,
+                'note': 'Mutation: p.R422S<br>COSM6813954 <br>large_intestine<br>Fathmm:PATHOGENIC|.92673<br>',
+                'source': 'COSMIC'
+            }, {
+                'sequenceIndex': 1,
+                'position': 422,
+                'note': 'Mutation: p.R422C<br>COSM5898464 <br>skin<br>Fathmm:PATHOGENIC|.95341<br>',
+                'source': 'COSMIC'
+            }, {
+                'sequenceIndex': 1,
+                'position': 416,
+                'note': 'Mutation: p.G416G<br>COSM7287864 <br>large_intestine<br>Fathmm:NEUTRAL|.14769<br>',
+                'source': 'COSMIC'
+            }, {
+                'sequenceIndex': 1,
+                'position': 412,
+                'note': 'Mutation: p.G412A<br>COSM6241913 <br>liver<br>Fathmm:PATHOGENIC|.99545<br>',
+                'source': 'COSMIC'
+            }, {
+                'sequenceIndex': 1,
+                'position': 412,
+                'note': 'Mutation: p.G412E<br>COSM3398780 <br>central_nervous_system<br>Fathmm:PATHOGENIC|.99472<br>',
+                'source': 'COSMIC'
+            }, {
+                'sequenceIndex': 1,
+                'position': 405,
+                'note': 'Mutation: p.V405V<br>COSM5035540 <br>oesophagus<br>Fathmm:NEUTRAL|.13071<br>',
+                'source': 'COSMIC'
+            }, {
+                'sequenceIndex': 1,
+                'position': 402,
+                'note': 'Mutation: p.R402H<br>COSM1195822 <br>lung<br>Fathmm:PATHOGENIC|.98255<br>',
+                'source': 'COSMIC'
+            }, {
+                'sequenceIndex': 1,
+                'position': 402,
+                'note': 'Mutation: p.R402H<br>COSM1195822 <br>lung<br>Fathmm:PATHOGENIC|.98255<br>',
+                'source': 'COSMIC'
+            }, {
+                'sequenceIndex': 1,
+                'position': 400,
+                'note': 'Mutation: p.A400V<br>COSM1586517 <br>endometrium<br>Fathmm:PATHOGENIC|.98987<br>',
+                'source': 'COSMIC'
+            }, {
+                'sequenceIndex': 1,
+                'position': 390,
+                'note': 'Mutation: p.R390H<br>COSM1318009 <br>haematopoietic_and_lymphoid_tissue<br>Fathmm:PATHOGENIC|.99375<br>',
+                'source': 'COSMIC'
+            }, {
+                'sequenceIndex': 1,
+                'position': 390,
+                'note': 'Mutation: p.R390R<br>COSM6339227 <br>liver<br>Fathmm:PATHOGENIC|.85691<br>',
+                'source': 'COSMIC'
+            }, {
+                'sequenceIndex': 1,
+                'position': 379,
+                'note': 'Mutation: p.S379N<br>COSM1135387 <br>kidney<br>Fathmm:PATHOGENIC|.98547<br>',
+                'source': 'COSMIC'
+            }, {
+                'sequenceIndex': 1,
+                'position': 360,
+                'note': 'Mutation: p.P360L<br>COSM3461645 <br>skin<br>Fathmm:PATHOGENIC|.99666<br>',
+                'source': 'COSMIC'
+            }, {
+                'sequenceIndex': 1,
+                'position': 360,
+                'note': 'Mutation: p.P360S<br>COSM3461646 <br>skin<br>Fathmm:PATHOGENIC|.99666<br>',
+                'source': 'COSMIC'
+            }, {
+                'sequenceIndex': 1,
+                'position': 360,
+                'note': 'Mutation: p.P360L<br>COSM3461645 <br>skin<br>Fathmm:PATHOGENIC|.99666<br>',
+                'source': 'COSMIC'
+            }, {
+                'sequenceIndex': 1,
+                'position': 359,
+                'note': 'Mutation: p.P359T<br>COSM4333372 <br>biliary_tract<br>Fathmm:PATHOGENIC|.99336<br>',
+                'source': 'COSMIC'
+            }, {
+                'sequenceIndex': 1,
+                'position': 356,
+                'note': 'Mutation: p.N356Y<br>COSM1152523 <br>endometrium<br>Fathmm:PATHOGENIC|.99448<br>',
+                'source': 'COSMIC'
+            }, {
+                'sequenceIndex': 1,
+                'position': 354,
+                'note': 'Mutation: p.G354G<br>COSM384256 <br>lung<br>Fathmm:PATHOGENIC|.9189<br>',
+                'source': 'COSMIC'
+            }, {
+                'sequenceIndex': 1,
+                'position': 345,
+                'note': 'Mutation: p.D345D<br>COSM2007687 <br>large_intestine<br>Fathmm:NEUTRAL|.10371<br>',
+                'source': 'COSMIC'
+            }, {
+                'sequenceIndex': 1,
+                'position': 345,
+                'note': 'Mutation: p.D345D<br>COSM2007687 <br>large_intestine<br>Fathmm:NEUTRAL|.10371<br>',
+                'source': 'COSMIC'
+            }, {
+                'sequenceIndex': 1,
+                'position': 339,
+                'note': 'Mutation: p.R339C<br>COSM4877491 <br>prostate<br>Fathmm:PATHOGENIC|.98558<br>',
+                'source': 'COSMIC'
+            }, {
+                'sequenceIndex': 1,
+                'position': 332,
+                'note': 'Mutation: p.I332I<br>COSM4042431 <br>stomach<br>Fathmm:|.61943<br>',
+                'source': 'COSMIC'
+            }, {
+                'sequenceIndex': 1,
+                'position': 331,
+                'note': 'Mutation: p.A331V<br>COSM7092659 <br>urinary_tract<br>Fathmm:PATHOGENIC|.97322<br>',
+                'source': 'COSMIC'
+            }, {
+                'sequenceIndex': 1,
+                'position': 327,
+                'note': 'Mutation: p.D327Y<br>COSM1586516 <br>endometrium<br>Fathmm:PATHOGENIC|.99286<br>',
+                'source': 'COSMIC'
+            }, {
+                'sequenceIndex': 1,
+                'position': 322,
+                'note': 'Mutation: p.D322D<br>COSM5650646 <br>large_intestine<br>Fathmm:NEUTRAL|.02591<br>',
+                'source': 'COSMIC'
+            }, {
+                'sequenceIndex': 1,
+                'position': 322,
+                'note': 'Mutation: p.D322D<br>COSM5650646 <br>haematopoietic_and_lymphoid_tissue<br>Fathmm:NEUTRAL|.02591<br>',
+                'source': 'COSMIC'
+            }, {
+                'sequenceIndex': 1,
+                'position': 322,
+                'note': 'Mutation: p.D322D<br>COSM5650646 <br>large_intestine<br>Fathmm:NEUTRAL|.02591<br>',
+                'source': 'COSMIC'
+            }, {
+                'sequenceIndex': 1,
+                'position': 318,
+                'note': 'Mutation: p.L318L<br>COSM2007690 <br>large_intestine<br>Fathmm:|.50126<br>',
+                'source': 'COSMIC'
+            }, {
+                'sequenceIndex': 1,
+                'position': 297,
+                'note': 'Mutation: p.E297K<br>COSM1269501 <br>oesophagus<br>Fathmm:PATHOGENIC|.98405<br>',
+                'source': 'COSMIC'
+            }, {
+                'sequenceIndex': 1,
+                'position': 297,
+                'note': 'Mutation: p.E297Q<br>COSM6574910 <br>breast<br>Fathmm:PATHOGENIC|.98737<br>',
+                'source': 'COSMIC'
+            }, {
+                'sequenceIndex': 1,
+                'position': 287,
+                'note': 'Mutation: p.S287T<br>COSM6418235 <br>thyroid<br>Fathmm:PATHOGENIC|.94328<br>',
+                'source': 'COSMIC'
+            }, {
+                'sequenceIndex': 1,
+                'position': 287,
+                'note': 'Mutation: p.S287T<br>COSM6418235 <br>thyroid<br>Fathmm:PATHOGENIC|.94328<br>',
+                'source': 'COSMIC'
+            }, {
+                'sequenceIndex': 1,
+                'position': 286,
+                'note': 'Mutation: p.L286R<br>COSM5897051 <br>skin<br>Fathmm:PATHOGENIC|.9945<br>',
+                'source': 'COSMIC'
+            }, {
+                'sequenceIndex': 1,
+                'position': 281,
+                'note': 'Mutation: p.A281T<br>COSM5470030 <br>large_intestine<br>Fathmm:PATHOGENIC|.98878<br>',
+                'source': 'COSMIC'
+            }, {
+                'sequenceIndex': 1,
+                'position': 271,
+                'note': 'Mutation: p.T271T<br>COSM2007699 <br>large_intestine<br>Fathmm:PATHOGENIC|.80034<br>',
+                'source': 'COSMIC'
+            }, {
+                'sequenceIndex': 1,
+                'position': 271,
+                'note': 'Mutation: p.T271T<br>COSM2007699 <br>large_intestine<br>Fathmm:PATHOGENIC|.80034<br>',
+                'source': 'COSMIC'
+            }, {
+                'sequenceIndex': 1,
+                'position': 269,
+                'note': 'Mutation: p.L269M<br>COSM7152940 <br>urinary_tract<br>Fathmm:PATHOGENIC|.98276<br>',
+                'source': 'COSMIC'
+            }, {
+                'sequenceIndex': 1,
+                'position': 268,
+                'note': 'Mutation: p.P268S<br>COSM4961324 <br>liver<br>Fathmm:PATHOGENIC|.98112<br>',
+                'source': 'COSMIC'
+            }, {
+                'sequenceIndex': 1,
+                'position': 266,
+                'note': 'Mutation: p.H266Q<br>COSM1299464 <br>urinary_tract<br>Fathmm:PATHOGENIC|.95657<br>',
+                'source': 'COSMIC'
+            }, {
+                'sequenceIndex': 1,
+                'position': 263,
+                'note': 'Mutation: p.P263S<br>COSM3461647 <br>skin<br>Fathmm:PATHOGENIC|.99475<br>',
+                'source': 'COSMIC'
+            }, {
+                'sequenceIndex': 1,
+                'position': 262,
+                'note': 'Mutation: p.Y262Y<br>COSM2007701 <br>kidney<br>Fathmm:NEUTRAL|.17396<br>',
+                'source': 'COSMIC'
+            }, {
+                'sequenceIndex': 1,
+                'position': 261,
+                'note': 'Mutation: p.P261P<br>COSM6215914 <br>prostate<br>Fathmm:PATHOGENIC|.93897<br>',
+                'source': 'COSMIC'
+            }, {
+                'sequenceIndex': 1,
+                'position': 259,
+                'note': 'Mutation: p.L259M<br>COSM4738263 <br>large_intestine<br>Fathmm:PATHOGENIC|.94382<br>',
+                'source': 'COSMIC'
+            }, {
+                'sequenceIndex': 1,
+                'position': 257,
+                'note': 'Mutation: p.T257P<br>COSM5753948 <br>large_intestine<br>Fathmm:PATHOGENIC|.99225<br>',
+                'source': 'COSMIC'
+            }, {
+                'sequenceIndex': 1,
+                'position': 254,
+                'note': 'Mutation: p.E254Q<br>COSM7161214 <br>urinary_tract<br>Fathmm:PATHOGENIC|.99518<br>',
+                'source': 'COSMIC'
+            }, {
+                'sequenceIndex': 1,
+                'position': 254,
+                'note': 'Mutation: p.E254K<br>COSM1586515 <br>endometrium<br>Fathmm:PATHOGENIC|.99465<br>',
+                'source': 'COSMIC'
+            }, {
+                'sequenceIndex': 1,
+                'position': 252,
+                'note': 'Mutation: p.L252L<br>COSM3871744 <br>skin<br>Fathmm:PATHOGENIC|.98908<br>',
+                'source': 'COSMIC'
+            }, {
+                'sequenceIndex': 1,
+                'position': 248,
+                'note': 'Mutation: p.L248L<br>COSM4902990 <br>skin<br>Fathmm:PATHOGENIC|.98616<br>',
+                'source': 'COSMIC'
+            }, {
+                'sequenceIndex': 1,
+                'position': 244,
+                'note': 'Mutation: p.F244C<br>COSM5753949 <br>large_intestine<br>Fathmm:PATHOGENIC|.99664<br>',
+                'source': 'COSMIC'
+            }, {
+                'sequenceIndex': 1,
+                'position': 244,
+                'note': 'Mutation: p.F244C<br>COSM5753949 <br>large_intestine<br>Fathmm:PATHOGENIC|.99664<br>',
+                'source': 'COSMIC'
+            }, {
+                'sequenceIndex': 1,
+                'position': 243,
+                'note': 'Mutation: p.R243K<br>COSM1176889 <br>endometrium<br>Fathmm:PATHOGENIC|.98993<br>',
+                'source': 'COSMIC'
+            }, {
+                'sequenceIndex': 1,
+                'position': 242,
+                'note': 'Mutation: p.L242L<br>COSM2007706 <br>skin<br>Fathmm:NEUTRAL|.05868<br>',
+                'source': 'COSMIC'
+            }, {
+                'sequenceIndex': 1,
+                'position': 238,
+                'note': 'Mutation: p.I238I<br>COSM6813957 <br>large_intestine<br>Fathmm:PATHOGENIC|.94745<br>',
+                'source': 'COSMIC'
+            }, {
+                'sequenceIndex': 1,
+                'position': 232,
+                'note': 'Mutation: p.G232D<br>COSM1664833 <br>kidney<br>Fathmm:PATHOGENIC|.97803<br>',
+                'source': 'COSMIC'
+            }, {
+                'sequenceIndex': 1,
+                'position': 219,
+                'note': 'Mutation: p.I219S<br>COSM1152524 <br>endometrium<br>Fathmm:PATHOGENIC|.99571<br>',
+                'source': 'COSMIC'
+            }, {
+                'sequenceIndex': 1,
+                'position': 218,
+                'note': 'Mutation: p.D218Y<br>COSM1586539 <br>endometrium<br>Fathmm:PATHOGENIC|.99386<br>',
+                'source': 'COSMIC'
+            }, {
+                'sequenceIndex': 1,
+                'position': 218,
+                'note': 'Mutation: p.D218N<br>COSM4555385 <br>skin<br>Fathmm:PATHOGENIC|.99316<br>',
+                'source': 'COSMIC'
+            }, {
+                'sequenceIndex': 1,
+                'position': 214,
+                'note': 'Mutation: p.R214C<br>COSM1147033 <br>lung<br>Fathmm:PATHOGENIC|.98361<br>',
+                'source': 'COSMIC'
+            }, {
+                'sequenceIndex': 1,
+                'position': 210,
+                'note': 'Mutation: p.Y210H<br>COSM5966465 <br>adrenal_gland<br>Fathmm:PATHOGENIC|.99473<br>',
+                'source': 'COSMIC'
+            }, {
+                'sequenceIndex': 1,
+                'position': 208,
+                'note': 'Mutation: p.A208S<br>COSM6025310 <br>large_intestine<br>Fathmm:PATHOGENIC|.9935<br>',
+                'source': 'COSMIC'
+            }, {
+                'sequenceIndex': 1,
+                'position': 208,
+                'note': 'Mutation: p.A208S<br>COSM6025310 <br>large_intestine<br>Fathmm:PATHOGENIC|.9935<br>',
+                'source': 'COSMIC'
+            }, {
+                'sequenceIndex': 1,
+                'position': 185,
+                'note': 'Mutation: p.Y185*<br>COSM7396272 <br>lung<br>Fathmm:PATHOGENIC|.97347<br>',
+                'source': 'COSMIC'
+            }, {
+                'sequenceIndex': 1,
+                'position': 183,
+                'note': 'Mutation: p.E183Q<br>COSM6897175 <br>skin<br>Fathmm:PATHOGENIC|.97571<br>',
+                'source': 'COSMIC'
+            }, {
+                'sequenceIndex': 1,
+                'position': 176,
+                'note': 'Mutation: p.Q176R<br>COSM6813958 <br>large_intestine<br>Fathmm:PATHOGENIC|.96539<br>',
+                'source': 'COSMIC'
+            }, {
+                'sequenceIndex': 1,
+                'position': 164,
+                'note': 'Mutation: p.K164T<br>COSM4042432 <br>stomach<br>Fathmm:PATHOGENIC|.97552<br>',
+                'source': 'COSMIC'
+            }, {
+                'sequenceIndex': 1,
+                'position': 164,
+                'note': 'Mutation: p.K164R<br>COSM1269502 <br>oesophagus<br>Fathmm:PATHOGENIC|.97061<br>',
+                'source': 'COSMIC'
+            }, {
+                'sequenceIndex': 1,
+                'position': 163,
+                'note': 'Mutation: p.K163N<br>COSM6585035 <br>breast<br>Fathmm:PATHOGENIC|.93283<br>',
+                'source': 'COSMIC'
+            }, {
+                'sequenceIndex': 1,
+                'position': 162,
+                'note': 'Mutation: p.G162D<br>COSM1586538 <br>endometrium<br>Fathmm:PATHOGENIC|.97199<br>',
+                'source': 'COSMIC'
+            }, {
+                'sequenceIndex': 1,
+                'position': 156,
+                'note': 'Mutation: p.R156H<br>COSM4042433 <br>stomach<br>Fathmm:PATHOGENIC|.95749<br>',
+                'source': 'COSMIC'
+            }, {
+                'sequenceIndex': 1,
+                'position': 156,
+                'note': 'Mutation: p.R156H<br>COSM4042433 <br>biliary_tract<br>Fathmm:PATHOGENIC|.95749<br>',
+                'source': 'COSMIC'
+            }, {
+                'sequenceIndex': 1,
+                'position': 151,
+                'note': 'Mutation: p.S151S<br>COSM7302503 <br>large_intestine<br>Fathmm:NEUTRAL|.15773<br>',
+                'source': 'COSMIC'
+            }, {
+                'sequenceIndex': 1,
+                'position': 146,
+                'note': 'Mutation: p.G146S<br>COSM6007851 <br>prostate<br>Fathmm:PATHOGENIC|.98813<br>',
+                'source': 'COSMIC'
+            }, {
+                'sequenceIndex': 1,
+                'position': 136,
+                'note': 'Mutation: p.L136L<br>COSM122173 <br>upper_aerodigestive_tract<br>Fathmm:NEUTRAL|.49534<br>',
+                'source': 'COSMIC'
+            }, {
+                'sequenceIndex': 1,
+                'position': 128,
+                'note': 'Mutation: p.Q128K<br>COSM1586537 <br>endometrium<br>Fathmm:PATHOGENIC|.99214<br>',
+                'source': 'COSMIC'
+            }, {
+                'sequenceIndex': 1,
+                'position': 127,
+                'note': 'Mutation: p.D127N<br>COSM5946407 <br>haematopoietic_and_lymphoid_tissue<br>Fathmm:PATHOGENIC|.9953<br>',
+                'source': 'COSMIC'
+            }, {
+                'sequenceIndex': 1,
+                'position': 124,
+                'note': 'Mutation: p.K124*<br>COSM6373669 <br>thyroid<br>Fathmm:PATHOGENIC|.97758<br>',
+                'source': 'COSMIC'
+            }, {
+                'sequenceIndex': 1,
+                'position': 124,
+                'note': 'Mutation: p.K124*<br>COSM6373669 <br>thyroid<br>Fathmm:PATHOGENIC|.97758<br>',
+                'source': 'COSMIC'
+            }, {
+                'sequenceIndex': 1,
+                'position': 123,
+                'note': 'Mutation: p.R123H<br>COSM6372511 <br>thyroid<br>Fathmm:PATHOGENIC|.97686<br>',
+                'source': 'COSMIC'
+            }, {
+                'sequenceIndex': 1,
+                'position': 123,
+                'note': 'Mutation: p.R123C<br>COSM1362087 <br>skin<br>Fathmm:PATHOGENIC|.94205<br>',
+                'source': 'COSMIC'
+            }, {
+                'sequenceIndex': 1,
+                'position': 123,
+                'note': 'Mutation: p.R123C<br>COSM1362087 <br>large_intestine<br>Fathmm:PATHOGENIC|.94205<br>',
+                'source': 'COSMIC'
+            }, {
+                'sequenceIndex': 1,
+                'position': 123,
+                'note': 'Mutation: p.R123H<br>COSM6372511 <br>thyroid<br>Fathmm:PATHOGENIC|.97686<br>',
+                'source': 'COSMIC'
+            }, {
+                'sequenceIndex': 1,
+                'position': 123,
+                'note': 'Mutation: p.R123C<br>COSM1362087 <br>skin<br>Fathmm:PATHOGENIC|.94205<br>',
+                'source': 'COSMIC'
+            }, {
+                'sequenceIndex': 1,
+                'position': 117,
+                'note': 'Mutation: p.L117L<br>COSM3812174 <br>breast<br>Fathmm:NEUTRAL|.03382<br>',
+                'source': 'COSMIC'
+            }, {
+                'sequenceIndex': 1,
+                'position': 113,
+                'note': 'Mutation: p.E113D<br>COSM1586536 <br>endometrium<br>Fathmm:PATHOGENIC|.85031<br>',
+                'source': 'COSMIC'
+            }, {
+                'sequenceIndex': 1,
+                'position': 106,
+                'note': 'Mutation: p.G106R<br>COSM1492943 <br>kidney<br>Fathmm:PATHOGENIC|.96015<br>',
+                'source': 'COSMIC'
+            }, {
+                'sequenceIndex': 1,
+                'position': 103,
+                'note': 'Mutation: p.Y103Y<br>COSM1606214 <br>liver<br>Fathmm:PATHOGENIC|.77048<br>',
+                'source': 'COSMIC'
+            }, {
+                'sequenceIndex': 1,
+                'position': 103,
+                'note': 'Mutation: p.Y103Y<br>COSM1606214 <br>liver<br>Fathmm:PATHOGENIC|.77048<br>',
+                'source': 'COSMIC'
+            }, {
+                'sequenceIndex': 1,
+                'position': 99,
+                'note': 'Mutation: p.A99A<br>COSM5804176 <br>liver<br>Fathmm:|.51603<br>',
+                'source': 'COSMIC'
+            }, {
+                'sequenceIndex': 1,
+                'position': 97,
+                'note': 'Mutation: p.E97*<br>COSM1362088 <br>large_intestine<br>Fathmm:PATHOGENIC|.96381<br>',
+                'source': 'COSMIC'
+            }, {
+                'sequenceIndex': 1,
+                'position': 96,
+                'note': 'Mutation: p.K96K<br>COSM5459982 <br>large_intestine<br>Fathmm:NEUTRAL|.19868<br>',
+                'source': 'COSMIC'
+            }, {
+                'sequenceIndex': 1,
+                'position': 90,
+                'note': 'Mutation: p.E90Q<br>COSM7161215 <br>urinary_tract<br>Fathmm:PATHOGENIC|.96512<br>',
+                'source': 'COSMIC'
+            }, {
+                'sequenceIndex': 1,
+                'position': 88,
+                'note': 'Mutation: p.H88R<br>COSM6813956 <br>large_intestine<br>Fathmm:PATHOGENIC|.94335<br>',
+                'source': 'COSMIC'
+            }, {
+                'sequenceIndex': 1,
+                'position': 88,
+                'note': 'Mutation: p.H88N<br>COSM7126955 <br>urinary_tract<br>Fathmm:PATHOGENIC|.97371<br>',
+                'source': 'COSMIC'
+            }, {
+                'sequenceIndex': 1,
+                'position': 84,
+                'note': 'Mutation: p.R84L<br>COSM4886878 <br>upper_aerodigestive_tract<br>Fathmm:PATHOGENIC|.95304<br>',
+                'source': 'COSMIC'
+            }, {
+                'sequenceIndex': 1,
+                'position': 59,
+                'note': 'Mutation: p.G59G<br>COSM1586535 <br>endometrium<br>Fathmm:PATHOGENIC|.84526<br>',
+                'source': 'COSMIC'
+            }, {
+                'sequenceIndex': 1,
+                'position': 56,
+                'note': 'Mutation: p.T56M<br>COSM1476610 <br>stomach<br>Fathmm:PATHOGENIC|.98055<br>',
+                'source': 'COSMIC'
+            }, {
+                'sequenceIndex': 1,
+                'position': 56,
+                'note': 'Mutation: p.T56M<br>COSM147499 <br>stomach<br>Fathmm:PATHOGENIC|.98055<br>',
+                'source': 'COSMIC'
+            }, {
+                'sequenceIndex': 1,
+                'position': 56,
+                'note': 'Mutation: p.T56T<br>COSM1362089 <br>large_intestine<br>Fathmm:NEUTRAL|.01479<br>',
+                'source': 'COSMIC'
+            }, {
+                'sequenceIndex': 1,
+                'position': 56,
+                'note': 'Mutation: p.T56M<br>COSM1476610 <br>breast<br>Fathmm:PATHOGENIC|.98055<br>',
+                'source': 'COSMIC'
+            }, {
+                'sequenceIndex': 1,
+                'position': 52,
+                'note': 'Mutation: p.F52L<br>COSM3812175 <br>breast<br>Fathmm:PATHOGENIC|.96883<br>',
+                'source': 'COSMIC'
+            }, {
+                'sequenceIndex': 1,
+                'position': 43,
+                'note': 'Mutation: p.G43V<br>COSM6137209 <br>lung<br>Fathmm:PATHOGENIC|.98553<br>',
+                'source': 'COSMIC'
+            }, {
+                'sequenceIndex': 1,
+                'position': 38,
+                'note': 'Mutation: p.S38R<br>COSM5568238 <br>prostate<br>Fathmm:PATHOGENIC|.98814<br>',
+                'source': 'COSMIC'
+            }, {
+                'sequenceIndex': 1,
+                'position': 35,
+                'note': 'Mutation: p.Q35*<br>COSM6520232 <br>lung<br>Fathmm:PATHOGENIC|.99722<br>',
+                'source': 'COSMIC'
+            }, {
+                'sequenceIndex': 1,
+                'position': 35,
+                'note': 'Mutation: p.Q35H<br>COSM4738264 <br>large_intestine<br>Fathmm:PATHOGENIC|.9746<br>',
+                'source': 'COSMIC'
+            }, {
+                'sequenceIndex': 1,
+                'position': 31,
+                'note': 'Mutation: p.Q31H<br>COSM5777347 <br>breast<br>Fathmm:PATHOGENIC|.98307<br>',
+                'source': 'COSMIC'
+            }, {
+                'sequenceIndex': 1,
+                'position': 29,
+                'note': 'Mutation: p.G29D<br>COSM6000733 <br>prostate<br>Fathmm:PATHOGENIC|.99551<br>',
+                'source': 'COSMIC'
+            }, {
+                'sequenceIndex': 1,
+                'position': 29,
+                'note': 'Mutation: p.G29D<br>COSM6000733 <br>prostate<br>Fathmm:PATHOGENIC|.99551<br>',
+                'source': 'COSMIC'
+            }, {
+                'sequenceIndex': 1,
+                'position': 23,
+                'note': 'Mutation: p.L23F<br>COSM6000245 <br>prostate<br>Fathmm:PATHOGENIC|.99237<br>',
+                'source': 'COSMIC'
+            }, {
+                'sequenceIndex': 1,
+                'position': 23,
+                'note': 'Mutation: p.L23F<br>COSM6000245 <br>prostate<br>Fathmm:PATHOGENIC|.99237<br>',
+                'source': 'COSMIC'
+            }, {
+                'sequenceIndex': 1,
+                'position': 2,
+                'note': 'Mutation: p.R2C<br>COSM5753950 <br>large_intestine<br>Fathmm:PATHOGENIC|.99758<br>',
+                'source': 'COSMIC'
+            }, {
+                'sequenceIndex': 1,
+                'position': 2,
+                'note': 'Mutation: p.R2C<br>COSM5753950 <br>large_intestine<br>Fathmm:PATHOGENIC|.99758<br>',
+                'source': 'COSMIC'
+            }, {
+                'sequenceIndex': 1,
+                'position': 1,
+                'note': 'Mutation: p.M1I<br>COSM6014936 <br>skin<br>Fathmm:|.65271<br>',
+                'source': 'COSMIC'
+            },
 
-		];
+        ];
 
-		$.get("sample_files/TUBA1A.txt", (fasta) => {
+        $.get("sample_files/TUBA1A.txt", (fasta) => {
 
-			viewer = new MSAViewer({
-				id: "MSABrowserDemo",
-				msa: MSAProcessor({
-					fasta: fasta,
-					hasConsensus: true
-				}),
-				title: "Human: TUBA1A",
-				annotations: annotations,
-				variations: variations,
-				colorSchema: "clustal",
-				resetOnScroll: true
-			});
+            viewer = new MSAViewer({
+                id: "MSABrowserDemo",
+                msa: MSAProcessor({
+                    fasta: fasta,
+                    hasConsensus: true
+                }),
+                title: "Human: TUBA1A",
+                annotations: annotations,
+                variations: variations,
+                colorSchema: "clustal",
+                resetOnScroll: true
+            });
 
-			viewer.export("MSA_export.fasta");
+            viewer.export("MSA_export.fasta");
 
-		});
-
-	</script>
+        });
+    </script>
 </body>
 
 </html>
