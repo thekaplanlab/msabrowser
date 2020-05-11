@@ -499,9 +499,9 @@
                 var aaColor = ColorSchemas[this.colorSchema][aaLetter]
                 aaBox.style.backgroundColor += aaColor;
                 // Special cases for color schema
-                if ((aaColor == "#fff") || (aaColor == "yellow")) { aaBox.style.color += "#555" };
+                if (aaColor == "#fff" || aaColor == "yellow") { aaBox.style.color += "#555" };
                 // Consensus
-                if ((aaLetter == ".") || (aaLetter == ":") || (Object.keys(ColorSchemas[this.colorSchema]).includes(aaLetter) == false)) { aaBox.style.backgroundColor += "#5c5c5c" };
+                if (aaLetter == "." || aaLetter == ":" || !aaColor) { aaBox.style.backgroundColor += "#5c5c5c" };
 
                 documentFragment.appendChild(aaBox);
                 this.createdDivs[`${sequenceIndex};${positionIndex}`] = aaBox;
