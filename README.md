@@ -10,17 +10,18 @@
 		- [:hash: Color Schemas List](#hash-color-schemas-list)
 		- [:hash: Adding Annoations (Protein Domains) & Example](#hash-adding-annoations-protein-domains--example)
 		- [:hash: Adding Variations & Example](#hash-adding-variations--example)
-	- [:hash: Example Usages (Use Cases) of MSABrowser](#hash-example-usages-use-cases-of-msabrowser)
+	- [:hash: Example Usages (Use Cases) of *MSABrowser*](#hash-example-usages-use-cases-of-msabrowser)
 		- [:hash: Evolutionary/Comparative Genomics Study](#hash-evolutionarycomparative-genomics-study)
 		- [:hash: COVID-19 / Virology Study](#hash-covid-19--virology-study)
 		- [:hash: Do you have another study which is not listed here?](#hash-do-you-have-another-study-which-is-not-listed-here)
 	- [:hash: Contributing & Feedback](#hash-contributing--feedback)
 	- [:hash: Developers](#hash-developers)
+	- [:hash: Citing the *MSABrowser*](#hash-citing-the-msabrowser)
 
 ---
 
 ## :hash: What is *MSABrowser* and the aim of this library?
-*MSABrowser* is an open-source, flexible and modern web-based tool to illustrate the genetic variants, post-translational modifications, and protein domainson the corresponding positions of aminoacids at the protein sequence of any species together with pairwise or multiple sequence alignment of anysize. Ever-increasing number of genetic variants and sequencing projects in next-generation sequencingera enable researchers to investigate the impacts of these variants together with the protein domains. Here, MSABrowser environment and its core features make it easy to visualize the evolutionary conserved amino acids and genetic variants. 
+Sequence alignment (MSA) is an excellent way to visualize the similarities and differences between DNA, RNA or protein sequences, yet it is currently difficult to jointly view MSAs with genetic variants, post-translational modifications and protein domains. Here, we develop the *MSABrowser* environment that makes easy to co-visualize genetic variations, modifications (i.e. PTMs), and annotations such as protein domains on the respective positions of amino acids or nucleotides in the genomes of any organisms in pairwise or multiple genome alignments. *MSABrowser* is developed entirely in JavaScript and works on any modern web browser at any platform including Linux, Mac OS X and Windows systems without any installation. MSABrowser is also freely available for the benefit of the scientific community. 
 
 
 ## :hash: Requirements and Installation
@@ -47,10 +48,13 @@
 | fasta | *It refers a variable that holds your sequence alignment or the name of the file in FASTA format* | `sample_msa.txt` or `sample_msa.fasta`
 | hasConsensus  | It asks whether you would like to display the consensus sequence or not. | Please state as either `true` or `false`.
 | title | *It defines the title of MSABrowser component on the box at the top left corner* | HARS Protein
-| domains  | It refers a variable that holds your protein domanin information. | Please check the example below.
-| variations | It serves for adding variations on the corresponding positions. | Please check the example below.
-| colorSchema  | It defines the name of the color schema you would like to display | Please the check the list of color schemas below.
-| resetOnScroll  | It enables to render (only) the positions in viewport. | Please state as either `true` (default) or `false`.
+| annotations  | *It refers a variable that holds your annotations such as protein domains.* | Please check the example below.
+| variations | *It serves for adding variations on the corresponding positions.* | Please check the example below.
+| colorSchema  | *It defines the name of the color schema you would like to display.* | Please the check the list of color schemas below.
+| resetOnScroll  | *It enables to render (only) the positions in viewport.* | Please state as either `true` (default) or `false`.
+| scrollToPosition() | *It enables addressing a specific position in a species.* | Please, give the `sequenceIndex` and `position` into the `scrollToPosition(sequenceIndex, position)` function, respectively.
+| export() | *It serves for downloading the alignment data. You can give a filename for the output into the function.* | Default name is `"MSA_export.fasta"`. 
+
 
 ### :hash: Color Schemas List
 
@@ -80,24 +84,50 @@ Example for this:
 
 > You are able to visualize the protein domains above the sequence aligner in the annotation part.
 
-Here is the example use of `domains` variable.
+> Also, you might consider to add more than one annotation parts in the *MSABrowser*.
+
+Here is the example use of `annotations` variable.
 ```
-var domains = [
+var annotations = [
 	{
-		'domain_id': "PFAM123",
-		'domain_name': "Protein Kinase Domain",
-		'domain_external_link': "http://link_for_the_domain.com/",
-		'domain_start_point': 11,
-		'domain_end_point': 32
-	},
+		source: "SourceName1",
+		data: [
+			{
+				'annotation_id': 'AnnotationID',
+				'annotation_name': 'AnnotationName',
+				'annotation_external_link': 'https://msabrowser.github.io',
+				'annotation_start_point': 15,
+				'annotation_end_point': 290
+			},
+			{
+				'annotation_id': 'SecondAnnotationID',
+				'annotation_name': 'SecondAnnotationName',
+				'annotation_external_link': 'https://kaplanlab.com',
+				'annotation_start_point': 450,
+				'annotation_end_point': 570
+			}
+		]
+	}, 
 	{
-		'domain_id': "PFAM456",
-		'domain_name': "Another Protein Domain",
-		'domain_external_link': "http://link_for_the_domain2.com/",
-		'domain_start_point': 35,
-		'domain_end_point': 55
+		source: "SourceName2",
+		data: [
+			{
+				'annotation_id': 'AnnotationID',
+				'annotation_name': 'AnnotationName',
+				'annotation_external_link': 'https://msabrowser.github.io',
+				'annotation_start_point': 25,
+				'annotation_end_point': 160
+			},
+			{
+				'annotation_id': 'SecondAnnotationID',
+				'annotation_name': 'SecondAnnotationName',
+				'annotation_external_link': 'http://kaplanlab.com',
+				'annotation_start_point': 250,
+				'annotation_end_point': 490
+			}
+		]
 	}
-];
+]
 ```
 
 ### :hash: Adding Variations & Example
@@ -118,35 +148,40 @@ var domains = [
 
 **Here is the example how to add a variation:**
 ```
-{
-	'protein': 2, 
-	'position': 5, 
-	'note': 'M->A : Pathogenic and causes a disease X', 
-	source: 'Surname et. al (2020)'
-},
-...
+var variations = [
+	{
+		'sequenceIndex': 2, 
+		'position': 5, 
+		'note': 'M->A : Pathogenic and causes a disease X', 
+		'source': 'Surname et. al (2020)'
+	},
+]
 ```
 
-> Here, this variation will be added onto the `5th` amino acid in the protein of `2nd` species in the sequence alignment with a note of "`M->A : Pathogenic and causes a disease with a name of X`" and source of "`Surname et. al (2020)`". 
+> Here, this variation will be added onto the `5th` position in the sequnce of `2nd` species in the alignment data with a note of "`M->A : Pathogenic and causes a disease with a name of X`" and source of "`Surname et. al (2020)`". 
 
+> In addition, if you state the `source` as `"modification"` (post-translational modification), it also will be notified as `red asterisk` in the viewer.
 
-> In addition, if you state the `source` as `"PTM"` (post-translational modification), it also will be notified as red asterisk in the viewer.
+> Also, you might want to add a cross-reference link by adding it within the `note` after changing the link in `href` attribute:
+> 
+> `<a href="http://msabrowser.github.io" target="_blank">For details, visit here</a>`
 
-
-## :hash: Example Usages (Use Cases) of MSABrowser
+## :hash: Example Usages (Use Cases) of *MSABrowser*
 
 ### :hash: Evolutionary/Comparative Genomics Study 
 In this example, human TUBA1A protein and its homologous proteins are aligned and human protein domains are added. Additionaly, some genetic variations are also included from different sources such as gnomAD and ClinVar. 
 
-> [Click here to reach MSABrowser example for Evolutionary/Comparative Genomics Study.](https://github.com/thekaplanlab/msaviewer/blob/master/examples/TUBA1A.html)
+> [Click here to reach *MSABrowser* example for Evolutionary/Comparative Genomics Study.](https://github.com/thekaplanlab/msaviewer/blob/master/examples/TUBA1A.html)
 
 ### :hash: COVID-19 / Virology Study 
-Will be added.
+In this example, some available SARS-CoV-2 sequences are aligned with default options of MUSCLE and their genetic variations received from [China National Center for Bioinformation 2019 Novel Coronavirus Resource (2019nCoVR)](https://bigd.big.ac.cn/ncov/) are added.
+
+> [Click here to reach *MSABrowser* example for COVID-19 / Virology Study.](https://github.com/thekaplanlab/msaviewer/blob/master/examples/SarsCov2.html)
 
 ### :hash: Do you have another study which is not listed here?
-Please do not hesitate to contact us for your study. 
+Please do not hesitate to [contact us](#hash-developers) for adding your study! 
 
-We would be very happy to list your study here.
+We would be very happy to list your study here!
 
 
 ## :hash: Contributing & Feedback
@@ -156,9 +191,10 @@ Moreover, please do not hesitate to `open an issue via Github` if you have any s
 
 
 ## :hash: Developers
-**Halil Bilgin |  [bilginhalil@gmail.com](mailto:bilginhalil@gmail.com) | Academia: [Google Scholar Profile](https://scholar.google.com/citations?user=U1jyUGkAAAAJ&hl=en&oi=ao)**
+**Halil I. Bilgin |  [bilginhalil@gmail.com](mailto:bilginhalil@gmail.com) | Academia: [Google Scholar Profile](https://scholar.google.com/citations?user=U1jyUGkAAAAJ&hl=en&oi=ao)**
 
 
-**Furkan Torun |  [furkanmtorun@gmail.com](mailto:furkanmtorun@gmail.com) | Academia: [Google Scholar Profile](https://scholar.google.com/citations?user=d5ZyOZ4AAAAJ)**
+**Furkan M. Torun |  [furkanmtorun@gmail.com](mailto:furkanmtorun@gmail.com) | Academia: [Google Scholar Profile](https://scholar.google.com/citations?user=d5ZyOZ4AAAAJ)**
 
-
+## :hash: Citing the *MSABrowser*
+Upcoming 
