@@ -21,12 +21,10 @@
         this.sequenceDetails = [];
         this.processedSequences = [];
         this.fasta = fasta;
-        this.extractLinkFromId = function (sequenceId) {
+        this.extractLinkFromId = function(sequenceId) {
             var sequenceType = sequenceId.substring(0, 2);
             var link;
-            if (sequenceType == "gi") { link = "https://www.ncbi.nlm.nih.gov/protein/" + sequenceId.split("|")[3]; }
-            else if (sequenceType == "NP" || sequenceType == "XP") { link = "https://www.ncbi.nlm.nih.gov/protein/" + sequenceId; }
-            else if (sequenceType == "EN") { link = "https://www.ensembl.org/id/" + sequenceId; }
+            if (sequenceType == "gi") { link = "https://www.ncbi.nlm.nih.gov/protein/" + sequenceId.split("|")[3]; } else if (sequenceType == "NP" || sequenceType == "XP") { link = "https://www.ncbi.nlm.nih.gov/protein/" + sequenceId; } else if (sequenceType == "EN") { link = "https://www.ensembl.org/id/" + sequenceId; }
 
             regexPattern = "[OPQ][0-9][A-Z0-9]{3}[0-9]|[A-NR-Z][0-9]([A-Z][A-Z0-9]{2}[0-9]){1,2}"
             if (sequenceId.search(regexPattern) != "-1") {
@@ -38,7 +36,7 @@
         }
 
 
-        this.loadSeq = function (fasta) {
+        this.loadSeq = function(fasta) {
             let firstStartPointer, endPointer, currentStartPointer = -1;
 
             do {
@@ -75,7 +73,7 @@
         // Time To Run
         loadSeq(fasta);
 
-        this.addConsensus = function () {
+        this.addConsensus = function() {
             let consensus_logo = "";
             var aaCount = this.processedSequences[0].length;
             for (let positionIndex = 0; positionIndex < aaCount; positionIndex++) {
@@ -87,14 +85,11 @@
                 }
                 if (Object.keys(position_dict).length == 1) {
                     consensus_logo = consensus_logo.concat(aminoacid);
-                }
-                else if (Object.keys(position_dict).length == this.processedSequences.length / 2) {
+                } else if (Object.keys(position_dict).length == this.processedSequences.length / 2) {
                     consensus_logo = consensus_logo.concat(':');
-                }
-                else if (Object.keys(position_dict).length == this.processedSequences.length) {
+                } else if (Object.keys(position_dict).length == this.processedSequences.length) {
                     consensus_logo = consensus_logo.concat('-');
-                }
-                else {
+                } else {
                     consensus_logo = consensus_logo.concat('.');
                 }
             }
@@ -151,7 +146,7 @@
         `;
     }
 
-    function MSAViewer({   // notice the curly braces! we are receiving an object now
+    function MSAViewer({ // notice the curly braces! we are receiving an object now
         id,
         msa,
         title = "",
@@ -164,7 +159,7 @@
         this.colorSchema = colorSchema;
         this.resetOnScroll = resetOnScroll;
         this.createdDivs = {};
-        
+
         function i_(name) {
             return `${id}-${name}`;
         }
@@ -185,7 +180,7 @@
         this.variationNotes = {};
         this.modificationNotes = {};
         this.loadedPositions = [];
-        for (var seqIndex = 0; seqIndex < msa.processedSequences.length; seqIndex++){
+        for (var seqIndex = 0; seqIndex < msa.processedSequences.length; seqIndex++) {
             this.loadedPositions[seqIndex] = [];
             for (i = 0; i < msa.processedSequences[0].length; i++) {
                 this.loadedPositions[seqIndex].push(false);
@@ -231,7 +226,7 @@
             }
 
             // For hiding sequences
-            $(".hiding-button").click(function () {
+            $(".hiding-button").click(function() {
                 var sequenceId = $(this).attr("href").split("#")[1];
                 $('[data-id="' + sequenceId + '"]').hide();
             });
@@ -274,7 +269,7 @@
             return offsetX;
         }
 
-        this.showVariation = function (prNumber, aaNumber) {
+        this.showVariation = function(prNumber, aaNumber) {
 
             let textBox = document.createElement("div");
             let innerTextBox = document.createElement("div");
@@ -288,7 +283,7 @@
             var aminoacidInfoBox = document.getElementById(this.ids.aminoacidInfo);
             aminoacidInfoBox.innerHTML = '';
             aminoacidInfoBox.appendChild(textBox).appendChild(innerTextBox); // time to insert the textBox into aminoacidInfoBox | eski: aminoacidInfoBox.appendChild(textBox)
-            $(".variation-inner-text-box").mouseleave(function (e) {
+            $(".variation-inner-text-box").mouseleave(function(e) {
                 var aminoacidInfo = document.getElementById(that.ids.aminoacidInfo);
                 aminoacidInfo.innerHTML = "";
             });
@@ -312,7 +307,7 @@
         }
         this.annotations = {};
 
-        if ((typeof (annotations) != "undefined")) {
+        if ((typeof(annotations) != "undefined")) {
             this.addAnnotations(annotations);
         }
         var t;
@@ -326,8 +321,8 @@
                             loadedPositions[seqIndex][i] = false;
                         }
                     }
-                    
-                    for(section of aminoacidContainers){
+
+                    for (section of aminoacidContainers) {
                         section.innerHTML = '';
                     }
                     that.loadDivsInViewport();
@@ -336,9 +331,9 @@
         };
 
         this.loadDivsInViewport();
-        this.mainDiv.find('.scroll-container').scroll(() => { 
+        this.mainDiv.find('.scroll-container').scroll(() => {
             clearTimeout(t);
-            this.loadDivsInViewport(); 
+            this.loadDivsInViewport();
             checkScroll();
 
         });
@@ -349,13 +344,13 @@
 
     }
 
-    MSAViewer.prototype.reset = function () {
+    MSAViewer.prototype.reset = function() {
         this.mainDiv.find('.sequence, .species-name').show();
     }
 
-    MSAViewer.prototype.loadDomainBar = function () {
+    MSAViewer.prototype.loadDomainBar = function() {
         var that = this;
-        $('.annotation').each(function () {
+        $('.annotation').each(function() {
             //console.log($(this).data('start-point'), );
             startPosition = that.getAminoacidPositionInViewport(0, parseInt($(this).data('start-point')) - 1);
 
@@ -366,7 +361,7 @@
             $(this).width((width * 20) + 'px');
         });
 
-        $(document).on('mouseover', '.specialAa', function () {
+        $(document).on('mouseover', '.specialAa', function() {
             prNumber = $(this).data('sid');
             aaNumber = parseInt($(this).attr('class').split(' ')[0].split('-')[1])
             that.showVariation(prNumber, viewportToAANumber[prNumber][aaNumber]);
@@ -378,7 +373,7 @@
         $('#' + ids.sequence).width(($('#' + ids.sequenceLength).width()) + 'px');
     }
 
-    MSAViewer.prototype.getAminoacidPositionInViewport = function (species_id, position) {
+    MSAViewer.prototype.getAminoacidPositionInViewport = function(species_id, position) {
         var sequence = this.msa.processedSequences[species_id];
         var aminoacidIndex = 0;
         for (i = 0; i < sequence.length; i++) {
@@ -395,7 +390,7 @@
         return -1;
     }
 
-    MSAViewer.prototype.highlightPosition = function (species, position) {
+    MSAViewer.prototype.highlightPosition = function(species, position) {
         var alignmentPosition = this.getAminoacidPositionInViewport(species, position);
 
         $mainDiv.find('.highlight-column').removeClass('highlight-column modification-highlighted');
@@ -407,12 +402,12 @@
 
         $mainDiv.find('.scroll-container').scrollLeft(alignmentPosition * 20 - ($mainDiv.width() - 160) / 2)
 
-        setTimeout(function () {
+        setTimeout(function() {
             $mainDiv.find('.i-' + alignmentPosition).addClass('highlight-column');
             $mainDiv.find('.sequence:eq(' + species + ') .modification.i-' + alignmentPosition).addClass('modification-highlighted');
         }, 75);
     }
-    MSAViewer.prototype.loadAminoacidSearch = function () {
+    MSAViewer.prototype.loadAminoacidSearch = function() {
         var ids = this.ids;
         $mainDiv = this.mainDiv;
         containerTemplate = `<section class="go-to-position">
@@ -432,11 +427,11 @@
         $(`#${ids.positionInput}, #${ids.speciesSelect}`).on("keyup change", () => {
             var position = parseInt($('#' + this.ids.positionInput).val());
             var species = parseInt($('#' + this.ids.speciesSelect).val());
-            this.highlightPosition(species, position-1)
+            this.highlightPosition(species, position - 1)
         });
     }
 
-    MSAViewer.prototype.loadDivsInViewport = function () {
+    MSAViewer.prototype.loadDivsInViewport = function() {
 
         var ids = this.ids;
         loadedPositions = this.loadedPositions;
@@ -448,17 +443,17 @@
         this.mainDiv.find('.species-and-gene-names').css('left', this.mainDiv.find('.scroll-container').scrollLeft());
 
         var startX = Math.max(0, parseInt((Math.abs(viewportOffset.left) - document.getElementById(ids.nameContainer).clientWidth) / 20));
-        
-        var endX = Math.min(processedSequences[0].length, 
-                    parseInt(startX + (document.getElementById(ids.nameContainer).clientWidth) / 20 + 3 * this.mainDiv.innerWidth() / 40 + 1));
-        
-        var startY = 0;
-        if(this.mainDiv.find('.gene-name')){
-            startY = -this.mainDiv.find('.gene-name').height()* this.mainDiv.find('.gene-name').length / 20
-        }
-        startY = Math.max(0, parseInt(startY+$('#'+ids.id).find('.scroll-container').scrollTop()/20 - 3));
 
-        var endY = Math.min(processedSequences.length, parseInt(startY +  350 / 20 + 1));
+        var endX = Math.min(processedSequences[0].length,
+            parseInt(startX + (document.getElementById(ids.nameContainer).clientWidth) / 20 + 3 * this.mainDiv.innerWidth() / 40 + 1));
+
+        var startY = 0;
+        if (this.mainDiv.find('.gene-name')) {
+            startY = -this.mainDiv.find('.gene-name').height() * this.mainDiv.find('.gene-name').length / 20
+        }
+        startY = Math.max(0, parseInt(startY + $('#' + ids.id).find('.scroll-container').scrollTop() / 20 - 3));
+
+        var endY = Math.min(processedSequences.length, parseInt(startY + 350 / 20 + 1));
 
         for (var sequenceIndex = startY; sequenceIndex < endY; sequenceIndex++) {
             seq1 = processedSequences[sequenceIndex];
@@ -471,7 +466,7 @@
                     loadedPositions[sequenceIndex][positionIndex] = true;
                 }
 
-                if(this.createdDivs[`${sequenceIndex};${positionIndex}`]) {
+                if (this.createdDivs[`${sequenceIndex};${positionIndex}`]) {
                     documentFragment.appendChild(this.createdDivs[`${sequenceIndex};${positionIndex}`]);
                     continue;
                 }
@@ -502,13 +497,13 @@
                 aaBox.style.cssText = 'left:' + (positionIndex * 20) + 'px;';
 
                 // Color schema for amino acids
-                
+
                 var aaColor = ColorSchemas[this.colorSchema][aaLetter]
                 aaBox.style.backgroundColor += aaColor;
                 // Special cases for color schema
                 if ((aaColor == "#fff") || (aaColor == "yellow")) { aaBox.style.color += "#555" };
                 // Consensus
-                if ((aaLetter == ".") || (aaLetter == ":")) { aaBox.style.backgroundColor += "#5c5c5c" };
+                if ((aaLetter == ".") || (aaLetter == ":") || (Object.keys(ColorSchemas[this.colorSchema]).includes(aaLetter) == false)) { aaBox.style.backgroundColor += "#5c5c5c" };
 
                 documentFragment.appendChild(aaBox);
                 this.createdDivs[`${sequenceIndex};${positionIndex}`] = aaBox;
@@ -522,22 +517,22 @@
 
     }
 
-    MSAViewer.prototype.addAnnotations = function (annotations) {
-        
+    MSAViewer.prototype.addAnnotations = function(annotations) {
+
         var ids = this.ids;
 
         for (var annotation of annotations) {
-            if(this.annotations[annotation.source]){
+            if (this.annotations[annotation.source]) {
                 continue;
             }
             this.annotations[annotation.source] = annotations.data;
-            
+
             var annotationContainerTemplate = `<section class="sequence-length"></section>`;
-            $('#'+ids.annotationSequence).append(annotationContainerTemplate);
-            
-            
-            var annotationContainer =  $('#'+ids.annotationSequence).find('.sequence-length:last')[0];
-            $('#'+ids.speciesNames).before(`<div class="gene-name">${annotation.source}</div>`);
+            $('#' + ids.annotationSequence).append(annotationContainerTemplate);
+
+
+            var annotationContainer = $('#' + ids.annotationSequence).find('.sequence-length:last')[0];
+            $('#' + ids.speciesNames).before(`<div class="gene-name">${annotation.source}</div>`);
 
             for (var key in annotation.data) {
                 var name = annotation.data[key]["annotation_id"];
@@ -560,7 +555,7 @@
         }
     }
 
-    MSAViewer.prototype.addVariation = function ({
+    MSAViewer.prototype.addVariation = function({
         sequenceIndex,
         position,
         note = "",
@@ -614,7 +609,7 @@
         }
     }
 
-    MSAViewer.prototype.export = function (fileName) {
+    MSAViewer.prototype.export = function(fileName) {
         if (fileName != "") { var fileName = "MSA_export.fasta" }
         var fileContent = this.msa.fasta;
         var hrefTag = "data:text/plain;charset=UTF-8," + encodeURIComponent(fileContent);
@@ -632,11 +627,10 @@
         })
     }
 
-    MSAViewer.prototype.scrollToPosition = function (species, position) {
-        
-        this.highlightPosition(species-1, position-1)
+    MSAViewer.prototype.scrollToPosition = function(species, position) {
+
+        this.highlightPosition(species - 1, position - 1)
         this.mainDiv[0].scrollIntoViewIfNeeded();
 
         setTimeout(() => { this.showVariation(species - 1, position - 1); }, 20);
     }
-
