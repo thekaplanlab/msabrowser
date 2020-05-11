@@ -153,11 +153,9 @@
         variations = [],
         annotations = [],
         templateFunction = renderMSATemplate,
-        colorSchema,
-        resetOnScroll = false
+        colorSchema
     }) {
         this.colorSchema = colorSchema;
-        this.resetOnScroll = resetOnScroll;
         this.createdDivs = {};
 
         function i_(name) {
@@ -315,7 +313,7 @@
 
         function checkScroll() {
             setTimeout(() => {
-                if (resetOnScroll == true && $('#' + that.ids.sequence).find('section div').length > 50000) {
+                if ($('#' + that.ids.sequence).find('section div').length > 50000) {
                     for (var seqIndex in loadedPositions) {
                         for (var i in loadedPositions[seqIndex]) {
                             loadedPositions[seqIndex][i] = false;
