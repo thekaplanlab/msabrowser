@@ -51,7 +51,6 @@ Sequence alignment (MSA) is an excellent way to visualize the similarities and d
 | annotations  | *It refers a variable that holds your annotations such as protein domains.* | Please check the example below.
 | variations | *It serves for adding variations on the corresponding positions.* | Please check the example below.
 | colorSchema  | *It defines the name of the color schema you would like to display.* | Please the check the list of color schemas below.
-| resetOnScroll  | *It enables to render (only) the positions in viewport.* | Please state as either `true` (default) or `false`.
 | scrollToPosition() | *It enables addressing a specific position in a species.* | Please, give the `sequenceIndex` and `position` into the `scrollToPosition(sequenceIndex, position)` function, respectively.
 | export() | *It serves for downloading the alignment data. You can give a filename for the output into the function.* | Default name is `"MSA_export.fasta"`. 
 
