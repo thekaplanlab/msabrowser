@@ -30,7 +30,7 @@ Sequence alignment (MSA) is an excellent way to visualize the similarities and d
 ## :hash: How to use *MSABrowser*?
  - Create a directory and download any example listed below or use CDN links for required files on your page or clone the repository via Git using following command:
  
- 	`git clone https://github.com/thekaplanlab/MSABrowser.git`
+ 	`git clone https://github.com/msabrowser/msabrowser.git`
 
 > CDN links for JS and CSS files will be added here!
 
@@ -170,12 +170,12 @@ var variations = [
 ### :hash: Evolutionary/Comparative Genomics Study 
 In this example, human TUBA1A protein and its homologous proteins are aligned and human protein domains are added. Additionaly, some genetic variations are also included from different sources such as gnomAD and ClinVar. 
 
-> [Click here to reach *MSABrowser* example for Evolutionary/Comparative Genomics Study.](https://github.com/thekaplanlab/msaviewer/blob/master/examples/TUBA1A.html)
+> [Click here to reach *MSABrowser* example for Evolutionary/Comparative Genomics Study.](https://github.com/msabrowser/msabrowser/blob/master/examples/TUBA1A.html)
 
 ### :hash: COVID-19 / Virology Study 
 In this example, some available SARS-CoV-2 sequences are aligned with default options of MUSCLE and their genetic variations received from [China National Center for Bioinformation 2019 Novel Coronavirus Resource (2019nCoVR)](https://bigd.big.ac.cn/ncov/) are added.
 
-> [Click here to reach *MSABrowser* example for COVID-19 / Virology Study.](https://github.com/thekaplanlab/msaviewer/blob/master/examples/SarsCov2.html)
+> [Click here to reach *MSABrowser* example for COVID-19 / Virology Study.](https://github.com/msabrowser/msabrowser/blob/master/examples/SarsCov2.html)
 
 ### :hash: Do you have another study which is not listed here?
 Please do not hesitate to [contact us](#hash-developers) for adding your study! 
@@ -184,7 +184,7 @@ We would be very happy to list your study here!
 
 
 ## :hash: Contributing & Feedback
-MSABrowser is released as an open-source and web-based software under GNU General Public License, version 3.0 (GPLv3). The visualizer, documentation, all source code and examples are available at GitHub repository https://github.com/thekaplanlab/MSABrowser.
+MSABrowser is released as an open-source and web-based software under GNU General Public License, version 3.0 (GPLv3). The visualizer, documentation, all source code and examples are available at GitHub repository https://github.com/msabrowser/msabrowser.
 
 Moreover, please do not hesitate to `open an issue via Github` if you have any suggestion or feedback.
 

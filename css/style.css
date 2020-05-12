@@ -1,8 +1,3 @@
-/*
-  MSAViewer v0.1
-  April, 2020
-*/
-
 
 /* Font family */
 
@@ -408,12 +403,6 @@
     width: 100%;
 }
 
-
-#position-number {
-    position: absolute;
-    top: -20px!important;
-    color: #000!important;
-}
 
 .highlight-column {
     border-left: 2px solid #fff!important;

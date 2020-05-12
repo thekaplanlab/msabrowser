@@ -124,14 +124,14 @@
                         <div id="${ids.speciesNames}" class="species-names"></div>
                     </section>
                 </section>
-                <!--Current Project | annotations and Sequences Parts -->
+                <!--MSABrowser | annotations and Sequences Parts -->
                 <section id="${ids.annotationSequence}" class="annotation-sequence">
                     
-                    <!-- Current Project | Protein annotations for Human -->
+                    <!-- MSABrowser | Protein annotations for Human -->
                     <!-- end of annotations -->
 
                 </section> <!-- end of annotation and sequences parts -->
-                <!-- Current Project | Protein Sequences -->
+                <!-- MSABrowser | Protein Sequences -->
                 <section id="${ids.sequence}" class="sequence-container">
                     <div id="${ids.aminoacidInfo}" class="aminoacid-info"></div>
                 </section> <!-- end of protein sequences -->
@@ -146,7 +146,7 @@
         `;
     }
 
-    function MSAViewer({ // notice the curly braces! we are receiving an object now
+    function MSABrowser({ // notice the curly braces! we are receiving an object now
         id,
         msa,
         title = "",
@@ -342,11 +342,11 @@
 
     }
 
-    MSAViewer.prototype.reset = function() {
+    MSABrowser.prototype.reset = function() {
         this.mainDiv.find('.sequence, .species-name').show();
     }
 
-    MSAViewer.prototype.loadDomainBar = function() {
+    MSABrowser.prototype.loadDomainBar = function() {
         var that = this;
         $('.annotation').each(function() {
             //console.log($(this).data('start-point'), );
@@ -371,7 +371,7 @@
         $('#' + ids.sequence).width(($('#' + ids.sequenceLength).width()) + 'px');
     }
 
-    MSAViewer.prototype.getAminoacidPositionInViewport = function(species_id, position) {
+    MSABrowser.prototype.getAminoacidPositionInViewport = function(species_id, position) {
         var sequence = this.msa.processedSequences[species_id];
         var aminoacidIndex = 0;
         for (i = 0; i < sequence.length; i++) {
@@ -388,7 +388,7 @@
         return -1;
     }
 
-    MSAViewer.prototype.highlightPosition = function(species, position) {
+    MSABrowser.prototype.highlightPosition = function(species, position) {
         var alignmentPosition = this.getAminoacidPositionInViewport(species, position);
 
         $mainDiv.find('.highlight-column').removeClass('highlight-column modification-highlighted');
@@ -405,7 +405,7 @@
             $mainDiv.find('.sequence:eq(' + species + ') .modification.i-' + alignmentPosition).addClass('modification-highlighted');
         }, 75);
     }
-    MSAViewer.prototype.loadAminoacidSearch = function() {
+    MSABrowser.prototype.loadAminoacidSearch = function() {
         var ids = this.ids;
         $mainDiv = this.mainDiv;
         containerTemplate = `<section class="go-to-position">
@@ -429,7 +429,7 @@
         });
     }
 
-    MSAViewer.prototype.loadDivsInViewport = function() {
+    MSABrowser.prototype.loadDivsInViewport = function() {
 
         var ids = this.ids;
         loadedPositions = this.loadedPositions;
@@ -515,7 +515,7 @@
 
     }
 
-    MSAViewer.prototype.addAnnotations = function(annotations) {
+    MSABrowser.prototype.addAnnotations = function(annotations) {
 
         var ids = this.ids;
 
@@ -553,7 +553,7 @@
         }
     }
 
-    MSAViewer.prototype.addVariation = function({
+    MSABrowser.prototype.addVariation = function({
         sequenceIndex,
         position,
         note = "",
@@ -607,7 +607,7 @@
         }
     }
 
-    MSAViewer.prototype.export = function(fileName) {
+    MSABrowser.prototype.export = function(fileName) {
         if (fileName != "") { var fileName = "MSA_export.fasta" }
         var fileContent = this.msa.fasta;
         var hrefTag = "data:text/plain;charset=UTF-8," + encodeURIComponent(fileContent);
@@ -625,7 +625,7 @@
         })
     }
 
-    MSAViewer.prototype.scrollToPosition = function(species, position) {
+    MSABrowser.prototype.scrollToPosition = function(species, position) {
 
         this.highlightPosition(species - 1, position - 1)
         this.mainDiv[0].scrollIntoViewIfNeeded();
