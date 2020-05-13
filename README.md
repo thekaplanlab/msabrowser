@@ -13,6 +13,7 @@
 	- [:hash: Example Usages (Use Cases) of *MSABrowser*](#hash-example-usages-use-cases-of-msabrowser)
 		- [:hash: Evolutionary/Comparative Genomics Study](#hash-evolutionarycomparative-genomics-study)
 		- [:hash: COVID-19 / Virology Study](#hash-covid-19--virology-study)
+		- [:hash: Spike Proteins Example](#hash-spike-proteins-example)
 		- [:hash: Do you have another study which is not listed here?](#hash-do-you-have-another-study-which-is-not-listed-here)
 	- [:hash: Contributing & Feedback](#hash-contributing--feedback)
 	- [:hash: Developers](#hash-developers)
@@ -32,7 +33,13 @@ Sequence alignment (MSA) is an excellent way to visualize the similarities and d
  
  	`git clone https://github.com/msabrowser/msabrowser.git`
 
-> CDN links for JS and CSS files will be added here!
+> CDN Links:
+>
+> JS: https://cdn.jsdelivr.net/gh/msabrowser/msabrowser/javascript/msabrowser.js
+> 
+> CSS: https://cdn.jsdelivr.net/gh/msabrowser/msabrowser/css/style.css
+> 
+> You can directly import them into your HTML file!
 
 
 - Then, place your pairwise or multiple sequence alignment (MSA) result file as **FASTA** format in the folder.
@@ -176,6 +183,12 @@ In this example, human TUBA1A protein and its homologous proteins are aligned an
 In this example, some available SARS-CoV-2 sequences are aligned with default options of MUSCLE and their genetic variations received from [China National Center for Bioinformation 2019 Novel Coronavirus Resource (2019nCoVR)](https://bigd.big.ac.cn/ncov/) are added.
 
 > [Click here to reach *MSABrowser* example for COVID-19 / Virology Study.](https://github.com/msabrowser/msabrowser/blob/master/examples/SarsCov2.html)
+
+### :hash: Spike Proteins Example
+In this example, spike proteins are retrieved and aligned. Additionaly, some genetic variations and modifications are also added.
+
+> [Click here to reach *MSABrowser* example for Spike Proteins.](https://github.com/msabrowser/msabrowser/blob/master/examples/SpikeProteins.html)
+
 
 ### :hash: Do you have another study which is not listed here?
 Please do not hesitate to [contact us](#hash-developers) for adding your study! 
