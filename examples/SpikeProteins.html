@@ -1,0 +1,1751 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>MSABrowser | TUBA1A Example</title>
+    <link type="text/css" rel="stylesheet" href="https://cdn.jsdelivr.net/gh/msabrowser/msabrowser/css/style.css" media="screen" />
+    <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js" type="text/javascript"></script>
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/msabrowser/msabrowser/javascript/msabrowser.js"></script>
+</head>
+
+<body>
+    <h1>MSABrowser for Spike Proteins Example</h1>
+    <article>
+        In this example, spike proteins are retrieved and aligned.
+        <br> Additionaly, some genetic variations and modifications are also added.
+        <br> For example, you can view a<a href="javascript:void(0)" onclick="viewer.scrollToPosition(1,6)"> particular modification and variation</a> in a protein.
+    </article>
+
+    <!-- MSABrowser Demo -->
+    <section id="MSABrowserDemo"></section>
+    <!-- end of MSABrowser Demo -->
+
+
+    <script type="text/javascript" charset="utf-8">
+        var viewer;
+        var annotations = [{
+                source: "PFAM|SPIKE_SARS2",
+                data: [{
+                    'annotation_id': 'PF01601.16 (Corona_S2)',
+                    'annotation_name': 'Coronavirus S2 glycoprotein',
+                    'annotation_external_link': 'https://pfam.xfam.org/family/PF01601.16',
+                    'annotation_start_point': 671,
+                    'annotation_end_point': 1270
+                }, {
+                    'annotation_id': 'PF09408.10 (Spike_rec_bind)',
+                    'annotation_name': 'Spike receptor binding domain',
+                    'annotation_external_link': 'https://pfam.xfam.org/family/PF09408.10',
+                    'annotation_start_point': 330,
+                    'annotation_end_point': 583
+                }]
+            }, {
+                source: "UniProt|SPIKE_SARS2",
+                data: [{
+                    'annotation_id': 'Receptor-binding motif; binding to human ACE2',
+                    'annotation_name': 'Receptor-binding motif; binding to human ACE2',
+                    'annotation_external_link': 'https://www.uniprot.org/blast/?about=P0DTC2[437-508]&key=Region',
+                    'annotation_start_point': 437,
+                    'annotation_end_point': 508
+                }, {
+                    'annotation_id': 'Fusion peptide',
+                    'annotation_name': 'Fusion peptide',
+                    'annotation_external_link': 'https://www.uniprot.org/blast/?about=P0DTC2[788-806]&key=Region',
+                    'annotation_start_point': 788,
+                    'annotation_end_point': 806
+                }, {
+                    'annotation_id': 'Heptad repeat 1',
+                    'annotation_name': 'Heptad repeat 1',
+                    'annotation_external_link': 'https://www.uniprot.org/blast/?about=P0DTC2[920-970]&key=Region',
+                    'annotation_start_point': 920,
+                    'annotation_end_point': 970
+                }, {
+                    'annotation_id': 'Heptad repeat 2',
+                    'annotation_name': 'Heptad repeat 2',
+                    'annotation_external_link': 'https://www.uniprot.org/blast/?about=P0DTC2[1163-1202]&key=Region',
+                    'annotation_start_point': 1163,
+                    'annotation_end_point': 1202
+                }]
+            }, {
+                source: "UniProt|Coiled coil",
+                data: [{
+                    'annotation_id': 'Coiled coil',
+                    'annotation_name': 'Coiled coil',
+                    'annotation_external_link': 'https://www.uniprot.org/blast/?about=P0DTC2[949-993]&key=Coiled%20coil',
+                    'annotation_start_point': 949,
+                    'annotation_end_point': 993
+                }, {
+                    'annotation_id': 'Coiled coil',
+                    'annotation_name': 'Coiled coil',
+                    'annotation_external_link': 'https://www.uniprot.org/blast/?about=P0DTC2[1176-1203]&key=Coiled%20coil',
+                    'annotation_start_point': 1176,
+                    'annotation_end_point': 1203
+                }]
+            },
+
+        ];
+
+        var variations = [{
+            'sequenceIndex': 3,
+            'source': 'modification',
+            'position': 751,
+            'note': 'Site|Note=Cleavage%3B by host'
+        }, {
+            'sequenceIndex': 3,
+            'source': 'modification',
+            'position': 887,
+            'note': 'Site|Note=Cleavage'
+        }, {
+            'sequenceIndex': 3,
+            'source': 'UniProtKB',
+            'position': 66,
+            'note': 'Glycosylation|Note=N-linked '
+        }, {
+            'sequenceIndex': 3,
+            'source': 'UniProtKB',
+            'position': 104,
+            'note': 'Glycosylation|Note=N-linked '
+        }, {
+            'sequenceIndex': 3,
+            'source': 'UniProtKB',
+            'position': 125,
+            'note': 'Glycosylation|Note=N-linked '
+        }, {
+            'sequenceIndex': 3,
+            'source': 'UniProtKB',
+            'position': 155,
+            'note': 'Glycosylation|Note=N-linked '
+        }, {
+            'sequenceIndex': 3,
+            'source': 'UniProtKB',
+            'position': 166,
+            'note': 'Glycosylation|Note=N-linked '
+        }, {
+            'sequenceIndex': 3,
+            'source': 'UniProtKB',
+            'position': 222,
+            'note': 'Glycosylation|Note=N-linked '
+        }, {
+            'sequenceIndex': 3,
+            'source': 'UniProtKB',
+            'position': 236,
+            'note': 'Glycosylation|Note=N-linked '
+        }, {
+            'sequenceIndex': 3,
+            'source': 'UniProtKB',
+            'position': 244,
+            'note': 'Glycosylation|Note=N-linked '
+        }, {
+            'sequenceIndex': 3,
+            'source': 'UniProtKB',
+            'position': 410,
+            'note': 'Glycosylation|Note=N-linked '
+        }, {
+            'sequenceIndex': 3,
+            'source': 'UniProtKB',
+            'position': 487,
+            'note': 'Glycosylation|Note=N-linked '
+        }, {
+            'sequenceIndex': 3,
+            'source': 'UniProtKB',
+            'position': 592,
+            'note': 'Glycosylation|Note=N-linked '
+        }, {
+            'sequenceIndex': 3,
+            'source': 'UniProtKB',
+            'position': 619,
+            'note': 'Glycosylation|Note=N-linked '
+        }, {
+            'sequenceIndex': 3,
+            'source': 'UniProtKB',
+            'position': 719,
+            'note': 'Glycosylation|Note=N-linked '
+        }, {
+            'sequenceIndex': 3,
+            'source': 'UniProtKB',
+            'position': 774,
+            'note': 'Glycosylation|Note=N-linked '
+        }, {
+            'sequenceIndex': 3,
+            'source': 'UniProtKB',
+            'position': 785,
+            'note': 'Glycosylation|Note=N-linked '
+        }, {
+            'sequenceIndex': 3,
+            'source': 'UniProtKB',
+            'position': 870,
+            'note': 'Glycosylation|Note=N-linked '
+        }, {
+            'sequenceIndex': 3,
+            'source': 'UniProtKB',
+            'position': 1176,
+            'note': 'Glycosylation|Note=N-linked '
+        }, {
+            'sequenceIndex': 3,
+            'source': 'UniProtKB',
+            'position': 1213,
+            'note': 'Glycosylation|Note=N-linked '
+        }, {
+            'sequenceIndex': 3,
+            'source': 'UniProtKB',
+            'position': 1225,
+            'note': 'Glycosylation|Note=N-linked '
+        }, {
+            'sequenceIndex': 3,
+            'source': 'UniProtKB',
+            'position': 1241,
+            'note': 'Glycosylation|Note=N-linked '
+        }, {
+            'sequenceIndex': 3,
+            'source': 'UniProtKB',
+            'position': 1256,
+            'note': 'Glycosylation|Note=N-linked '
+        }, {
+            'sequenceIndex': 3,
+            'source': 'UniProtKB',
+            'position': 1277,
+            'note': 'Glycosylation|Note=N-linked '
+        }, {
+            'sequenceIndex': 3,
+            'source': 'UniProtKB',
+            'position': 1288,
+            'note': 'Glycosylation|Note=N-linked '
+        }, {
+            'sequenceIndex': 1,
+            'source': 'modification',
+            'position': 685,
+            'note': 'Site|Note=Cleavage'
+        }, {
+            'sequenceIndex': 1,
+            'source': 'modification',
+            'position': 815,
+            'note': 'Site|Note=Cleavage'
+        }, {
+            'sequenceIndex': 1,
+            'source': 'UniProtKB',
+            'position': 17,
+            'note': 'Glycosylation|Note=N-linked '
+        }, {
+            'sequenceIndex': 1,
+            'source': 'UniProtKB',
+            'position': 61,
+            'note': 'Glycosylation|Note=N-linked '
+        }, {
+            'sequenceIndex': 1,
+            'source': 'UniProtKB',
+            'position': 74,
+            'note': 'Glycosylation|Note=N-linked '
+        }, {
+            'sequenceIndex': 1,
+            'source': 'UniProtKB',
+            'position': 122,
+            'note': 'Glycosylation|Note=N-linked '
+        }, {
+            'sequenceIndex': 1,
+            'source': 'UniProtKB',
+            'position': 149,
+            'note': 'Glycosylation|Note=N-linked '
+        }, {
+            'sequenceIndex': 1,
+            'source': 'UniProtKB',
+            'position': 165,
+            'note': 'Glycosylation|Note=N-linked '
+        }, {
+            'sequenceIndex': 1,
+            'source': 'UniProtKB',
+            'position': 234,
+            'note': 'Glycosylation|Note=N-linked '
+        }, {
+            'sequenceIndex': 1,
+            'source': 'UniProtKB',
+            'position': 282,
+            'note': 'Glycosylation|Note=N-linked '
+        }, {
+            'sequenceIndex': 1,
+            'source': 'UniProtKB',
+            'position': 331,
+            'note': 'Glycosylation|Note=N-linked '
+        }, {
+            'sequenceIndex': 1,
+            'source': 'UniProtKB',
+            'position': 343,
+            'note': 'Glycosylation|Note=N-linked '
+        }, {
+            'sequenceIndex': 1,
+            'source': 'UniProtKB',
+            'position': 603,
+            'note': 'Glycosylation|Note=N-linked '
+        }, {
+            'sequenceIndex': 1,
+            'source': 'UniProtKB',
+            'position': 616,
+            'note': 'Glycosylation|Note=N-linked '
+        }, {
+            'sequenceIndex': 1,
+            'source': 'UniProtKB',
+            'position': 657,
+            'note': 'Glycosylation|Note=N-linked '
+        }, {
+            'sequenceIndex': 1,
+            'source': 'UniProtKB',
+            'position': 709,
+            'note': 'Glycosylation|Note=N-linked '
+        }, {
+            'sequenceIndex': 1,
+            'source': 'UniProtKB',
+            'position': 717,
+            'note': 'Glycosylation|Note=N-linked '
+        }, {
+            'sequenceIndex': 1,
+            'source': 'UniProtKB',
+            'position': 801,
+            'note': 'Glycosylation|Note=N-linked '
+        }, {
+            'sequenceIndex': 1,
+            'source': 'UniProtKB',
+            'position': 1074,
+            'note': 'Glycosylation|Note=N-linked '
+        }, {
+            'sequenceIndex': 1,
+            'source': 'UniProtKB',
+            'position': 1098,
+            'note': 'Glycosylation|Note=N-linked '
+        }, {
+            'sequenceIndex': 1,
+            'source': 'UniProtKB',
+            'position': 1134,
+            'note': 'Glycosylation|Note=N-linked '
+        }, {
+            'sequenceIndex': 1,
+            'source': 'UniProtKB',
+            'position': 1158,
+            'note': 'Glycosylation|Note=N-linked '
+        }, {
+            'sequenceIndex': 1,
+            'source': 'UniProtKB',
+            'position': 1173,
+            'note': 'Glycosylation|Note=N-linked '
+        }, {
+            'sequenceIndex': 1,
+            'source': 'UniProtKB',
+            'position': 1194,
+            'note': 'Glycosylation|Note=N-linked '
+        }, {
+            'sequenceIndex': 1,
+            'source': 'UniProtKB',
+            'position': 679,
+            'note': 'Mutagenesis|Note=About 50%25 stronger entry efficiency in Vero E6 cells while 30%25 weaker entry efficiency in hACE2-expressing BHK cells. NSPRRA->IL'
+        }, {
+            'sequenceIndex': 6,
+            'source': 'modification',
+            'position': 717,
+            'note': 'Site|Note=Cleavage%3B by host'
+        }, {
+            'sequenceIndex': 6,
+            'source': 'modification',
+            'position': 869,
+            'note': 'Site|Note=Cleavage'
+        }, {
+            'sequenceIndex': 6,
+            'source': 'UniProtKB',
+            'position': 31,
+            'note': 'Glycosylation|Note=N-linked '
+        }, {
+            'sequenceIndex': 6,
+            'source': 'UniProtKB',
+            'position': 60,
+            'note': 'Glycosylation|Note=N-linked '
+        }, {
+            'sequenceIndex': 6,
+            'source': 'UniProtKB',
+            'position': 192,
+            'note': 'Glycosylation|Note=N-linked '
+        }, {
+            'sequenceIndex': 6,
+            'source': 'UniProtKB',
+            'position': 357,
+            'note': 'Glycosylation|Note=N-linked '
+        }, {
+            'sequenceIndex': 6,
+            'source': 'UniProtKB',
+            'position': 435,
+            'note': 'Glycosylation|Note=N-linked '
+        }, {
+            'sequenceIndex': 6,
+            'source': 'UniProtKB',
+            'position': 530,
+            'note': 'Glycosylation|Note=N-linked '
+        }, {
+            'sequenceIndex': 6,
+            'source': 'UniProtKB',
+            'position': 625,
+            'note': 'Glycosylation|Note=N-linked '
+        }, {
+            'sequenceIndex': 6,
+            'source': 'UniProtKB',
+            'position': 657,
+            'note': 'Glycosylation|Note=N-linked '
+        }, {
+            'sequenceIndex': 6,
+            'source': 'UniProtKB',
+            'position': 665,
+            'note': 'Glycosylation|Note=N-linked '
+        }, {
+            'sequenceIndex': 6,
+            'source': 'UniProtKB',
+            'position': 688,
+            'note': 'Glycosylation|Note=N-linked '
+        }, {
+            'sequenceIndex': 6,
+            'source': 'UniProtKB',
+            'position': 737,
+            'note': 'Glycosylation|Note=N-linked '
+        }, {
+            'sequenceIndex': 6,
+            'source': 'UniProtKB',
+            'position': 754,
+            'note': 'Glycosylation|Note=N-linked '
+        }, {
+            'sequenceIndex': 6,
+            'source': 'UniProtKB',
+            'position': 893,
+            'note': 'Glycosylation|Note=N-linked '
+        }, {
+            'sequenceIndex': 6,
+            'source': 'UniProtKB',
+            'position': 1180,
+            'note': 'Glycosylation|Note=N-linked '
+        }, {
+            'sequenceIndex': 6,
+            'source': 'UniProtKB',
+            'position': 1190,
+            'note': 'Glycosylation|Note=N-linked '
+        }, {
+            'sequenceIndex': 6,
+            'source': 'UniProtKB',
+            'position': 1209,
+            'note': 'Glycosylation|Note=N-linked '
+        }, {
+            'sequenceIndex': 6,
+            'source': 'UniProtKB',
+            'position': 1225,
+            'note': 'Glycosylation|Note=N-linked '
+        }, {
+            'sequenceIndex': 6,
+            'source': 'UniProtKB',
+            'position': 1246,
+            'note': 'Glycosylation|Note=N-linked '
+        }, {
+            'sequenceIndex': 6,
+            'source': 'UniProtKB',
+            'position': 82,
+            'note': 'Natural variant|Note=In strain: Isolate C12 mutant. R->T'
+        }, {
+            'sequenceIndex': 6,
+            'source': 'UniProtKB',
+            'position': 98,
+            'note': 'Natural variant|Note=In strain: Isolate C12 mutant. N->S'
+        }, {
+            'sequenceIndex': 6,
+            'source': 'UniProtKB',
+            'position': 159,
+            'note': 'Natural variant|Note=In strain: Isolate C12 mutant%3B associated with altered pathogenesis. Q->L'
+        }, {
+            'sequenceIndex': 6,
+            'source': 'UniProtKB',
+            'position': 716,
+            'note': 'Natural variant|Note=In strain: Isolate C12 mutant. H->D'
+        }, {
+            'sequenceIndex': 6,
+            'source': 'UniProtKB',
+            'position': 33,
+            'note': 'Mutagenesis|Note=Complete loss of infectivity on murine cells. S->G'
+        }, {
+            'sequenceIndex': 6,
+            'source': 'UniProtKB',
+            'position': 33,
+            'note': 'Mutagenesis|Note=No effect for infectivity on murine cells. S->R'
+        }, {
+            'sequenceIndex': 6,
+            'source': 'UniProtKB',
+            'position': 62,
+            'note': 'Mutagenesis|Note=No effect for infectivity on murine cells. T->A%2CS'
+        }, {
+            'sequenceIndex': 6,
+            'source': 'UniProtKB',
+            'position': 65,
+            'note': 'Mutagenesis|Note=No effect for infectivity on murine cells. L->A%2CH'
+        }, {
+            'sequenceIndex': 6,
+            'source': 'UniProtKB',
+            'position': 79,
+            'note': 'Mutagenesis|Note=No effect for infectivity on murine cells. LALR->AALA'
+        }, {
+            'sequenceIndex': 6,
+            'source': 'UniProtKB',
+            'position': 79,
+            'note': 'Mutagenesis|Note=Complete loss of infectivity on murine cells. LALR->MALM'
+        }, {
+            'sequenceIndex': 6,
+            'source': 'UniProtKB',
+            'position': 162,
+            'note': 'Mutagenesis|Note=Complete loss of infectivity on murine cells. Y->A%2CH%2CQ'
+        }, {
+            'sequenceIndex': 6,
+            'source': 'UniProtKB',
+            'position': 162,
+            'note': 'Mutagenesis|Note=No effect for infectivity on murine cells. Y->F'
+        }, {
+            'sequenceIndex': 6,
+            'source': 'UniProtKB',
+            'position': 183,
+            'note': 'Mutagenesis|Note=Complete loss of infectivity on murine cells. K->G'
+        }, {
+            'sequenceIndex': 6,
+            'source': 'UniProtKB',
+            'position': 183,
+            'note': 'Mutagenesis|Note=No effect for infectivity on murine cells. K->R'
+        }, {
+            'sequenceIndex': 5,
+            'source': 'modification',
+            'position': 758,
+            'note': 'Site|Note=Cleavage%3B by host'
+        }, {
+            'sequenceIndex': 5,
+            'source': 'modification',
+            'position': 903,
+            'note': 'Site|Note=Cleavage'
+        }, {
+            'sequenceIndex': 5,
+            'source': 'UniProtKB',
+            'position': 59,
+            'note': 'Glycosylation|Note=N-linked '
+        }, {
+            'sequenceIndex': 5,
+            'source': 'UniProtKB',
+            'position': 133,
+            'note': 'Glycosylation|Note=N-linked '
+        }, {
+            'sequenceIndex': 5,
+            'source': 'UniProtKB',
+            'position': 146,
+            'note': 'Glycosylation|Note=N-linked '
+        }, {
+            'sequenceIndex': 5,
+            'source': 'UniProtKB',
+            'position': 202,
+            'note': 'Glycosylation|Note=N-linked '
+        }, {
+            'sequenceIndex': 5,
+            'source': 'UniProtKB',
+            'position': 363,
+            'note': 'Glycosylation|Note=N-linked '
+        }, {
+            'sequenceIndex': 5,
+            'source': 'UniProtKB',
+            'position': 441,
+            'note': 'Glycosylation|Note=N-linked '
+        }, {
+            'sequenceIndex': 5,
+            'source': 'UniProtKB',
+            'position': 496,
+            'note': 'Glycosylation|Note=N-linked '
+        }, {
+            'sequenceIndex': 5,
+            'source': 'UniProtKB',
+            'position': 639,
+            'note': 'Glycosylation|Note=N-linked '
+        }, {
+            'sequenceIndex': 5,
+            'source': 'UniProtKB',
+            'position': 666,
+            'note': 'Glycosylation|Note=N-linked '
+        }, {
+            'sequenceIndex': 5,
+            'source': 'UniProtKB',
+            'position': 686,
+            'note': 'Glycosylation|Note=N-linked '
+        }, {
+            'sequenceIndex': 5,
+            'source': 'UniProtKB',
+            'position': 704,
+            'note': 'Glycosylation|Note=N-linked '
+        }, {
+            'sequenceIndex': 5,
+            'source': 'UniProtKB',
+            'position': 729,
+            'note': 'Glycosylation|Note=N-linked '
+        }, {
+            'sequenceIndex': 5,
+            'source': 'UniProtKB',
+            'position': 778,
+            'note': 'Glycosylation|Note=N-linked '
+        }, {
+            'sequenceIndex': 5,
+            'source': 'UniProtKB',
+            'position': 927,
+            'note': 'Glycosylation|Note=N-linked '
+        }, {
+            'sequenceIndex': 5,
+            'source': 'UniProtKB',
+            'position': 1184,
+            'note': 'Glycosylation|Note=N-linked '
+        }, {
+            'sequenceIndex': 5,
+            'source': 'UniProtKB',
+            'position': 1214,
+            'note': 'Glycosylation|Note=N-linked '
+        }, {
+            'sequenceIndex': 5,
+            'source': 'UniProtKB',
+            'position': 1224,
+            'note': 'Glycosylation|Note=N-linked '
+        }, {
+            'sequenceIndex': 5,
+            'source': 'UniProtKB',
+            'position': 1243,
+            'note': 'Glycosylation|Note=N-linked '
+        }, {
+            'sequenceIndex': 5,
+            'source': 'UniProtKB',
+            'position': 1257,
+            'note': 'Glycosylation|Note=N-linked '
+        }, {
+            'sequenceIndex': 5,
+            'source': 'UniProtKB',
+            'position': 1278,
+            'note': 'Glycosylation|Note=N-linked '
+        }, {
+            'sequenceIndex': 5,
+            'source': 'UniProtKB',
+            'position': 11,
+            'note': 'Natural variant|Note=In strain: Isolate VA. TAF->MAL'
+        }, {
+            'sequenceIndex': 5,
+            'source': 'UniProtKB',
+            'position': 23,
+            'note': 'Natural variant|Note=In strain: Isolate VA. SDN->TVA'
+        }, {
+            'sequenceIndex': 5,
+            'source': 'UniProtKB',
+            'position': 23,
+            'note': 'Natural variant|Note=In strain: Isolate CU. SDN->TVS'
+        }, {
+            'sequenceIndex': 5,
+            'source': 'UniProtKB',
+            'position': 25,
+            'note': 'Natural variant|Note=In strain: Isolate AT and Isolate ATCC VR-759. N->TSY'
+        }, {
+            'sequenceIndex': 5,
+            'source': 'UniProtKB',
+            'position': 29,
+            'note': 'Natural variant|Note=In strain: Isolate CU. K->I'
+        }, {
+            'sequenceIndex': 5,
+            'source': 'UniProtKB',
+            'position': 29,
+            'note': 'Natural variant|Note=In strain: Isolate VA. K->V'
+        }, {
+            'sequenceIndex': 5,
+            'source': 'UniProtKB',
+            'position': 33,
+            'note': 'Natural variant|Note=In strain: Isolate VA. PPPI->VPST'
+        }, {
+            'sequenceIndex': 5,
+            'source': 'UniProtKB',
+            'position': 33,
+            'note': 'Natural variant|Note=In strain: Isolate CU. PPP->APS'
+        }, {
+            'sequenceIndex': 5,
+            'source': 'UniProtKB',
+            'position': 40,
+            'note': 'Natural variant|Note=In strain: Isolate CU and Isolate VA. T->I'
+        }, {
+            'sequenceIndex': 5,
+            'source': 'UniProtKB',
+            'position': 62,
+            'note': 'Natural variant|Note=In strain: Isolate AT. L->F'
+        }, {
+            'sequenceIndex': 5,
+            'source': 'UniProtKB',
+            'position': 63,
+            'note': 'Natural variant|Note=In strain: Isolate AT%2C Isolate CU and Isolate VA. F->L'
+        }, {
+            'sequenceIndex': 5,
+            'source': 'UniProtKB',
+            'position': 83,
+            'note': 'Natural variant|Note=In strain: Isolate CU and Isolate VA. SV->TL'
+        }, {
+            'sequenceIndex': 5,
+            'source': 'UniProtKB',
+            'position': 115,
+            'note': 'Natural variant|Note=In strain: Isolate VA. D->H'
+        }, {
+            'sequenceIndex': 5,
+            'source': 'UniProtKB',
+            'position': 115,
+            'note': 'Natural variant|Note=In strain: Isolate CU. D->K'
+        }, {
+            'sequenceIndex': 5,
+            'source': 'UniProtKB',
+            'position': 116,
+            'note': 'Natural variant|Note=In strain: Isolate AT%2C Isolate CU and Isolate VA. R->G'
+        }, {
+            'sequenceIndex': 5,
+            'source': 'UniProtKB',
+            'position': 143,
+            'note': 'Natural variant|Note=In strain: Isolate CU and Isolate VA. RTINSTQDG->HTTNL'
+        }, {
+            'sequenceIndex': 5,
+            'source': 'UniProtKB',
+            'position': 152,
+            'note': 'Natural variant|Note=In strain: Isolate AT and Isolate ATCC VR-759. D->Y'
+        }, {
+            'sequenceIndex': 5,
+            'source': 'UniProtKB',
+            'position': 161,
+            'note': 'Natural variant|Note=In strain: Isolate CU and Isolate VA. V->I'
+        }, {
+            'sequenceIndex': 5,
+            'source': 'UniProtKB',
+            'position': 167,
+            'note': 'Natural variant|Note=In strain: Isolate CU and Isolate VA. N->T'
+        }, {
+            'sequenceIndex': 5,
+            'source': 'UniProtKB',
+            'position': 173,
+            'note': 'Natural variant|Note=In strain: Isolate CU. Q->H'
+        }, {
+            'sequenceIndex': 5,
+            'source': 'UniProtKB',
+            'position': 173,
+            'note': 'Natural variant|Note=In strain: Isolate VA. Q->N'
+        }, {
+            'sequenceIndex': 5,
+            'source': 'UniProtKB',
+            'position': 183,
+            'note': 'Natural variant|Note=In strain: Isolate CU and Isolate VA. HRK->RRV'
+        }, {
+            'sequenceIndex': 5,
+            'source': 'UniProtKB',
+            'position': 190,
+            'note': 'Natural variant|Note=In strain: Isolate CU and Isolate VA. L->W'
+        }, {
+            'sequenceIndex': 5,
+            'source': 'UniProtKB',
+            'position': 222,
+            'note': 'Natural variant|Note=In strain: Isolate VA. T->I'
+        }, {
+            'sequenceIndex': 5,
+            'source': 'UniProtKB',
+            'position': 244,
+            'note': 'Natural variant|Note=In strain: Isolate CU and Isolate VA. MA->TV'
+        }, {
+            'sequenceIndex': 5,
+            'source': 'UniProtKB',
+            'position': 248,
+            'note': 'Natural variant|Note=In strain: Isolate VA. H->Y'
+        }, {
+            'sequenceIndex': 5,
+            'source': 'UniProtKB',
+            'position': 252,
+            'note': 'Natural variant|Note=In strain: Isolate CU. M->L'
+        }, {
+            'sequenceIndex': 5,
+            'source': 'UniProtKB',
+            'position': 259,
+            'note': 'Natural variant|Note=In strain: Isolate CU%2C Isolate ATCC VR-759 and Isolate VA. KL->AM'
+        }, {
+            'sequenceIndex': 5,
+            'source': 'UniProtKB',
+            'position': 260,
+            'note': 'Natural variant|Note=In strain: Isolate AT and Isolate ATCC VR-759. L->VKNGF'
+        }, {
+            'sequenceIndex': 5,
+            'source': 'UniProtKB',
+            'position': 272,
+            'note': 'Natural variant|Note=In strain: Isolate CU and Isolate VA. R->K'
+        }, {
+            'sequenceIndex': 5,
+            'source': 'UniProtKB',
+            'position': 283,
+            'note': 'Natural variant|Note=In strain: Isolate CU and Isolate VA. I->V'
+        }, {
+            'sequenceIndex': 5,
+            'source': 'UniProtKB',
+            'position': 288,
+            'note': 'Natural variant|Note=In strain: Isolate AT%2C Isolate ATCC VR-759%2C Isolate CU and Isolate VA. E->V'
+        }, {
+            'sequenceIndex': 5,
+            'source': 'UniProtKB',
+            'position': 291,
+            'note': 'Natural variant|Note=In strain: Isolate CU and Isolate VA. M->K'
+        }, {
+            'sequenceIndex': 5,
+            'source': 'UniProtKB',
+            'position': 303,
+            'note': 'Natural variant|Note=In strain: Isolate CU and Isolate VA. Q->L'
+        }, {
+            'sequenceIndex': 5,
+            'source': 'UniProtKB',
+            'position': 308,
+            'note': 'Natural variant|Note=In strain: Isolate CU and Isolate VA. P->S'
+        }, {
+            'sequenceIndex': 5,
+            'source': 'UniProtKB',
+            'position': 329,
+            'note': 'Natural variant|Note=In strain: Isolate CU and Isolate VA. K->I'
+        }, {
+            'sequenceIndex': 5,
+            'source': 'UniProtKB',
+            'position': 330,
+            'note': 'Natural variant|Note=In strain: Isolate ATCC VR-759. P->L'
+        }, {
+            'sequenceIndex': 5,
+            'source': 'UniProtKB',
+            'position': 334,
+            'note': 'Natural variant|Note=In strain: Isolate CU and Isolate VA. N->D'
+        }, {
+            'sequenceIndex': 5,
+            'source': 'UniProtKB',
+            'position': 451,
+            'note': 'Natural variant|Note=In strain: Isolate VA. T->I'
+        }, {
+            'sequenceIndex': 5,
+            'source': 'UniProtKB',
+            'position': 454,
+            'note': 'Natural variant|Note=In strain: Isolate CU and Isolate VA. K->R'
+        }, {
+            'sequenceIndex': 5,
+            'source': 'UniProtKB',
+            'position': 459,
+            'note': 'Natural variant|Note=In strain: Isolate CU and Isolate VA. IED->TEQ'
+        }, {
+            'sequenceIndex': 5,
+            'source': 'UniProtKB',
+            'position': 467,
+            'note': 'Natural variant|Note=In strain: Isolate CU and Isolate VA. R->Q'
+        }, {
+            'sequenceIndex': 5,
+            'source': 'UniProtKB',
+            'position': 469,
+            'note': 'Natural variant|Note=In strain: Isolate CU. AGVLTN->VGVFTH'
+        }, {
+            'sequenceIndex': 5,
+            'source': 'UniProtKB',
+            'position': 472,
+            'note': 'Natural variant|Note=In strain: Isolate VA. LTN->FTD'
+        }, {
+            'sequenceIndex': 5,
+            'source': 'UniProtKB',
+            'position': 488,
+            'note': 'Natural variant|Note=In strain: Isolate CU and Isolate VA. K->T'
+        }, {
+            'sequenceIndex': 5,
+            'source': 'UniProtKB',
+            'position': 496,
+            'note': 'Natural variant|Note=In strain: Isolate CU and Isolate VA. N->D'
+        }, {
+            'sequenceIndex': 5,
+            'source': 'UniProtKB',
+            'position': 499,
+            'note': 'Natural variant|Note=In strain: Isolate CU and Isolate VA. CVGSGPGKNNGIGTCPAGTNYLTCDNLCTPDPITFTGT->LCVGNGPGIDAGYKNSGIGTCPAGTNYLTCHNAAQCDCLCTPDPITSKSTGP'
+        }, {
+            'sequenceIndex': 5,
+            'source': 'UniProtKB',
+            'position': 533,
+            'note': 'Natural variant|Note=In strain: Isolate AT and Isolate ATCC VR-759. F->FKA'
+        }, {
+            'sequenceIndex': 5,
+            'source': 'UniProtKB',
+            'position': 544,
+            'note': 'Natural variant|Note=In strain: Isolate CU and Isolate VA. S->Y'
+        }, {
+            'sequenceIndex': 5,
+            'source': 'UniProtKB',
+            'position': 557,
+            'note': 'Natural variant|Note=In strain: Isolate CU and Isolate VA. V->I'
+        }, {
+            'sequenceIndex': 5,
+            'source': 'UniProtKB',
+            'position': 566,
+            'note': 'Natural variant|Note=In strain: Isolate AT%2C Isolate CU and Isolate VA. S->P'
+        }, {
+            'sequenceIndex': 5,
+            'source': 'UniProtKB',
+            'position': 570,
+            'note': 'Natural variant|Note=In strain: Isolate CU and Isolate VA. R->Q'
+        }, {
+            'sequenceIndex': 5,
+            'source': 'UniProtKB',
+            'position': 579,
+            'note': 'Natural variant|Note=In strain: Isolate CU and Isolate VA. A->V'
+        }, {
+            'sequenceIndex': 5,
+            'source': 'UniProtKB',
+            'position': 587,
+            'note': 'Natural variant|Note=In strain: Isolate CU and Isolate VA. K->R'
+        }, {
+            'sequenceIndex': 5,
+            'source': 'UniProtKB',
+            'position': 603,
+            'note': 'Natural variant|Note=In strain: Isolate CU and Isolate VA. L->T'
+        }, {
+            'sequenceIndex': 5,
+            'source': 'UniProtKB',
+            'position': 612,
+            'note': 'Natural variant|Note=In strain: Isolate CU and Isolate VA. A->S'
+        }, {
+            'sequenceIndex': 5,
+            'source': 'UniProtKB',
+            'position': 630,
+            'note': 'Natural variant|Note=In strain: Isolate CU and Isolate VA. L->T'
+        }, {
+            'sequenceIndex': 5,
+            'source': 'UniProtKB',
+            'position': 641,
+            'note': 'Natural variant|Note=In strain: Isolate CU and Isolate VA. T->P'
+        }, {
+            'sequenceIndex': 5,
+            'source': 'UniProtKB',
+            'position': 664,
+            'note': 'Natural variant|Note=In strain: Isolate CU and Isolate VA. II->LT'
+        }, {
+            'sequenceIndex': 5,
+            'source': 'UniProtKB',
+            'position': 665,
+            'note': 'Natural variant|Note=In strain: Isolate AT and Isolate ATCC VR-759. I->T'
+        }, {
+            'sequenceIndex': 5,
+            'source': 'UniProtKB',
+            'position': 694,
+            'note': 'Natural variant|Note=In strain: Isolate AT. F->S'
+        }, {
+            'sequenceIndex': 5,
+            'source': 'UniProtKB',
+            'position': 700,
+            'note': 'Natural variant|Note=In strain: Isolate CU. N->S'
+        }, {
+            'sequenceIndex': 5,
+            'source': 'UniProtKB',
+            'position': 706,
+            'note': 'Natural variant|Note=In strain: Isolate CU and Isolate VA. SLT->TLS'
+        }, {
+            'sequenceIndex': 5,
+            'source': 'UniProtKB',
+            'position': 728,
+            'note': 'Natural variant|Note=In strain: Isolate CU and Isolate VA. Y->D'
+        }, {
+            'sequenceIndex': 5,
+            'source': 'UniProtKB',
+            'position': 732,
+            'note': 'Natural variant|Note=In strain: Isolate CU. AIS->SSV'
+        }, {
+            'sequenceIndex': 5,
+            'source': 'UniProtKB',
+            'position': 733,
+            'note': 'Natural variant|Note=In strain: Isolate VA. IS->SA'
+        }, {
+            'sequenceIndex': 5,
+            'source': 'UniProtKB',
+            'position': 752,
+            'note': 'Natural variant|Note=In strain: Isolate CU and Isolate VA. KN->TK'
+        }, {
+            'sequenceIndex': 5,
+            'source': 'UniProtKB',
+            'position': 758,
+            'note': 'Natural variant|Note=In strain: Isolate CU and Isolate VA. G->R'
+        }, {
+            'sequenceIndex': 5,
+            'source': 'UniProtKB',
+            'position': 783,
+            'note': 'Natural variant|Note=In strain: Isolate VA. P->H'
+        }, {
+            'sequenceIndex': 5,
+            'source': 'UniProtKB',
+            'position': 802,
+            'note': 'Natural variant|Note=In strain: Isolate AT%2C Isolate ATCC VR-759%2C Isolate CU and Isolate VA. V->E'
+        }, {
+            'sequenceIndex': 5,
+            'source': 'UniProtKB',
+            'position': 817,
+            'note': 'Natural variant|Note=In strain: Isolate CU and Isolate VA. A->S'
+        }, {
+            'sequenceIndex': 5,
+            'source': 'UniProtKB',
+            'position': 824,
+            'note': 'Natural variant|Note=In strain: Isolate VA. Y->C'
+        }, {
+            'sequenceIndex': 5,
+            'source': 'UniProtKB',
+            'position': 833,
+            'note': 'Natural variant|Note=In strain: Isolate AT. E->G'
+        }, {
+            'sequenceIndex': 5,
+            'source': 'UniProtKB',
+            'position': 884,
+            'note': 'Natural variant|Note=In strain: Isolate VA. I->V'
+        }, {
+            'sequenceIndex': 5,
+            'source': 'UniProtKB',
+            'position': 896,
+            'note': 'Natural variant|Note=In strain: Isolate CU. E->C'
+        }, {
+            'sequenceIndex': 5,
+            'source': 'UniProtKB',
+            'position': 898,
+            'note': 'Natural variant|Note=In strain: Isolate CU and Isolate VA. SKA->NKV'
+        }, {
+            'sequenceIndex': 5,
+            'source': 'UniProtKB',
+            'position': 912,
+            'note': 'Natural variant|Note=In strain: Isolate CU and Isolate VA. D->S'
+        }, {
+            'sequenceIndex': 5,
+            'source': 'UniProtKB',
+            'position': 915,
+            'note': 'Natural variant|Note=In strain: Isolate VA. K->R'
+        }, {
+            'sequenceIndex': 5,
+            'source': 'UniProtKB',
+            'position': 933,
+            'note': 'Natural variant|Note=In strain: Isolate VA. E->G'
+        }, {
+            'sequenceIndex': 5,
+            'source': 'UniProtKB',
+            'position': 944,
+            'note': 'Natural variant|Note=In strain: Isolate CU and Isolate VA. K->N'
+        }, {
+            'sequenceIndex': 5,
+            'source': 'UniProtKB',
+            'position': 955,
+            'note': 'Natural variant|Note=In strain: Isolate VA. E->D'
+        }, {
+            'sequenceIndex': 5,
+            'source': 'UniProtKB',
+            'position': 955,
+            'note': 'Natural variant|Note=In strain: Isolate CU. E->V'
+        }, {
+            'sequenceIndex': 5,
+            'source': 'UniProtKB',
+            'position': 969,
+            'note': 'Natural variant|Note=In strain: Isolate VA. S->N'
+        }, {
+            'sequenceIndex': 5,
+            'source': 'UniProtKB',
+            'position': 973,
+            'note': 'Natural variant|Note=In strain: Isolate ATCC VR-759. P->L'
+        }, {
+            'sequenceIndex': 5,
+            'source': 'UniProtKB',
+            'position': 975,
+            'note': 'Natural variant|Note=In strain: Isolate CU and Isolate VA. T->S'
+        }, {
+            'sequenceIndex': 5,
+            'source': 'UniProtKB',
+            'position': 993,
+            'note': 'Natural variant|Note=In strain: Isolate CU and Isolate VA. L->I'
+        }, {
+            'sequenceIndex': 5,
+            'source': 'UniProtKB',
+            'position': 1012,
+            'note': 'Natural variant|Note=In strain: Isolate CU. N->S'
+        }, {
+            'sequenceIndex': 5,
+            'source': 'UniProtKB',
+            'position': 1016,
+            'note': 'Natural variant|Note=In strain: Isolate AT%2C Isolate CU and Isolate VA. Y->D'
+        }, {
+            'sequenceIndex': 5,
+            'source': 'UniProtKB',
+            'position': 1039,
+            'note': 'Natural variant|Note=In strain: Isolate VA. N->D'
+        }, {
+            'sequenceIndex': 5,
+            'source': 'UniProtKB',
+            'position': 1058,
+            'note': 'Natural variant|Note=In strain: Isolate CU. S->G'
+        }, {
+            'sequenceIndex': 5,
+            'source': 'UniProtKB',
+            'position': 1059,
+            'note': 'Natural variant|Note=In strain: Isolate CU and Isolate VA. A->S'
+        }, {
+            'sequenceIndex': 5,
+            'source': 'UniProtKB',
+            'position': 1074,
+            'note': 'Natural variant|Note=In strain: Isolate CU and Isolate VA. E->Q'
+        }, {
+            'sequenceIndex': 5,
+            'source': 'UniProtKB',
+            'position': 1089,
+            'note': 'Natural variant|Note=In strain: Isolate VA. N->D'
+        }, {
+            'sequenceIndex': 5,
+            'source': 'UniProtKB',
+            'position': 1160,
+            'note': 'Natural variant|Note=In strain: Isolate CU and Isolate VA. R->K'
+        }, {
+            'sequenceIndex': 5,
+            'source': 'UniProtKB',
+            'position': 1189,
+            'note': 'Natural variant|Note=In strain: Isolate CU and Isolate VA. Y->F'
+        }, {
+            'sequenceIndex': 5,
+            'source': 'UniProtKB',
+            'position': 1193,
+            'note': 'Natural variant|Note=In strain: Isolate VA. G->R'
+        }, {
+            'sequenceIndex': 5,
+            'source': 'UniProtKB',
+            'position': 1197,
+            'note': 'Natural variant|Note=In strain: Isolate AT. P->L'
+        }, {
+            'sequenceIndex': 5,
+            'source': 'UniProtKB',
+            'position': 1202,
+            'note': 'Natural variant|Note=In strain: Isolate CU and Isolate VA. E->G'
+        }, {
+            'sequenceIndex': 5,
+            'source': 'UniProtKB',
+            'position': 1211,
+            'note': 'Natural variant|Note=In strain: Isolate AT. C->W'
+        }, {
+            'sequenceIndex': 5,
+            'source': 'UniProtKB',
+            'position': 1220,
+            'note': 'Natural variant|Note=In strain: Isolate CU and Isolate VA. Y->D'
+        }, {
+            'sequenceIndex': 5,
+            'source': 'UniProtKB',
+            'position': 1225,
+            'note': 'Natural variant|Note=In strain: Isolate CU and Isolate VA. TSI->IST'
+        }, {
+            'sequenceIndex': 5,
+            'source': 'UniProtKB',
+            'position': 1231,
+            'note': 'Natural variant|Note=In strain: Isolate CU. P->H'
+        }, {
+            'sequenceIndex': 5,
+            'source': 'UniProtKB',
+            'position': 1246,
+            'note': 'Natural variant|Note=In strain: Isolate VA. S->L'
+        }, {
+            'sequenceIndex': 5,
+            'source': 'UniProtKB',
+            'position': 1265,
+            'note': 'Natural variant|Note=In strain: Isolate CU and Isolate VA. V->D'
+        }, {
+            'sequenceIndex': 5,
+            'source': 'UniProtKB',
+            'position': 1305,
+            'note': 'Natural variant|Note=In strain: Isolate CU and Isolate VA. CL->GF'
+        }, {
+            'sequenceIndex': 5,
+            'source': 'UniProtKB',
+            'position': 1331,
+            'note': 'Natural variant|Note=In strain: Isolate CU. K->I'
+        }, {
+            'sequenceIndex': 5,
+            'source': 'UniProtKB',
+            'position': 1342,
+            'note': 'Natural variant|Note=In strain: Isolate CU and Isolate VA. Y->H'
+        }, {
+            'sequenceIndex': 5,
+            'source': 'UniProtKB',
+            'position': 1352,
+            'note': 'Natural variant|Note=In strain: Isolate VA. DD->EG'
+        }, {
+            'sequenceIndex': 2,
+            'source': 'modification',
+            'position': 667,
+            'note': 'Site|Note=Cleavage'
+        }, {
+            'sequenceIndex': 2,
+            'source': 'modification',
+            'position': 797,
+            'note': 'Site|Note=Cleavage'
+        }, {
+            'sequenceIndex': 2,
+            'source': 'UniProtKB',
+            'position': 29,
+            'note': 'Glycosylation|Note=N-linked '
+        }, {
+            'sequenceIndex': 2,
+            'source': 'UniProtKB',
+            'position': 65,
+            'note': 'Glycosylation|Note=N-linked '
+        }, {
+            'sequenceIndex': 2,
+            'source': 'UniProtKB',
+            'position': 73,
+            'note': 'Glycosylation|Note=N-linked '
+        }, {
+            'sequenceIndex': 2,
+            'source': 'UniProtKB',
+            'position': 109,
+            'note': 'Glycosylation|Note=N-linked '
+        }, {
+            'sequenceIndex': 2,
+            'source': 'UniProtKB',
+            'position': 118,
+            'note': 'Glycosylation|Note=N-linked '
+        }, {
+            'sequenceIndex': 2,
+            'source': 'UniProtKB',
+            'position': 119,
+            'note': 'Glycosylation|Note=N-linked '
+        }, {
+            'sequenceIndex': 2,
+            'source': 'UniProtKB',
+            'position': 158,
+            'note': 'Glycosylation|Note=N-linked '
+        }, {
+            'sequenceIndex': 2,
+            'source': 'UniProtKB',
+            'position': 227,
+            'note': 'Glycosylation|Note=N-linked '
+        }, {
+            'sequenceIndex': 2,
+            'source': 'UniProtKB',
+            'position': 269,
+            'note': 'Glycosylation|Note=N-linked '
+        }, {
+            'sequenceIndex': 2,
+            'source': 'UniProtKB',
+            'position': 318,
+            'note': 'Glycosylation|Note=N-linked '
+        }, {
+            'sequenceIndex': 2,
+            'source': 'UniProtKB',
+            'position': 330,
+            'note': 'Glycosylation|Note=N-linked '
+        }, {
+            'sequenceIndex': 2,
+            'source': 'UniProtKB',
+            'position': 357,
+            'note': 'Glycosylation|Note=N-linked '
+        }, {
+            'sequenceIndex': 2,
+            'source': 'UniProtKB',
+            'position': 589,
+            'note': 'Glycosylation|Note=N-linked '
+        }, {
+            'sequenceIndex': 2,
+            'source': 'UniProtKB',
+            'position': 602,
+            'note': 'Glycosylation|Note=N-linked '
+        }, {
+            'sequenceIndex': 2,
+            'source': 'UniProtKB',
+            'position': 691,
+            'note': 'Glycosylation|Note=N-linked '
+        }, {
+            'sequenceIndex': 2,
+            'source': 'UniProtKB',
+            'position': 699,
+            'note': 'Glycosylation|Note=N-linked '
+        }, {
+            'sequenceIndex': 2,
+            'source': 'UniProtKB',
+            'position': 783,
+            'note': 'Glycosylation|Note=N-linked '
+        }, {
+            'sequenceIndex': 2,
+            'source': 'UniProtKB',
+            'position': 1056,
+            'note': 'Glycosylation|Note=N-linked '
+        }, {
+            'sequenceIndex': 2,
+            'source': 'UniProtKB',
+            'position': 1080,
+            'note': 'Glycosylation|Note=N-linked '
+        }, {
+            'sequenceIndex': 2,
+            'source': 'UniProtKB',
+            'position': 1116,
+            'note': 'Glycosylation|Note=N-linked '
+        }, {
+            'sequenceIndex': 2,
+            'source': 'UniProtKB',
+            'position': 1140,
+            'note': 'Glycosylation|Note=N-linked '
+        }, {
+            'sequenceIndex': 2,
+            'source': 'UniProtKB',
+            'position': 1155,
+            'note': 'Glycosylation|Note=N-linked '
+        }, {
+            'sequenceIndex': 2,
+            'source': 'UniProtKB',
+            'position': 1176,
+            'note': 'Glycosylation|Note=N-linked '
+        }, {
+            'sequenceIndex': 2,
+            'source': 'UniProtKB',
+            'position': 49,
+            'note': 'Natural variant|Note=In strain: Isolate GZ50. S->L'
+        }, {
+            'sequenceIndex': 2,
+            'source': 'UniProtKB',
+            'position': 77,
+            'note': 'Natural variant|Note=In strain: Isolate BJ01%2C Isolate BJ02%2C Isolate BJ03%2C Isolate GZ50%2C Isolate CUHK-W1%2C Isolate HKU-36871%2C Isolate GD01%2C Isolate GD03 and Isolate SZ3. G->D'
+        }, {
+            'sequenceIndex': 2,
+            'source': 'UniProtKB',
+            'position': 78,
+            'note': 'Natural variant|Note=In strain: Isolate GD03. N->D'
+        }, {
+            'sequenceIndex': 2,
+            'source': 'UniProtKB',
+            'position': 118,
+            'note': 'Natural variant|Note=In strain: Isolate Shanghai LY. N->S'
+        }, {
+            'sequenceIndex': 2,
+            'source': 'UniProtKB',
+            'position': 139,
+            'note': 'Natural variant|Note=In strain: Isolate GD03. A->V'
+        }, {
+            'sequenceIndex': 2,
+            'source': 'UniProtKB',
+            'position': 144,
+            'note': 'Natural variant|Note=In strain: Isolate BJ03. M->L'
+        }, {
+            'sequenceIndex': 2,
+            'source': 'UniProtKB',
+            'position': 147,
+            'note': 'Natural variant|Note=In strain: Isolate GD03. Q->R'
+        }, {
+            'sequenceIndex': 2,
+            'source': 'UniProtKB',
+            'position': 193,
+            'note': 'Natural variant|Note=In strain: Isolate Shanghai LY. F->S'
+        }, {
+            'sequenceIndex': 2,
+            'source': 'UniProtKB',
+            'position': 227,
+            'note': 'Natural variant|Note=In strain: Isolate SZ3. N->K'
+        }, {
+            'sequenceIndex': 2,
+            'source': 'UniProtKB',
+            'position': 239,
+            'note': 'Natural variant|Note=In strain: Isolate GD01 and Isolate SZ3. S->L'
+        }, {
+            'sequenceIndex': 2,
+            'source': 'UniProtKB',
+            'position': 244,
+            'note': 'Natural variant|Note=In strain: Isolate BJ01%2C Isolate BJ02%2C Isolate BJ03%2C Isolate BJ04%2C Isolate GZ50%2C Isolate CUHK-W1%2C Isolate HKU-36871%2C Isolate GD01%2C Isolate GD03 and Isolate SZ3. I->T'
+        }, {
+            'sequenceIndex': 2,
+            'source': 'UniProtKB',
+            'position': 261,
+            'note': 'Natural variant|Note=In strain: Isolate SZ3. T->K'
+        }, {
+            'sequenceIndex': 2,
+            'source': 'UniProtKB',
+            'position': 311,
+            'note': 'Natural variant|Note=In strain: Isolate GD01 and Isolate BJ02. G->R'
+        }, {
+            'sequenceIndex': 2,
+            'source': 'UniProtKB',
+            'position': 344,
+            'note': 'Natural variant|Note=In strain: Isolate GD01%2C Isolate GD03 and Isolate SZ3%3B no effect on affinity with either human or palm civet ACE2. K->R'
+        }, {
+            'sequenceIndex': 2,
+            'source': 'UniProtKB',
+            'position': 360,
+            'note': 'Natural variant|Note=In strain: Isolate GD03 and Isolate SZ3%3B no effect on affinity with either human or palm civet ACE2. F->S'
+        }, {
+            'sequenceIndex': 2,
+            'source': 'UniProtKB',
+            'position': 426,
+            'note': 'Natural variant|Note=In strain: Isolate Shanghai LY. R->G'
+        }, {
+            'sequenceIndex': 2,
+            'source': 'UniProtKB',
+            'position': 437,
+            'note': 'Natural variant|Note=In strain: Isolate Shanghai LY. N->D'
+        }, {
+            'sequenceIndex': 2,
+            'source': 'UniProtKB',
+            'position': 472,
+            'note': 'Natural variant|Note=In strain: Isolate GD03. L->P'
+        }, {
+            'sequenceIndex': 2,
+            'source': 'UniProtKB',
+            'position': 479,
+            'note': 'Natural variant|Note=In strain: Isolate SZ3%3B 20fold decrease of affinity with human ACE2%3B no effect on affinity with palm civet ACE2. N->K'
+        }, {
+            'sequenceIndex': 2,
+            'source': 'UniProtKB',
+            'position': 480,
+            'note': 'Natural variant|Note=In strain: Isolate GD03. D->G'
+        }, {
+            'sequenceIndex': 2,
+            'source': 'UniProtKB',
+            'position': 487,
+            'note': 'Natural variant|Note=In strain: Isolate GD03 and Isolate SZ3%3B 20fold decrease of affinity with human ACE2%3B decrease of affinity with palm civet ACE2. T->S'
+        }, {
+            'sequenceIndex': 2,
+            'source': 'UniProtKB',
+            'position': 501,
+            'note': 'Natural variant|Note=In strain: Isolate GD01. F->Y'
+        }, {
+            'sequenceIndex': 2,
+            'source': 'UniProtKB',
+            'position': 577,
+            'note': 'Natural variant|Note=In strain: Isolate Tor2 and Isolate Shanghai QXC1. S->A'
+        }, {
+            'sequenceIndex': 2,
+            'source': 'UniProtKB',
+            'position': 605,
+            'note': 'Natural variant|Note=In strain: Isolate Shanghai QXC1. D->N'
+        }, {
+            'sequenceIndex': 2,
+            'source': 'UniProtKB',
+            'position': 607,
+            'note': 'Natural variant|Note=In strain: Isolate SZ3. S->P'
+        }, {
+            'sequenceIndex': 2,
+            'source': 'UniProtKB',
+            'position': 608,
+            'note': 'Natural variant|Note=In strain: Isolate Shanghai QXC1. T->A'
+        }, {
+            'sequenceIndex': 2,
+            'source': 'UniProtKB',
+            'position': 609,
+            'note': 'Natural variant|Note=In strain: Isolate GD03. A->L'
+        }, {
+            'sequenceIndex': 2,
+            'source': 'UniProtKB',
+            'position': 613,
+            'note': 'Natural variant|Note=In strain: Isolate GD03. D->E'
+        }, {
+            'sequenceIndex': 2,
+            'source': 'UniProtKB',
+            'position': 665,
+            'note': 'Natural variant|Note=In strain: Isolate GD03 and Isolate SZ3. L->S'
+        }, {
+            'sequenceIndex': 2,
+            'source': 'UniProtKB',
+            'position': 701,
+            'note': 'Natural variant|Note=In strain: Isolate SZ3. S->L'
+        }, {
+            'sequenceIndex': 2,
+            'source': 'UniProtKB',
+            'position': 743,
+            'note': 'Natural variant|Note=In strain: Isolate SZ3. T->A'
+        }, {
+            'sequenceIndex': 2,
+            'source': 'UniProtKB',
+            'position': 743,
+            'note': 'Natural variant|Note=In strain: Isolate GD03. T->R'
+        }, {
+            'sequenceIndex': 2,
+            'source': 'UniProtKB',
+            'position': 754,
+            'note': 'Natural variant|Note=In strain: Isolate SZ3. A->V'
+        }, {
+            'sequenceIndex': 2,
+            'source': 'UniProtKB',
+            'position': 765,
+            'note': 'Natural variant|Note=In strain: Isolate GD03. A->V'
+        }, {
+            'sequenceIndex': 2,
+            'source': 'UniProtKB',
+            'position': 778,
+            'note': 'Natural variant|Note=In strain: Isolate GD01%2C Isolate GZ50%2C Isolate GD03 and Isolate SZ3. Y->D'
+        }, {
+            'sequenceIndex': 2,
+            'source': 'UniProtKB',
+            'position': 794,
+            'note': 'Natural variant|Note=In strain: Isolate GD01. P->S'
+        }, {
+            'sequenceIndex': 2,
+            'source': 'UniProtKB',
+            'position': 804,
+            'note': 'Natural variant|Note=In strain: Isolate Shanghai LY. L->P'
+        }, {
+            'sequenceIndex': 2,
+            'source': 'UniProtKB',
+            'position': 860,
+            'note': 'Natural variant|Note=In strain: Isolate BJ03. VS->LR'
+        }, {
+            'sequenceIndex': 2,
+            'source': 'UniProtKB',
+            'position': 894,
+            'note': 'Natural variant|Note=In strain: Isolate SZ3. T->A'
+        }, {
+            'sequenceIndex': 2,
+            'source': 'UniProtKB',
+            'position': 999,
+            'note': 'Natural variant|Note=In strain: Isolate Shanghai LY. E->G'
+        }, {
+            'sequenceIndex': 2,
+            'source': 'UniProtKB',
+            'position': 1001,
+            'note': 'Natural variant|Note=In strain: Isolate BJ04. R->M'
+        }, {
+            'sequenceIndex': 2,
+            'source': 'UniProtKB',
+            'position': 1132,
+            'note': 'Natural variant|Note=In strain: Isolate Shanghai QXC1. E->G'
+        }, {
+            'sequenceIndex': 2,
+            'source': 'UniProtKB',
+            'position': 1148,
+            'note': 'Natural variant|Note=In strain: Isolate Frankfurt 1 and Isolate FRA. L->F'
+        }, {
+            'sequenceIndex': 2,
+            'source': 'UniProtKB',
+            'position': 1163,
+            'note': 'Natural variant|Note=In strain: Isolate GD03 and Isolate SZ3. K->E'
+        }, {
+            'sequenceIndex': 2,
+            'source': 'UniProtKB',
+            'position': 323,
+            'note': 'Mutagenesis|Note=No effect on human ACE2 binding in vitro. C->A'
+        }, {
+            'sequenceIndex': 2,
+            'source': 'UniProtKB',
+            'position': 348,
+            'note': 'Mutagenesis|Note=Complete loss of human ACE2 binding in vitro. C->A'
+        }, {
+            'sequenceIndex': 2,
+            'source': 'UniProtKB',
+            'position': 452,
+            'note': 'Mutagenesis|Note=90%25 loss of human ACE2 binding in vitro. E->A'
+        }, {
+            'sequenceIndex': 2,
+            'source': 'UniProtKB',
+            'position': 454,
+            'note': 'Mutagenesis|Note=Complete loss of human ACE2 binding in vitro. D->A'
+        }, {
+            'sequenceIndex': 2,
+            'source': 'UniProtKB',
+            'position': 463,
+            'note': 'Mutagenesis|Note=Partial loss of human ACE2 binding in vitro. D->A'
+        }, {
+            'sequenceIndex': 2,
+            'source': 'UniProtKB',
+            'position': 467,
+            'note': 'Mutagenesis|Note=Complete loss of human ACE2 binding in vitro. C->A'
+        }, {
+            'sequenceIndex': 2,
+            'source': 'UniProtKB',
+            'position': 474,
+            'note': 'Mutagenesis|Note=Complete loss of human ACE2 binding in vitro. C->A'
+        }, {
+            'sequenceIndex': 2,
+            'source': 'UniProtKB',
+            'position': 480,
+            'note': 'Mutagenesis|Note=No effect on human ACE2 binding in vitro. D->A'
+        }, {
+            'sequenceIndex': 2,
+            'source': 'UniProtKB',
+            'position': 667,
+            'note': 'Mutagenesis|Note=40%25 loss of cell-cell fusion. R->S'
+        }, {
+            'sequenceIndex': 2,
+            'source': 'UniProtKB',
+            'position': 672,
+            'note': 'Mutagenesis|Note=No effect on cell-cell fusion. K->S'
+        }, {
+            'sequenceIndex': 2,
+            'source': 'UniProtKB',
+            'position': 797,
+            'note': 'Mutagenesis|Note=Complete loss of trypsin-induced membrane fusion. R->N'
+        }, {
+            'sequenceIndex': 2,
+            'source': 'UniProtKB',
+            'position': 1251,
+            'note': 'Mutagenesis|Note=Decrease in Golgi localization%2C and complete loss of COPI binding%3B when associated with A-1253. K->A'
+        }, {
+            'sequenceIndex': 2,
+            'source': 'UniProtKB',
+            'position': 1253,
+            'note': 'Mutagenesis|Note=Decrease in Golgi localization%2C and complete loss of COPI binding%3B when associated with A-1251. H->A'
+        }, {
+            'sequenceIndex': 4,
+            'source': 'modification',
+            'position': 756,
+            'note': 'Site|Note=Cleavage%3B by host'
+        }, {
+            'sequenceIndex': 4,
+            'source': 'modification',
+            'position': 900,
+            'note': 'Site|Note=Cleavage'
+        }, {
+            'sequenceIndex': 4,
+            'source': 'UniProtKB',
+            'position': 19,
+            'note': 'Glycosylation|Note=N-linked '
+        }, {
+            'sequenceIndex': 4,
+            'source': 'UniProtKB',
+            'position': 29,
+            'note': 'Glycosylation|Note=N-linked '
+        }, {
+            'sequenceIndex': 4,
+            'source': 'UniProtKB',
+            'position': 58,
+            'note': 'Glycosylation|Note=N-linked '
+        }, {
+            'sequenceIndex': 4,
+            'source': 'UniProtKB',
+            'position': 114,
+            'note': 'Glycosylation|Note=N-linked '
+        }, {
+            'sequenceIndex': 4,
+            'source': 'UniProtKB',
+            'position': 132,
+            'note': 'Glycosylation|Note=N-linked '
+        }, {
+            'sequenceIndex': 4,
+            'source': 'UniProtKB',
+            'position': 171,
+            'note': 'Glycosylation|Note=N-linked '
+        }, {
+            'sequenceIndex': 4,
+            'source': 'UniProtKB',
+            'position': 188,
+            'note': 'Glycosylation|Note=N-linked '
+        }, {
+            'sequenceIndex': 4,
+            'source': 'UniProtKB',
+            'position': 192,
+            'note': 'Glycosylation|Note=N-linked '
+        }, {
+            'sequenceIndex': 4,
+            'source': 'UniProtKB',
+            'position': 251,
+            'note': 'Glycosylation|Note=N-linked '
+        }, {
+            'sequenceIndex': 4,
+            'source': 'UniProtKB',
+            'position': 335,
+            'note': 'Glycosylation|Note=N-linked '
+        }, {
+            'sequenceIndex': 4,
+            'source': 'UniProtKB',
+            'position': 355,
+            'note': 'Glycosylation|Note=N-linked '
+        }, {
+            'sequenceIndex': 4,
+            'source': 'UniProtKB',
+            'position': 433,
+            'note': 'Glycosylation|Note=N-linked '
+        }, {
+            'sequenceIndex': 4,
+            'source': 'UniProtKB',
+            'position': 454,
+            'note': 'Glycosylation|Note=N-linked '
+        }, {
+            'sequenceIndex': 4,
+            'source': 'UniProtKB',
+            'position': 561,
+            'note': 'Glycosylation|Note=N-linked '
+        }, {
+            'sequenceIndex': 4,
+            'source': 'UniProtKB',
+            'position': 664,
+            'note': 'Glycosylation|Note=N-linked '
+        }, {
+            'sequenceIndex': 4,
+            'source': 'UniProtKB',
+            'position': 684,
+            'note': 'Glycosylation|Note=N-linked '
+        }, {
+            'sequenceIndex': 4,
+            'source': 'UniProtKB',
+            'position': 703,
+            'note': 'Glycosylation|Note=N-linked '
+        }, {
+            'sequenceIndex': 4,
+            'source': 'UniProtKB',
+            'position': 725,
+            'note': 'Glycosylation|Note=N-linked '
+        }, {
+            'sequenceIndex': 4,
+            'source': 'UniProtKB',
+            'position': 771,
+            'note': 'Glycosylation|Note=N-linked '
+        }, {
+            'sequenceIndex': 4,
+            'source': 'UniProtKB',
+            'position': 776,
+            'note': 'Glycosylation|Note=N-linked '
+        }, {
+            'sequenceIndex': 4,
+            'source': 'UniProtKB',
+            'position': 793,
+            'note': 'Glycosylation|Note=N-linked '
+        }, {
+            'sequenceIndex': 4,
+            'source': 'UniProtKB',
+            'position': 924,
+            'note': 'Glycosylation|Note=N-linked '
+        }, {
+            'sequenceIndex': 4,
+            'source': 'UniProtKB',
+            'position': 1181,
+            'note': 'Glycosylation|Note=N-linked '
+        }, {
+            'sequenceIndex': 4,
+            'source': 'UniProtKB',
+            'position': 1211,
+            'note': 'Glycosylation|Note=N-linked '
+        }, {
+            'sequenceIndex': 4,
+            'source': 'UniProtKB',
+            'position': 1221,
+            'note': 'Glycosylation|Note=N-linked '
+        }, {
+            'sequenceIndex': 4,
+            'source': 'UniProtKB',
+            'position': 1226,
+            'note': 'Glycosylation|Note=N-linked '
+        }, {
+            'sequenceIndex': 4,
+            'source': 'UniProtKB',
+            'position': 1240,
+            'note': 'Glycosylation|Note=N-linked '
+        }, {
+            'sequenceIndex': 4,
+            'source': 'UniProtKB',
+            'position': 1247,
+            'note': 'Glycosylation|Note=N-linked '
+        }, {
+            'sequenceIndex': 4,
+            'source': 'UniProtKB',
+            'position': 1255,
+            'note': 'Glycosylation|Note=N-linked '
+        }, {
+            'sequenceIndex': 4,
+            'source': 'UniProtKB',
+            'position': 1276,
+            'note': 'Glycosylation|Note=N-linked '
+        }, ];
+        $.get("sample_files/SpikeProteins.txt", (fasta) => {
+
+            viewer = new MSABrowser({
+                id: "MSABrowserDemo",
+                msa: MSAProcessor({
+                    fasta: fasta,
+                    hasConsensus: true
+                }),
+                title: "Spike Proteins",
+                annotations: annotations,
+                variations: variations,
+                colorSchema: "hydrophobicity",
+            });
+
+            viewer.export("MSA_export.fasta");
+
+        });
+    </script>
+</body>
+
+</html>
