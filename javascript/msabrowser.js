@@ -24,14 +24,13 @@
         this.extractLinkFromId = function(sequenceId) {
             var sequenceType = sequenceId.substring(0, 2);
             var link;
-            if (sequenceType == "gi") { link = "https://www.ncbi.nlm.nih.gov/protein/" + sequenceId.split("|")[3]; } else if (sequenceType == "NP" || sequenceType == "XP") { link = "https://www.ncbi.nlm.nih.gov/protein/" + sequenceId; } else if (sequenceType == "EN") { link = "https://www.ensembl.org/id/" + sequenceId; }
-
-            regexPattern = "[OPQ][0-9][A-Z0-9]{3}[0-9]|[A-NR-Z][0-9]([A-Z][A-Z0-9]{2}[0-9]){1,2}"
-            if (sequenceId.search(regexPattern) != "-1") {
-                sequenceId = sequenceId.split(" ")[1];
-                link = "https://www.uniprot.org/uniprot/" + sequenceId;
-            }
-
+            regexPattern = "[OPQ][0-9][A-Z0-9]{3}[0-9]|[A-NR-Z][0-9]([A-Z][A-Z0-9]{2}[0-9]){1,2}";
+            if (sequenceType == "gi") { link = "https://www.ncbi.nlm.nih.gov/protein/" + sequenceId.split("|")[3]; } 
+            else if (sequenceType == "NP" || sequenceType == "XP") { link = "https://www.ncbi.nlm.nih.gov/protein/" + sequenceId; } 
+            else if (sequenceType == "EN") { link = "https://www.ensembl.org/id/" + sequenceId; }
+            else if (sequenceId.search(regexPattern) != "-1") { sequenceId = sequenceId.split("|")[1]; link = "https://www.uniprot.org/uniprot/" + sequenceId; }
+            else { link = "https://www.ncbi.nlm.nih.gov/search/all/?term=" + sequenceId; }
+            
             return link;
         }
 
