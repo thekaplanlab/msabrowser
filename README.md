@@ -16,7 +16,10 @@ MSABrowser is released as an open-source and web-based software under GNU Genera
 
 Moreover, please do not hesitate to `open an issue via Github` if you have any suggestion or feedback.
 
-# :hash: Developers
+# :hash: Contributors
+**Oktay Kaplan | [oktaykaplan@gmail.com](mailto:oktaykaplan@gmail.com) | Academia: [Google Scholar Profile](https://scholar.google.com/citations?user=YFzvQQUAAAAJ&hl=en)
+
+
 **Halil I. Bilgin |  [bilginhalil@gmail.com](mailto:bilginhalil@gmail.com) | Academia: [Google Scholar Profile](https://scholar.google.com/citations?user=U1jyUGkAAAAJ&hl=en&oi=ao)**
 
 
