@@ -4,7 +4,9 @@
 
 # 🧬 MSABrowser
 
-Sequence alignment (MSA) is an excellent way to visualize the similarities and differences between DNA, RNA or protein sequences, yet it is currently difficult to jointly view MSAs with genetic variants, post-translational modifications and protein domains. Here, we develop the *MSABrowser* environment that makes easy to co-visualize genetic variations, modifications (i.e. PTMs), and annotations such as protein domains on the respective positions of amino acids or nucleotides in the genomes of any organisms in pairwise or multiple genome alignments. *MSABrowser* is developed entirely in JavaScript and works on any modern web browser at any platform including Linux, Mac OS X and Windows systems without any installation. MSABrowser is also freely available for the benefit of the scientific community. 
+MSABrowser is developed as a new JavaScript tool with an ultimate goal of dynamic and fast visualization of sequence alignments, variations, and annotations. Also, it does not require any installation at any platform such as Linux, Mac OS X, and Windows.
+
+More details are available on our pre-print!
 
 # :hash: Documentation and Examples 
 Please, visit [https://msabrowser.github.io/](https://msabrowser.github.io/)
