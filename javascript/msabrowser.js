@@ -366,9 +366,11 @@
         });
         
         $(document).on('click', '.sequence>div', function() {
-            var position = $(this).prevAll().length+1;
-            var sequence = $(this).parent().index('.sequence')+1;
-            that.scrollToPosition(sequence, position);
+            var regex = /i-([0-9]+)/i;
+            var sequence = $(this).parent().index('.sequence');
+            var position = viewportToAANumber[sequence][$(this).attr('class').match(regex)[1]];
+
+            that.scrollToPosition(sequence+1, position+1);
         })
 
 
