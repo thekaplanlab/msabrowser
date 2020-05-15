@@ -14,6 +14,11 @@
         "nucleotide": { A: " #64F73F", C: " #FFB340", G: " #EB413C", T: " #3C88EE", U: " #3C88EE" }
     }
 
+    const Alteration = {
+        Modification: 'modification',
+        Variation: 'variation'
+    }
+
     function MSAProcessor({
         fasta,
         hasConsensus = false
@@ -118,17 +123,15 @@
                 <!--Gene name and specie names-->
                 <section>
                     <section id="${ids.nameContainer}" class="species-and-gene-names">
-
                         <div id="${ids.speciesNames}" class="species-names"></div>
                     </section>
                 </section>
                 <!--MSABrowser | annotations and Sequences Parts -->
                 <section id="${ids.annotationSequence}" class="annotation-sequence">
-                    
-                    <!-- MSABrowser | Protein annotations for Human -->
-                    <!-- end of annotations -->
-
                 </section> <!-- end of annotation and sequences parts -->
+                <section class="highlighter-container">
+                </section>
+
                 <!-- MSABrowser | Protein Sequences -->
                 <section id="${ids.sequence}" class="sequence-container">
                     <div id="${ids.aminoacidInfo}" class="aminoacid-info"></div>
@@ -147,7 +150,7 @@
     function MSABrowser({ // notice the curly braces! we are receiving an object now
         id,
         msa,
-        variations = [],
+        alterations = [],
         annotations = [],
         templateFunction = renderMSATemplate,
         colorSchema
@@ -172,8 +175,8 @@
             speciesSelect: i_('-species-select')
         }
         this.msa = msa;
-        this.variationNotes = {};
-        this.modificationNotes = {};
+        this.alterationNotes = {};
+        this.modificationHighlights = {};
         this.loadedPositions = [];
         for (var seqIndex = 0; seqIndex < msa.processedSequences.length; seqIndex++) {
             this.loadedPositions[seqIndex] = [];
@@ -264,14 +267,14 @@
             return offsetX;
         }
 
-        this.showVariation = function(prNumber, aaNumber) {
+        this.showAlteration = function(prNumber, aaNumber) {
 
             let textBox = document.createElement("div");
             let innerTextBox = document.createElement("div");
             textBox.setAttribute("class", "variation-text-box");
             innerTextBox.setAttribute("class", "variation-inner-text-box");
 
-            var sequenceNotes = this.variationNotes[prNumber];
+            var sequenceNotes = this.alterationNotes[prNumber];
             for (var source in sequenceNotes[aaNumber]) {
                 innerTextBox.innerHTML += "<h3>" + source + "</h3>" + sequenceNotes[aaNumber][source];
             }
@@ -299,9 +302,9 @@
 
         }
 
-        for (i in variations) {
-            variation = variations[i];
-            this.addVariation(variation);
+        for (i in alterations) {
+            variation = alterations[i];
+            this.addAlteration(variation);
         }
         this.annotations = {};
 
@@ -362,7 +365,7 @@
         $(document).on('mouseover', '.specialAa', function() {
             prNumber = $(this).data('sid');
             aaNumber = parseInt($(this).attr('class').split(' ')[0].split('-')[1])
-            that.showVariation(prNumber, viewportToAANumber[prNumber][aaNumber]);
+            that.showAlteration(prNumber, viewportToAANumber[prNumber][aaNumber]);
         });
         
         $(document).on('click', '.sequence>div', function() {
@@ -442,8 +445,8 @@
         var ids = this.ids;
         loadedPositions = this.loadedPositions;
         processedSequences = this.msa.processedSequences;
-        variationNotes = this.variationNotes;
-        modificationNotes = this.modificationNotes;
+        alterationNotes = this.alterationNotes;
+        modificationHighlights = this.modificationHighlights;
 
         var viewportOffset = document.getElementById(ids.sequence).getBoundingClientRect();
         this.mainDiv.find('.species-and-gene-names').css('left', this.mainDiv.find('.scroll-container').scrollLeft());
@@ -489,15 +492,11 @@
                     continue;
                 }
 
-                if (sequenceIndex in variationNotes && viewportToAANumber[sequenceIndex][positionIndex] != -1 && viewportToAANumber[sequenceIndex][positionIndex] in variationNotes[sequenceIndex]) {
+                if (sequenceIndex in alterationNotes && viewportToAANumber[sequenceIndex][positionIndex] != -1 && viewportToAANumber[sequenceIndex][positionIndex] in alterationNotes[sequenceIndex]) {
                     aaBox.className += " specialAa";
                     aaBox.setAttribute('data-sid', sequenceIndex);
                 }
 
-                if (sequenceIndex == 0 && viewportToAANumber[sequenceIndex][positionIndex] in modificationNotes) {
-                    aaBox.className += " modification";
-                    aaBox.setAttribute('data-sid', sequenceIndex);
-                }
 
                 aaBox.innerHTML = aaLetter;
                 aaBox.style.cssText = 'left:' + (positionIndex * 20) + 'px;';
@@ -565,16 +564,17 @@
         }
     }
 
-    MSABrowser.prototype.addVariation = function({
+    MSABrowser.prototype.addAlteration = function({
         sequenceIndex,
         position,
         note = "",
-        source = ""
+        source = "",
+        type = Alteration.Variation
     }) {
         var sequenceIndex = sequenceIndex - 1; // the species start from 0
         let aaNumber = position - 1; // the aacids start from 0
 
-        notesByProtein = this.variationNotes[sequenceIndex];
+        notesByProtein = this.alterationNotes[sequenceIndex];
         if (notesByProtein == undefined) {
             notesByProtein = [];
         }
@@ -587,10 +587,17 @@
         }
 
         notesByProtein[aaNumber][source] += note;
-        this.variationNotes[sequenceIndex] = notesByProtein
+        this.alterationNotes[sequenceIndex] = notesByProtein
+        var viewportPosition = this.getAminoacidPositionInViewport(sequenceIndex, aaNumber);
+        if (type == Alteration.Modification) {
+            if(! this.modificationHighlights[viewportPosition]){
+                this.modificationHighlights[viewportPosition] = true;
+                var style = `left: ${viewportPosition * 20}px; width: 20px; text-align:center;`;
+    
+                this.mainDiv.find('.highlighter-container').append(`<div class="modification" style="${style}">*</div>`);    
+            } 
+        } else {
 
-        if (source == "modification") {
-            this.modificationNotes[aaNumber] += position + 1;
         }
     }
 
@@ -642,5 +649,5 @@
         this.highlightPosition(species - 1, position - 1)
         this.mainDiv[0].scrollIntoViewIfNeeded();
 
-        setTimeout(() => { this.showVariation(species - 1, position - 1); }, 20);
+        setTimeout(() => { this.showAlteration(species - 1, position - 1); }, 20);
     }
