@@ -110,8 +110,7 @@
     };
 
     function renderMSATemplate({
-        ids,
-        title = ""
+        ids
     }) {
         return `
         <section class="msa-container">
@@ -148,7 +147,6 @@
     function MSABrowser({ // notice the curly braces! we are receiving an object now
         id,
         msa,
-        title = "",
         variations = [],
         annotations = [],
         templateFunction = renderMSATemplate,
@@ -250,7 +248,7 @@
                 }
             }
         }
-        document.getElementById(id).innerHTML = templateFunction({ ids: this.ids, title: title });
+        document.getElementById(id).innerHTML = templateFunction({ ids: this.ids });
         loadProteins(msa);
         this.viewportToAANumber = loadViewportToAANumber(msa);
 
