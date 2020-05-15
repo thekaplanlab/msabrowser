@@ -1,4 +1,3 @@
-
 /* Font family */
 
 @import url('https://fonts.googleapis.com/css?family=Tajawal:500');
@@ -228,17 +227,20 @@
     position: absolute;
     top: 0;
     left: 0;
-    z-index:150;
+    z-index: 150;
     background: #fff;
     font-style: italic;
-    float:left;
+    float: left;
 }
-.msa-container .gene-name:first-of-type{
+
+.msa-container .gene-name:first-of-type {
     margin-top: 1.4em;
 }
-.msa-container .species-and-gene-names>div:nth-last-of-type(2){
+
+.msa-container .species-and-gene-names>div:nth-last-of-type(2) {
     margin-bottom: 1.35em!important;
 }
+
 .msa-container .gene-name {
     /*position: absolute;*/
     /*left: 2px;*/
@@ -254,7 +256,7 @@
     color: #fff;
     font-family: 'Tajawal', sans-serif !important;
     font-style: italic;
-    padding-top:0em;
+    padding-top: 0em;
     cursor: default;
 }
 
@@ -276,6 +278,7 @@
     max-width: 150px !important;
     background: #2a76d2 !important;
 }
+
 .msa-container .species-name a {
     color: #FFF !important;
     font-size: 14px;
@@ -288,8 +291,8 @@
     border-radius: 50%;
     margin-right: 5px;
     font-weight: bold;
-    
 }
+
 .msa-container .species-name .hiding-button:hover {
     background: #FFF !important;
     color: #2a76d2 !important;
@@ -305,7 +308,6 @@
     box-shadow: 0 0 7px #000;
 }
 
-
 .highlighter-container {
     width: 100%;
     height: 20px;
@@ -313,11 +315,11 @@
     margin-left: 160px;
 }
 
-.highlighter-container>div{
+.highlighter-container>div {
     position: absolute;
 }
 
-.highlighter-container .modification{
+.highlighter-container .modification {
     font-size: 22px;
     font-weight: bold;
     color: red;
@@ -359,10 +361,10 @@
     width: 100%;
     overflow-x: hidden;
 }
+
 .msa-container .variation-inner-text-box a {
     color: #004883;
 }
-
 
 .variation-inner-text-box h3 {
     margin-top: 1em;
@@ -401,7 +403,8 @@
     background: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAUCAAAAACo4kLRAAAAAW9yTlQBz6J3mgAAABpJREFUGNNjiMECGIaY4PT///8fGFxOoqYgACNCkklBjzWtAAAAAElFTkSuQmCC") repeat-x;
     width: 100%;
 }
-.sequence>div{
+
+.sequence>div {
     cursor: pointer!important;
 }
 
@@ -417,7 +420,6 @@
     width: 100%;
 }
 
-
 .highlight-column {
     border-left: 2px solid #fff!important;
     border-right: 2px solid #fff!important;
@@ -425,17 +427,15 @@
     border-radius: 0!important;
 }
 
-
 .position-number {
     position: absolute;
     top: -20px!important;
     color: #000!important;
 }
 
-
 .go-to-position {
     display: block;
-    float:left;
+    float: left;
     margin-left: 5px
 }
 
@@ -449,6 +449,7 @@
     float: left;
     display: block;
 }
+
 
 /* Form CSS */
 
@@ -504,7 +505,7 @@
 
 .tooltip .tooltiptext {
     visibility: hidden;
-    width: 130px;
+    min-width: 130px;
     background-color: #fff;
     color: #555;
     text-align: center;
@@ -512,7 +513,7 @@
     border-radius: 6px;
     /* Position the tooltip text */
     position: absolute;
-    z-index: 5 !important;
+    z-index: 32123132123123 !important;
     border: 1px solid #ccc;
     top: -5px;
     left: 105%;
@@ -540,9 +541,9 @@
     border-color: transparent #fff transparent transparent;
 }
 
-.reset-button {  
-    display: block;   
-    background: #1ab357;     
+.reset-button {
+    display: block;
+    background: #1ab357;
     color: #FFF;
     float: right;
     margin: 10px;
