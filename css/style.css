@@ -66,10 +66,13 @@
     border-style: dotted;
     background: none;
     z-index: -1;
+    overflow: hidden;
 }
 
 .annotation>p {
     font-size: 18px;
+    text-align: center;
+    max-width: 100%;
 }
 
 
@@ -389,6 +392,9 @@
     height: 20px;
     background: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAUCAAAAACo4kLRAAAAAW9yTlQBz6J3mgAAABpJREFUGNNjiMECGIaY4PT///8fGFxOoqYgACNCkklBjzWtAAAAAElFTkSuQmCC") repeat-x;
     width: 100%;
+}
+.sequence>div{
+    cursor: pointer!important;
 }
 
 .highlight-column {

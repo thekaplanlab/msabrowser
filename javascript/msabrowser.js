@@ -277,6 +277,9 @@
             for (var source in sequenceNotes[aaNumber]) {
                 innerTextBox.innerHTML += "<h3>" + source + "</h3>" + sequenceNotes[aaNumber][source];
             }
+            if (innerTextBox.innerHTML == ''){
+                return false;
+            }
             var aminoacidInfoBox = document.getElementById(this.ids.aminoacidInfo);
             aminoacidInfoBox.innerHTML = '';
             aminoacidInfoBox.appendChild(textBox).appendChild(innerTextBox); // time to insert the textBox into aminoacidInfoBox | eski: aminoacidInfoBox.appendChild(textBox)
@@ -363,6 +366,12 @@
             aaNumber = parseInt($(this).attr('class').split(' ')[0].split('-')[1])
             that.showVariation(prNumber, viewportToAANumber[prNumber][aaNumber]);
         });
+        
+        $(document).on('click', '.sequence>div', function() {
+            var position = $(this).prevAll().length+1;
+            var sequence = $(this).parent().index('.sequence')+1;
+            that.scrollToPosition(sequence, position);
+        })
 
 
         var ids = this.ids;
@@ -485,7 +494,7 @@
                     aaBox.setAttribute('data-sid', sequenceIndex);
                 }
 
-                if (sequenceIndex == 0 && viewportToAANumber[sequenceIndex][positionIndex] != -1 && viewportToAANumber[sequenceIndex][positionIndex] in modificationNotes) {
+                if (sequenceIndex == 0 && viewportToAANumber[sequenceIndex][positionIndex] in modificationNotes) {
                     aaBox.className += " modification";
                     aaBox.setAttribute('data-sid', sequenceIndex);
                 }
@@ -536,12 +545,16 @@
                 var link = annotation.data[key]["annotation_external_link"];
                 var startPoint = annotation.data[key]["annotation_start_point"];
                 var endPoint = annotation.data[key]["annotation_end_point"];
+                var repeatCount = Math.max(1, Math.round((endPoint - startPoint) * 20 / 800));
+                
+                var annotationMessage = `<p style="width: 800px">${name} (${startPoint} - ${endPoint})</p>`.repeat(repeatCount);
+
 
                 var annotationHtml = `
                 <a href="${link}" target="_blank">
                     <div class="annotation" data-start-point="${startPoint}" data-end-point="${endPoint}">
                         <div class="annotation_start_point">${startPoint}</div>
-                        <p>${name} (${startPoint} - ${endPoint})</p>
+                        ${annotationMessage}
                         <div class="annotation_end_point">${endPoint}</div>
                     </div>
                 </a>
