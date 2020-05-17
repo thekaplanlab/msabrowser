@@ -413,6 +413,7 @@
 
         setTimeout(function() {
             $mainDiv.find('.i-' + alignmentPosition).addClass('highlight-column');
+            $mainDiv.find('.i-' + alignmentPosition).css('box-sizing', 'unset');
             $mainDiv.find('.sequence:eq(' + species + ') .modification.i-' + alignmentPosition).addClass('modification-highlighted');
         }, 75);
     }

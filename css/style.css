@@ -303,9 +303,11 @@
 
 .specialAa {
     cursor: pointer !important;
-    border-radius: 40%;
-    border-color: transparent !important;
-    box-shadow: 0 0 7px #000;
+    border-radius: 50%;
+    bottom: 1px;
+    line-height: 1.4 !important;
+    box-sizing: border-box;
+    border: 2px solid #fff;
 }
 
 .highlighter-container {
