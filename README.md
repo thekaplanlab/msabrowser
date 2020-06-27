@@ -1,5 +1,6 @@
 ![MSABrowser Logo](https://user-images.githubusercontent.com/65191506/81839302-06123400-9550-11ea-92d2-ac904ccd32c6.png)
-##  Documentation and Examples: [https://msabrowser.github.io/](https://msabrowser.github.io/)
+<h2 align="center"> 📰 Documentation and Examples: <a href="https://msabrowser.github.io/">https://msabrowser.github.io/</a> </h2>
+
 ---
 
 # 🧬 MSABrowser
