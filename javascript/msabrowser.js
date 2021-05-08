@@ -39,7 +39,6 @@
             return link;
         }
 
-
         this.loadSeq = function(fasta) {
             let firstStartPointer, endPointer, currentStartPointer = -1;
 
@@ -527,42 +526,53 @@
 
         var ids = this.ids;
 
-        for (var annotation of annotations) {
-            if (this.annotations[annotation.source]) {
-                continue;
+        // Check whether annotations are provided
+        if (annotations.length > 0) {
+            for (var annotation of annotations) {
+                if (this.annotations[annotation.source]) {
+                    continue;
+                }
+                this.annotations[annotation.source] = annotations.data;
+    
+                var annotationContainerTemplate = `<section class="sequence-length"></section>`;
+                $('#' + ids.annotationSequence).append(annotationContainerTemplate);
+    
+                var annotationContainer = $('#' + ids.annotationSequence).find('.sequence-length:last')[0];
+                $('#' + ids.speciesNames).before(`<div class="gene-name">${annotation.source}</div>`);
+    
+                for (var key in annotation.data) {
+                    var name = annotation.data[key]["annotation_id"];
+                    var link = annotation.data[key]["annotation_external_link"];
+                    var startPoint = annotation.data[key]["annotation_start_point"];
+                    var endPoint = annotation.data[key]["annotation_end_point"];
+                    var repeatCount = Math.max(1, Math.round((endPoint - startPoint) * 20 / 800));
+                    
+                    var annotationMessage = `<p style="width: 800px">${name} (${startPoint} - ${endPoint})</p>`.repeat(repeatCount);
+    
+                    var annotationHtml = `
+                    <a href="${link}" target="_blank">
+                        <div class="annotation" data-start-point="${startPoint}" data-end-point="${endPoint}">
+                            <div class="annotation_start_point">${startPoint}</div>
+                            ${annotationMessage}
+                            <div class="annotation_end_point">${endPoint}</div>
+                        </div>
+                    </a>
+                    `;
+    
+                    $(annotationContainer).append(annotationHtml);
+                };
             }
-            this.annotations[annotation.source] = annotations.data;
+        }
 
+        // In case annotations are NOT provided
+        else {
             var annotationContainerTemplate = `<section class="sequence-length"></section>`;
             $('#' + ids.annotationSequence).append(annotationContainerTemplate);
 
-
             var annotationContainer = $('#' + ids.annotationSequence).find('.sequence-length:last')[0];
-            $('#' + ids.speciesNames).before(`<div class="gene-name">${annotation.source}</div>`);
-
-            for (var key in annotation.data) {
-                var name = annotation.data[key]["annotation_id"];
-                var link = annotation.data[key]["annotation_external_link"];
-                var startPoint = annotation.data[key]["annotation_start_point"];
-                var endPoint = annotation.data[key]["annotation_end_point"];
-                var repeatCount = Math.max(1, Math.round((endPoint - startPoint) * 20 / 800));
-                
-                var annotationMessage = `<p style="width: 800px">${name} (${startPoint} - ${endPoint})</p>`.repeat(repeatCount);
-
-
-                var annotationHtml = `
-                <a href="${link}" target="_blank">
-                    <div class="annotation" data-start-point="${startPoint}" data-end-point="${endPoint}">
-                        <div class="annotation_start_point">${startPoint}</div>
-                        ${annotationMessage}
-                        <div class="annotation_end_point">${endPoint}</div>
-                    </div>
-                </a>
-                `;
-
-                $(annotationContainer).append(annotationHtml);
-            };
+            $('#' + ids.speciesNames).before(`<div class="gene-name">MSABrowser</div>`);
         }
+        
     }
 
     MSABrowser.prototype.addAlteration = function({
