@@ -1,0 +1,116 @@
+
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>MSABrowser|NIPBL Example</title>
+    <link type="text/css" rel="stylesheet" href="https://cdn.jsdelivr.net/gh/msabrowser/msabrowser@v1.1//css/style.css" media="screen" />
+    <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js" type="text/javascript"></script>
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/msabrowser/msabrowser@v1.1/javascript/msabrowser.js"></script>
+</head>
+
+<body>
+    <h1>Simulated FASTA with long sequences</h1>
+    <article>
+        In this case, we created a FASTA file with 75 sequences each have more than 75000 amino acids. This is to show the power of our visualization tool. 
+    </article>
+
+    <!-- MSABrowser Demo -->
+    <section id="MSABrowserDemo"></section>
+    <!-- end of MSABrowser Demo -->
+
+
+    <script type="text/javascript" charset="utf-8">
+        var viewer;
+        var annotations = [{
+                source: "PFAM Domains",
+                data: [{
+                    "annotation_id": "Cohesin_HEAT (PF12765.7)",
+                    "annotation_name": "HEAT repeat associated with sister chromatid cohesion",
+                    "annotation_external_link": "https://pfam.xfam.org/family/PF12765.7",
+                    "annotation_start_point": 1794,
+                    "annotation_end_point": 1835
+                }, {
+                    "annotation_id": "Nipped-B_C (PF12830.7)",
+                    "annotation_name": "Sister chromatid cohesion C-terminus",
+                    "annotation_external_link": "https://pfam.xfam.org/family/PF12830.7",
+                    "annotation_start_point": 2275,
+                    "annotation_end_point": 2455
+                }]
+            }, {
+                source: "NOTES",
+                data: [{
+                    "annotation_id": "Defined sequence interval 1",
+                    "annotation_name": "efined sequence interval 1",
+                    "annotation_external_link": "https://msabrowser.github.io",
+                    "annotation_start_point": 25,
+                    "annotation_end_point": 50
+                }, {
+                    "annotation_id": "Defined sequence interval 2",
+                    "annotation_name": "efined sequence interval 2",
+                    "annotation_external_link": "https://msabrowser.github.io",
+                    "annotation_start_point": 1800,
+                    "annotation_end_point": 1840
+                }]
+            }
+
+        ];
+
+        var alterations = [
+            // MOUSE
+            {
+                'sequenceIndex': 2,
+                'position': 117,
+                'note': 'Alt:W|Ref:V,rs1131700854,synonymous variant',
+                'source': 'dbSNP'
+            }, {
+                'sequenceIndex': 2,
+                'position': 150,
+                'note': 'Alt:R|Ref:S,rs237678659,synonymous variant',
+                'source': 'dbSNP'
+            }, {
+                'sequenceIndex': 2,
+                'position': 199,
+                'note': 'Alt:Y|Ref:P,rs211696152,synonymous variant',
+                'source': 'dbSNP'
+            }, {
+                'sequenceIndex': 2,
+                'position': 259,
+                'note': 'Alt:R|Ref:G,rs216297383,synonymous variant',
+                'source': 'dbSNP'
+            }, {
+                'sequenceIndex': 2,
+                'position': 287,
+                'note': 'Alt:Y|Ref:T,rs253215325,synonymous variant',
+                'source': 'dbSNP'
+            }, {
+                'sequenceIndex': 2,
+                'position': 457,
+                'note': 'Alt:Y|Ref:Q,rs258399537,synonymous variant',
+                'source': 'dbSNP'
+            }
+        ];
+
+        $.get("https://cdn.jsdelivr.net/gh/thekaplanlab/msabrowser@feb7426c1d98887baa9d6ad3481b7145279c4dff/examples/sample_files/simulated.txt", (fasta) => {
+
+            viewer = new MSABrowser({
+                id: "MSABrowserDemo",
+                msa: MSAProcessor({
+                    fasta: fasta,
+                    hasConsensus: true
+                }),
+                annotations: annotations,
+                alterations: alterations,
+                colorSchema: "mae",
+            });
+
+            viewer.export("MSA_export.fasta");
+
+        });
+    </script>
+</body>
+
+</html>
