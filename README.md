@@ -1,5 +1,5 @@
 ![MSABrowser Logo](https://user-images.githubusercontent.com/65191506/81839302-06123400-9550-11ea-92d2-ac904ccd32c6.png)
-<h2 align="center"> 📰 Documentation and Examples: <a href="https://MSABrowser.github.io/">https://MSABrowser.github.io/</a> </h2>
+<h2 align="center"> 📰 Documentation and Examples: <a href="https://thekaplanlab.github.io/">https://thekaplanlab.github.io/</a> </h2>
 
 ---
 
