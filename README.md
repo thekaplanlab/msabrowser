@@ -11,7 +11,7 @@ MSABrowser is developed as a new JavaScript tool with an ultimate goal of dynami
 Please, visit [https://thekaplanlab.github.io/](https://thekaplanlab.github.io/)
 
 # :hash: Contributing & Feedback
-MSABrowser is released as an open-source and web-based software under MIT License. The visualizer, documentation, all source code and examples are available at https://MSABrowser.github.io/.
+MSABrowser is released as an open-source and web-based software under MIT License. The visualizer, documentation, all source code and examples are available at https://thekaplanlab.github.io.
 
 Moreover, please do not hesitate to `open an issue via Github` if you have any suggestion or feedback.
 
