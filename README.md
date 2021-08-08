@@ -27,5 +27,5 @@ Moreover, please do not hesitate to `open an issue via Github` if you have any s
 
 
 # :hash: Citing the *MSABrowser*
-Torun, F. M., Bilgin, H. I., & Kaplan, O. I. (2021). MSABrowser: dynamic and fast visualization of sequence alignments, variations, and annotations. doi:[10.1101/2021.04.05.426321](https://www.biorxiv.org/content/10.1101/2021.04.05.426321v1) 
+Furkan M Torun, Halil I Bilgin, Oktay I Kaplan, MSABrowser: dynamic and fast visualization of sequence alignments, variations, and annotations, Bioinformatics Advances, 2021;, vbab009, https://doi.org/10.1093/bioadv/vbab009
 
