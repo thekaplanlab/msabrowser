@@ -482,7 +482,7 @@
 
                 let aaBox = document.createElement("div");
                 //reading protein sequence letter by letter
-                var aaLetter = seq1.charAt(positionIndex);
+                var aaLetter = seq1.charAt(positionIndex).toUpperCase();
                 //creating amino acid boxes
 
                 if (aaLetter != '-') {
